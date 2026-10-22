@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { AppLayout } from './components/layout/AppLayout';
+import { ScrollToTop } from './components/common/ScrollToTop';
 import { HomePage } from './pages/HomePage';
 import { AllGamesPage } from './pages/AllGamesPage';
 import { CategoriesOverviewPage } from './pages/CategoriesOverviewPage';
@@ -14,6 +15,7 @@ export function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<AppLayout />}>
             <Route index element={<HomePage />} />

@@ -71,7 +71,7 @@ export const HomePage: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full space-y-16">
         {/* Learning Categories Grid */}
-        <section>
+        <section id="categories">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-2.5">
@@ -115,7 +115,7 @@ export const HomePage: React.FC = () => {
         </section>
 
         {/* Featured Games Section */}
-        <section>
+        <section id="featured-games">
           <div className="flex items-center justify-between mb-8">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-800 flex items-center gap-2.5">
@@ -144,7 +144,7 @@ export const HomePage: React.FC = () => {
         </section>
 
         {/* New Educational Activities Section */}
-        <section>
+        <section id="new-activities">
           <div className="flex items-center justify-between mb-8">
             <div>
               <div className="inline-flex items-center gap-1 text-xs font-black text-emerald-700 bg-emerald-100 px-3 py-0.5 rounded-full mb-1">
