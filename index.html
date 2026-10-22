@@ -4,118 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ستار فل بالعربي - ألعاب تعليمية للأطفال</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="منصة ألعاب تعليمية تفاعلية للأطفال من عمر 1-7 سنوات تركز على تعليم الحروف والأرقام والمفاهيم الأساسية والألغاز باللغة العربية">
+    <meta property="og:title" content="ستار فل بالعربي - ألعاب تعليمية للأطفال">
+    <meta property="og:description" content="منصة ألعاب تعليمية تفاعلية للأطفال من عمر 1-7 سنوات تركز على تعليم الحروف والأرقام والمفاهيم الأساسية والألغاز باللغة العربية">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body>
-    <header class="header">
-        <div class="container">
-            <h1 class="logo">
-                <span class="star">⭐</span>
-                ستار فل بالعربي
-                <span class="star">⭐</span>
-            </h1>
-            <p class="subtitle">ألعاب تعليمية ممتعة للأطفال من عمر 1-7 سنوات</p>
-        </div>
-    </header>
-
-    <main class="main">
-        <div class="container">
-            <div class="games-grid">
-                <div class="game-card" data-game="numbers">
-                    <div class="game-icon">🔢</div>
-                    <h3 class="game-title">تطابق الأرقام</h3>
-                    <p class="game-description">تعلم الأرقام من خلال لعبة التطابق الممتعة</p>
-                    <button class="play-btn" onclick="openGame('numbers')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="english-letters">
-                    <div class="game-icon">🔤</div>
-                    <h3 class="game-title">تطابق الحروف الإنجليزية</h3>
-                    <p class="game-description">تعلم الحروف الإنجليزية بطريقة تفاعلية</p>
-                    <button class="play-btn" onclick="openGame('english-letters')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="arabic-letters">
-                    <div class="game-icon">أ</div>
-                    <h3 class="game-title">تطابق الحروف العربية</h3>
-                    <p class="game-description">اكتشف جمال الحروف العربية</p>
-                    <button class="play-btn" onclick="openGame('arabic-letters')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="arabic-words">
-                    <div class="game-icon">📝</div>
-                    <h3 class="game-title">الحروف والكلمات العربية</h3>
-                    <p class="game-description">ربط الحروف بالكلمات التي تبدأ بها</p>
-                    <button class="play-btn" onclick="openGame('arabic-words')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="english-words">
-                    <div class="game-icon">📖</div>
-                    <h3 class="game-title">الكلمات الإنجليزية</h3>
-                    <p class="game-description">تطابق الكلمات الإنجليزية بنفس الحرف</p>
-                    <button class="play-btn" onclick="openGame('english-words')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="images">
-                    <div class="game-icon">🖼️</div>
-                    <h3 class="game-title">تطابق الصور</h3>
-                    <p class="game-description">لعبة ذاكرة ممتعة مع الصور الملونة</p>
-                    <button class="play-btn" onclick="openGame('images')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="relations">
-                    <div class="game-icon">🔗</div>
-                    <h3 class="game-title">التعرف على العلاقات</h3>
-                    <p class="game-description">ربط الأشياء المترابطة مثل المضرب والكرة</p>
-                    <button class="play-btn" onclick="openGame('relations')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="opposites">
-                    <div class="game-icon">⬆️⬇️</div>
-                    <h3 class="game-title">المعكوسات</h3>
-                    <p class="game-description">تعلم المفاهيم المتضادة مثل فوق وتحت</p>
-                    <button class="play-btn" onclick="openGame('opposites')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="puzzle-2">
-                    <div class="game-icon">🧩</div>
-                    <h3 class="game-title">ترتيب الصور - قطعتان</h3>
-                    <p class="game-description">لعبة بازل بسيطة من قطعتين</p>
-                    <button class="play-btn" onclick="openGame('puzzle-2')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="puzzle-4">
-                    <div class="game-icon">🧩</div>
-                    <h3 class="game-title">ترتيب الصور - أربع قطع</h3>
-                    <p class="game-description">لعبة بازل أكثر تحديًا من أربع قطع</p>
-                    <button class="play-btn" onclick="openGame('puzzle-4')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="seasons">
-                    <div class="game-icon">🌸</div>
-                    <h3 class="game-title">فصول السنة</h3>
-                    <p class="game-description">تعلم فصول السنة الأربعة</p>
-                    <button class="play-btn" onclick="openGame('seasons')">العب الآن</button>
-                </div>
-
-                <div class="game-card" data-game="day-night">
-                    <div class="game-icon">🌞🌙</div>
-                    <h3 class="game-title">الليل والنهار</h3>
-                    <p class="game-description">اكتشف الفرق بين الليل والنهار</p>
-                    <button class="play-btn" onclick="openGame('day-night')">العب الآن</button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2025 ستار فل بالعربي - جميع الحقوق محفوظة</p>
-        </div>
-    </footer>
-
-    <script src="js/main.js"></script>
+<body class="bg-gradient-to-br from-[#e3f2fd] to-[#f3e5f5] min-h-screen font-['Cairo',sans-serif] text-slate-800 antialiased selection:bg-amber-300 selection:text-amber-900">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
-

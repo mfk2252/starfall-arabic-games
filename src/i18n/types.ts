@@ -1,0 +1,42 @@
+export type Language = 'ar' | 'en';
+
+export interface Translations {
+  appName: string;
+  appSubtitle: string;
+  heroTagline: string;
+  startLearning: string;
+  allGames: string;
+  categories: string;
+  myProgress: string;
+  about: string;
+  searchPlaceholder: string;
+  filterByAge: string;
+  allAges: string;
+  filterByCategory: string;
+  featuredGames: string;
+  playNow: string;
+  starsEarned: string;
+  soundOn: string;
+  soundOff: string;
+  score: string;
+  newGame: string;
+  goHome: string;
+  backToGames: string;
+  restart: string;
+  nextQuestion: string;
+  seeFinalResult: string;
+  congratulations: string;
+  winMessage: string;
+  tryAgain: string;
+  wellDone: string;
+  resetProgress: string;
+  resetProgressConfirm: string;
+  clearProgressSuccess: string;
+  noGamesFound: string;
+  safeChildEnvironment: string;
+  safeChildDesc: string;
+  footerRights: string;
+  footerSubtitle: string;
+  categoryNames: Record<string, string>;
+  categoryDescriptions: Record<string, string>;
+}
