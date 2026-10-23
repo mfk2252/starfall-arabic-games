@@ -63,7 +63,7 @@
   animation: shake 0.4s ease-in-out forwards;
 }
 
-/* Card gradient top strips matching original css */
+/* Card gradient top strips matching Taleen Pink Theme */
 .card-rainbow-strip {
-  background: linear-gradient(90deg, #4fc3f7, #81c784, #ffd54f, #ff8a65, #f48fb1, #ce93d8);
+  background: linear-gradient(90deg, #ec4899, #f43f5e, #d946ef, #a855f7, #fb7185, #f472b6);
 }

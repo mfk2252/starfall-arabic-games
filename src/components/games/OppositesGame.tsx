@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
 import { CheckCircle2, ArrowRight, ArrowLeft, HelpCircle, Sparkles, Trophy } from 'lucide-react';
 import { OPPOSITES_DATA, OppositePair, OppositeDifficulty } from '../../data/oppositesData';
+import { RoundManager } from '../../utils/roundManager';
 import { useLanguage } from '../../i18n/LanguageContext';
 
 interface GameState {
@@ -24,6 +25,9 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   const isAr = language === 'ar';
   const BackIcon = dir === 'rtl' ? ArrowRight : ArrowLeft;
 
+  // Persistent round manager across re-renders
+  const roundManagerRef = useRef(new RoundManager<OppositePair>(OPPOSITES_DATA, 50));
+
   const [game, setGame] = useState<GameState>({
     status: 'menu',
     difficulty: null,
@@ -36,30 +40,18 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
     isProcessing: false,
   });
 
-  const shuffle = <T,>(array: T[]): T[] => {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
   const startNewGame = (diff: OppositeDifficulty) => {
     sound.playClick();
 
-    // Filter by difficulty across the entire 125-pair dataset
-    let pool: OppositePair[] = [];
-    if (diff === 'easy') {
-      pool = OPPOSITES_DATA.filter((p) => p.difficulty === 'easy');
-    } else if (diff === 'medium') {
-      pool = OPPOSITES_DATA.filter((p) => p.difficulty === 'easy' || p.difficulty === 'medium');
-    } else {
-      pool = OPPOSITES_DATA; // All for advanced
-    }
-
+    // Filter by difficulty across dataset using RoundManager
     const count = diff === 'easy' ? 4 : diff === 'medium' ? 6 : 8;
-    const selected = shuffle(pool).slice(0, count);
+    const filterFn = (p: OppositePair) => {
+      if (diff === 'easy') return p.difficulty === 'easy';
+      if (diff === 'medium') return p.difficulty === 'easy' || p.difficulty === 'medium';
+      return true;
+    };
+
+    const selected = roundManagerRef.current.getNextRoundItems(count, filterFn);
 
     setGame({
       status: 'playing',
@@ -158,11 +150,11 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   ]);
 
   // Shuffled columns for rendering
-  const leftColumn = useMemo(() => shuffle(game.currentPairs), [game.currentPairs]);
-  const rightColumn = useMemo(() => shuffle(game.currentPairs), [game.currentPairs]);
+  const leftColumn = useMemo(() => roundManagerRef.current.shuffle(game.currentPairs), [game.currentPairs]);
+  const rightColumn = useMemo(() => roundManagerRef.current.shuffle(game.currentPairs), [game.currentPairs]);
 
   // --------------------------------------------------------------------------
-  // UI - MENU (Child-friendly level selection starting from 4 years old)
+  // UI - MENU
   // --------------------------------------------------------------------------
   if (game.status === 'menu') {
     return (
@@ -173,25 +165,25 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
               sound.playClick();
               onGoHome();
             }}
-            className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
+            className="flex items-center gap-2 bg-white dark:bg-[#200b1e] hover:bg-pink-50 dark:hover:bg-pink-950/60 text-slate-700 dark:text-pink-100 px-4 py-2.5 rounded-full font-bold shadow-xs border border-pink-200 dark:border-pink-900/60 transition-all cursor-pointer"
           >
-            <BackIcon className="w-5 h-5 text-emerald-500" />
+            <BackIcon className="w-5 h-5 text-rose-500" />
             <span>{isAr ? 'الرجوع للمكتبة' : 'Back to Library'}</span>
           </button>
-          <div className="flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 rounded-full font-black text-sm shadow-sm">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-rose-500 via-pink-600 to-fuchsia-600 text-white px-4 py-2 rounded-full font-black text-sm shadow-xs">
             <span>⬆️⬇️</span>
             <span>{isAr ? 'لعبة المعكوسات' : 'Opposites Game'}</span>
           </div>
         </div>
 
         <div className="text-center space-y-4 mb-10">
-          <div className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto shadow-inner border-4 border-white dark:border-emerald-800">
+          <div className="w-24 h-24 bg-pink-100 dark:bg-pink-950/50 rounded-full flex items-center justify-center mx-auto shadow-inner border-4 border-white dark:border-pink-900/60">
             <span className="text-5xl filter drop-shadow animate-pulse">⬆️⬇️</span>
           </div>
-          <h1 className="font-heading text-3xl sm:text-4xl font-black text-slate-800 dark:text-white">
+          <h1 className="font-heading text-3xl sm:text-4xl font-black text-slate-800 dark:text-pink-100">
             {isAr ? 'تحدي المعكوسات والمفاهيم المتضادة' : 'Opposites & Antonyms Challenge'}
           </h1>
-          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-medium max-w-lg mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-600 dark:text-pink-200/80 font-medium max-w-lg mx-auto leading-relaxed">
             {isAr
               ? 'ساعد في مطابقة كل شيء مع ما يضاده في المعنى (مثل: كبير وصغير، حار وبارد، فوق وتحت). اختر المستوى وابدأ المرح!'
               : 'Help pair opposite concepts together (like big and small, hot and cold). Pick a level and start having fun!'}
@@ -205,21 +197,21 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
               label: isAr ? 'سهل' : 'Easy',
               sublabel: isAr ? '٤ أزواج بصرية واضحة' : '4 Visual Pairs',
               icon: '🐣',
-              color: 'from-emerald-400 to-teal-600',
+              color: 'from-pink-400 to-rose-600',
             },
             {
               id: 'medium',
               label: isAr ? 'متوسط' : 'Medium',
               sublabel: isAr ? '٦ أزواج متنوعة' : '6 Fun Pairs',
               icon: '🚀',
-              color: 'from-sky-400 to-blue-600',
+              color: 'from-rose-500 to-fuchsia-600',
             },
             {
               id: 'advanced',
               label: isAr ? 'متقدم' : 'Advanced',
               sublabel: isAr ? '٨ أزواج لتحدي الأبطال' : '8 Super Pairs',
               icon: '🧠',
-              color: 'from-purple-500 to-indigo-700',
+              color: 'from-fuchsia-600 to-purple-800',
             },
           ].map((lvl) => (
             <button
@@ -240,7 +232,7 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   }
 
   // --------------------------------------------------------------------------
-  // UI - PLAYING (Same harmonious structure as RelationsGame)
+  // UI - PLAYING
   // --------------------------------------------------------------------------
   return (
     <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh]">
@@ -250,7 +242,7 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         score={game.score}
         onRestart={() => setGame((prev) => ({ ...prev, status: 'menu' }))}
         onGoHome={onGoHome}
-        accentGradient="from-emerald-500 to-teal-600"
+        accentGradient="from-pink-500 to-rose-600"
         badgeText={
           isAr
             ? `مستوى: ${
@@ -264,16 +256,16 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         }
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-[2.5rem] p-5 sm:p-10 shadow-2xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-4xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#200b1e] rounded-[2.5rem] p-5 sm:p-10 shadow-2xl border border-pink-100 dark:border-pink-900/60 text-slate-800 dark:text-pink-100 max-w-4xl w-full flex flex-col items-center">
         {/* Feedback Message */}
         <div className="w-full text-center mb-8 h-16 flex items-center justify-center">
           <div
-            className={`inline-block px-6 py-3 rounded-2xl font-bold text-sm sm:text-lg transition-all transform animate-pop-in shadow-sm ${
+            className={`inline-block px-6 py-3 rounded-2xl font-bold text-sm sm:text-lg transition-all transform animate-pop-in shadow-xs ${
               game.message.startsWith('✅')
                 ? 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-emerald-800 dark:text-emerald-300'
                 : game.message.startsWith('❌')
                 ? 'bg-rose-50 dark:bg-rose-950/40 border border-rose-200 text-rose-800 dark:text-rose-300'
-                : 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 text-emerald-800 dark:text-emerald-300'
+                : 'bg-pink-50 dark:bg-pink-950/60 border border-pink-200 text-pink-800 dark:text-pink-200'
             }`}
           >
             {game.message}
@@ -284,14 +276,14 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         <div className="grid grid-cols-2 gap-4 sm:gap-10 w-full relative">
           {/* Connector Decoration (Desktop only) */}
           <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none">
-            <Sparkles className="w-32 h-32 text-emerald-500" />
+            <Sparkles className="w-32 h-32 text-rose-500" />
           </div>
 
           {/* Left Column (Items A) */}
           <div className="flex flex-col gap-3.5">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <HelpCircle className="w-4 h-4 text-slate-400" />
-              <h3 className="font-heading font-black text-slate-500 text-xs sm:text-sm uppercase tracking-wider">
+              <HelpCircle className="w-4 h-4 text-rose-400" />
+              <h3 className="font-heading font-black text-rose-700 dark:text-pink-300 text-xs sm:text-sm uppercase tracking-wider">
                 {isAr ? 'المجموعة الأولى' : 'Group A'}
               </h3>
             </div>
@@ -309,7 +301,7 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
                       ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-400 opacity-60'
                       : isSelected
                       ? 'bg-amber-50 dark:bg-amber-900/30 border-amber-400 dark:border-amber-600 shadow-xl scale-105 z-10'
-                      : 'bg-white dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-slate-700 border-slate-100 dark:border-slate-800 hover:border-emerald-300 shadow-md cursor-pointer active:scale-95'
+                      : 'bg-white dark:bg-pink-950/40 hover:bg-pink-50 dark:hover:bg-pink-900/40 border-pink-100 dark:border-pink-900/60 hover:border-pink-300 shadow-md cursor-pointer active:scale-95'
                   }`}
                 >
                   <span
@@ -335,10 +327,10 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
           {/* Right Column (Items B) */}
           <div className="flex flex-col gap-3.5">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <h3 className="font-heading font-black text-slate-500 text-xs sm:text-sm uppercase tracking-wider">
+              <h3 className="font-heading font-black text-rose-700 dark:text-pink-300 text-xs sm:text-sm uppercase tracking-wider">
                 {isAr ? 'المجموعة المتضادة' : 'Opposite Group'}
               </h3>
-              <HelpCircle className="w-4 h-4 text-slate-400" />
+              <HelpCircle className="w-4 h-4 text-rose-400" />
             </div>
             {rightColumn.map((pair) => {
               const isMatched = game.matchedIds.includes(pair.id);
@@ -354,7 +346,7 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
                       ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-400 opacity-60'
                       : isSelected
                       ? 'bg-amber-50 dark:bg-amber-900/30 border-amber-400 dark:border-amber-600 shadow-xl scale-105 z-10'
-                      : 'bg-white dark:bg-slate-800/50 hover:bg-emerald-50 dark:hover:bg-slate-700 border-slate-100 dark:border-slate-800 hover:border-emerald-300 shadow-md cursor-pointer active:scale-95'
+                      : 'bg-white dark:bg-pink-950/40 hover:bg-pink-50 dark:hover:bg-pink-900/40 border-pink-100 dark:border-pink-900/60 hover:border-pink-300 shadow-md cursor-pointer active:scale-95'
                   }`}
                 >
                   <span
@@ -379,8 +371,8 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         </div>
 
         {/* Progress Summary */}
-        <div className="mt-10 sm:mt-12 w-full border-t border-slate-100 dark:border-slate-800 pt-6">
-          <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-500 mb-4 px-2">
+        <div className="mt-10 sm:mt-12 w-full border-t border-pink-100 dark:border-pink-950/60 pt-6">
+          <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-500 dark:text-pink-300/80 mb-4 px-2">
             <div className="flex items-center gap-2">
               <Trophy className="w-4 h-4 text-amber-500" />
               <span>{isAr ? 'التقدم المحرز:' : 'Round Progress:'}</span>
@@ -389,9 +381,9 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
               {game.matchedIds.length} / {game.currentPairs.length}
             </span>
           </div>
-          <div className="w-full bg-slate-100 dark:bg-slate-800 h-3.5 rounded-full overflow-hidden shadow-inner">
+          <div className="w-full bg-pink-50 dark:bg-pink-950/80 h-3.5 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 transition-all duration-500 ease-out"
+              className="h-full bg-gradient-to-r from-pink-500 via-rose-500 to-fuchsia-600 transition-all duration-500 ease-out"
               style={{
                 width: `${(game.matchedIds.length / (game.currentPairs.length || 1)) * 100}%`,
               }}
