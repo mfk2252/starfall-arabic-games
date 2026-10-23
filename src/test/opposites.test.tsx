@@ -72,7 +72,7 @@ describe('Opposites Educational Dataset & Integrity', () => {
   });
 });
 
-describe('OppositesGame Component & Multi-Mode Interaction', () => {
+describe('OppositesGame Component & Gameplay Flow', () => {
   const renderGame = () => {
     return render(
       <ThemeProvider>
@@ -85,37 +85,30 @@ describe('OppositesGame Component & Multi-Mode Interaction', () => {
     );
   };
 
-  it('renders the game header with title and score', () => {
+  it('renders the child-friendly level menu with title and level cards', () => {
     renderGame();
-    expect(screen.getByText('المعكوسات والمفاهيم المتضادة')).toBeDefined();
-    expect(screen.getByText('النقاط:')).toBeDefined();
+    expect(screen.getByText('تحدي المعكوسات والمفاهيم المتضادة')).toBeDefined();
+    expect(screen.getByText('سهل')).toBeDefined();
+    expect(screen.getByText('متوسط')).toBeDefined();
+    expect(screen.getByText('متقدم')).toBeDefined();
   });
 
-  it('renders all 5 mode navigation tabs', () => {
+  it('starts playing when clicking a difficulty level card', () => {
     renderGame();
-    expect(screen.getByText('اختيار الضد')).toBeDefined();
-    expect(screen.getByText('مطابقة الأزواج')).toBeDefined();
-    expect(screen.getByText('إكمال السياق')).toBeDefined();
-    expect(screen.getByText('تحدي الكلمات')).toBeDefined();
-    expect(screen.getByText('المراجعة والاستكشاف')).toBeDefined();
-  });
+    const easyBtn = screen.getByText('سهل');
+    fireEvent.click(easyBtn);
 
-  it('switches to Pair Matching mode smoothly', () => {
-    renderGame();
-    const matchTab = screen.getByText('مطابقة الأزواج');
-    fireEvent.click(matchTab);
+    // After clicking easy, playing UI should appear with two matching columns
     expect(screen.getByText('المجموعة الأولى')).toBeDefined();
     expect(screen.getByText('المجموعة المتضادة')).toBeDefined();
+    expect(screen.getByText(/التقدم المحرز:/i)).toBeDefined();
   });
 
-  it('switches to Review & Explorer encyclopedia mode and allows searching', () => {
+  it('renders GameHeader with score and restart in playing mode', () => {
     renderGame();
-    const reviewTab = screen.getByText('المراجعة والاستكشاف');
-    fireEvent.click(reviewTab);
-    expect(screen.getByText('موسوعة واستكشاف المعكوسات')).toBeDefined();
+    fireEvent.click(screen.getByText('سهل'));
 
-    const searchInput = screen.getByPlaceholderText(/ابحث عن أي مفهوم/i);
-    expect(searchInput).toBeDefined();
-    fireEvent.change(searchInput, { target: { value: 'كبير' } });
+    expect(screen.getByText('المعكوسات والمفاهيم المتضادة')).toBeDefined();
+    expect(screen.getByText(/النقاط:/i)).toBeDefined();
   });
 });
