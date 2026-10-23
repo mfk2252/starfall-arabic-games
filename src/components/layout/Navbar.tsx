@@ -19,6 +19,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { useTheme } from '../../theme/ThemeContext';
 import { sound } from '../../utils/audio';
 import { ButterflyIcon } from '../common/ButterflyIcon';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 
 export const Navbar: React.FC = () => {
   const { language, toggleLanguage } = useLanguage();
@@ -112,8 +113,11 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Controls: Dark/Light Mode, Language Switcher, Sound & Mobile Menu */}
+          {/* Controls: Dark/Light Mode, Language Switcher, PWA Install Button, Sound & Mobile Menu */}
           <div className="flex items-center gap-1.5 sm:gap-2.5">
+            {/* PWA Install Button */}
+            <PWAInstallButton />
+
             {/* Dark / Light Mode Toggle Pill */}
             <button
               onClick={() => {
@@ -181,7 +185,11 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-[#0b1329]/98 px-4 pt-3 pb-5 space-y-1.5 shadow-xl animate-pop-in">
+        <div className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-[#0b1329]/98 px-4 pt-3 pb-5 space-y-2 shadow-xl animate-pop-in">
+          <div className="pb-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-400">{language === 'ar' ? 'تطبيق تالين PWA' : 'Taleen PWA App'}</span>
+            <PWAInstallButton />
+          </div>
           {navLinks.map((link) => {
             const isActive = location.pathname === link.to;
             const Icon = link.icon;
