@@ -1,14 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { GAMES_LIST } from '../data/games';
+import { STORIES_LIST } from '../data/stories';
 import { GameCard } from '../components/ui/GameCard';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
-import { Sparkles, ArrowRight, ArrowLeft, Trophy, ShieldCheck, Heart, Compass } from 'lucide-react';
+import {
+  Sparkles,
+  ArrowRight,
+  ArrowLeft,
+  Trophy,
+  ShieldCheck,
+  Heart,
+  Compass,
+  BookOpen,
+  Stethoscope,
+  ExternalLink,
+  Award
+} from 'lucide-react';
 
 export const HomePage: React.FC = () => {
   const { t, language } = useLanguage();
   const ArrowIcon = language === 'ar' ? ArrowLeft : ArrowRight;
+  const officialPortfolioUrl = 'https://mfekry.vercel.app/';
 
   const featuredGames = GAMES_LIST.filter((g) => g.featured);
   const newGames = GAMES_LIST.filter((g) => g.isNew);
@@ -34,7 +48,7 @@ export const HomePage: React.FC = () => {
         <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10">
           <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold border border-white/30 text-white shadow-xs mb-4">
             <Sparkles className="w-4 h-4 text-amber-300" />
-            <span>{language === 'ar' ? '١٨ لعبة تفاعلية للأطفال الصغار' : '18 Engaging Educational Games'}</span>
+            <span>{language === 'ar' ? 'منصة تالين التعليمية التفاعلية للأطفال' : 'Taleen Interactive Educational Platform'}</span>
           </div>
 
           <h1 className="text-3xl sm:text-6xl font-black mb-4 tracking-tight flex items-center justify-center gap-3 drop-shadow-md">
@@ -58,12 +72,21 @@ export const HomePage: React.FC = () => {
             </Link>
 
             <Link
-              to="/categories"
+              to="/stories"
               onClick={() => sound.playClick()}
               className="bg-white/20 hover:bg-white/30 text-white px-6 py-4 rounded-full font-bold text-base shadow-md backdrop-blur-md transition-all border border-white/40 flex items-center gap-2"
             >
-              <Compass className="w-5 h-5" />
-              <span>{t('categories')}</span>
+              <BookOpen className="w-5 h-5 text-amber-300" />
+              <span>{t('stories')}</span>
+            </Link>
+
+            <Link
+              to="/consultation"
+              onClick={() => sound.playClick()}
+              className="bg-white/10 hover:bg-white/20 text-white px-5 py-4 rounded-full font-bold text-base shadow-sm backdrop-blur-md transition-all border border-white/30 flex items-center gap-2"
+            >
+              <Stethoscope className="w-5 h-5 text-sky-200" />
+              <span>{t('consultation')}</span>
             </Link>
           </div>
         </div>
@@ -79,7 +102,7 @@ export const HomePage: React.FC = () => {
                 <span>{t('categories')}</span>
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 font-semibold mt-1">
-                {language === 'ar' ? 'اختر مجال التعلم الذي يفضله طفلك اليوم' : 'Choose a learning domain for your child today'}
+                {language === 'ar' ? 'اختر مسار التعلم والمهارات لطفلك اليوم' : 'Choose a developmental path for your child'}
               </p>
             </div>
             <Link
@@ -109,6 +132,60 @@ export const HomePage: React.FC = () => {
                 <span className="text-[11px] text-slate-500 line-clamp-1">
                   {cat.desc}
                 </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* Featured Stories Section */}
+        <section id="featured-stories" className="bg-gradient-to-br from-amber-50/70 via-orange-50/40 to-yellow-50/50 rounded-3xl p-6 sm:p-8 border border-amber-200/60 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <div>
+              <div className="inline-flex items-center gap-1 text-xs font-black text-amber-800 bg-amber-100 px-3 py-1 rounded-full mb-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+                <span>{language === 'ar' ? 'قسم القصص التفاعلية' : 'Interactive Stories'}</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-800">
+                {language === 'ar' ? 'قصص مصورة وأنشطة استيعاب للأطفال' : 'Illustrated Children Stories'}
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
+                {language === 'ar'
+                  ? 'قصص هادفة تسرد القيم والمفاهيم العلمية بأسلوب مشوّق مع أسئلة تفاعلية تشاركية'
+                  : 'Delightful stories cultivating positive values and scientific curiosity'}
+              </p>
+            </div>
+            <Link
+              to="/stories"
+              onClick={() => sound.playClick()}
+              className="bg-amber-400 hover:bg-amber-300 text-amber-950 px-5 py-2.5 rounded-full font-black text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5 shrink-0"
+            >
+              <span>{language === 'ar' ? 'استعراض كل القصص' : 'All Stories'}</span>
+              <ArrowIcon className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {STORIES_LIST.map((story) => (
+              <Link
+                key={story.id}
+                to={`/stories/${story.id}`}
+                onClick={() => sound.playClick()}
+                className="bg-white rounded-2xl p-5 shadow-xs hover:shadow-md border border-amber-100 transition-all flex items-center gap-4 group"
+              >
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${story.gradient} text-white flex items-center justify-center text-3xl shadow-xs shrink-0 group-hover:scale-105 transition-transform`}>
+                  {story.coverIcon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-black text-base text-slate-800 group-hover:text-amber-600 transition-colors truncate">
+                    {language === 'ar' ? story.title : story.titleEn}
+                  </h4>
+                  <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">
+                    {language === 'ar' ? story.summary : story.summaryEn}
+                  </p>
+                  <span className="inline-block mt-2 text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md">
+                    {language === 'ar' ? story.duration : story.durationEn}
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
@@ -169,6 +246,46 @@ export const HomePage: React.FC = () => {
             {newGames.map((game) => (
               <GameCard key={game.id} game={game} />
             ))}
+          </div>
+        </section>
+
+        {/* Consultation & Founder Banner */}
+        <section className="bg-gradient-to-br from-sky-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-xl relative overflow-hidden">
+          <div className="absolute top-2 right-4 text-6xl opacity-10">🩺</div>
+          <div className="max-w-4xl relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-3 text-center md:text-start">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 bg-white/10 px-3 py-1 rounded-full border border-white/20">
+                <Award className="w-3.5 h-3.5" />
+                <span>{language === 'ar' ? 'إشراف أخصائي التربية الخاصة والتخاطب' : 'Clinical Speech & Special Ed Supervision'}</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-black text-white">
+                {language === 'ar' ? 'استشارات وخطط تدخل مبكر مع محمد فكري الكفافي' : 'Consultations & Early Intervention with Mohamed Fekry'}
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed font-medium">
+                {language === 'ar'
+                  ? 'هل ترغب في تقييم نطق طفلك أو وضع خطة لغوية وإدراكية مخصصة؟ تعرف على الخدمات الاستشارية وجلسات التخاطب المباشرة.'
+                  : 'Looking for a professional speech evaluation or individualized early intervention plan? Learn about our direct therapy sessions.'}
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+              <Link
+                to="/consultation"
+                onClick={() => sound.playClick()}
+                className="bg-amber-400 hover:bg-amber-300 text-amber-950 px-6 py-3 rounded-full font-black text-sm shadow-md transition-all text-center"
+              >
+                {t('bookConsultation')}
+              </Link>
+              <a
+                href={officialPortfolioUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => sound.playClick()}
+                className="bg-white/20 hover:bg-white/30 text-white px-5 py-3 rounded-full font-bold text-sm shadow-xs backdrop-blur-md transition-all border border-white/30 flex items-center justify-center gap-1.5"
+              >
+                <span>{language === 'ar' ? 'موقع الأخصائي' : 'Official Portal'}</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </section>
 

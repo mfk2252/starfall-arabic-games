@@ -7,8 +7,16 @@ export interface Translations {
   startLearning: string;
   allGames: string;
   categories: string;
+  stories: string;
+  consultation: string;
+  bookConsultation: string;
+  bookSession: string;
   myProgress: string;
   about: string;
+  aboutTaleen: string;
+  founderName: string;
+  founderRole: string;
+  personalWebsite: string;
   searchPlaceholder: string;
   filterByAge: string;
   allAges: string;

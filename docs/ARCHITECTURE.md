@@ -1,17 +1,21 @@
-# البنية المعمارية لمنصة ستار فل بالعربي (Architecture Documentation)
+# البنية المعمارية لمنصة تالين التعليمية للأطفال (TALEEN Architecture)
 
-## 1. المبادئ المعمارية (Architectural Principles)
-- **Component-Driven Modular Architecture**: تجزئة الواجهات إلى مكونات مشتركة قابلة لإعادة الاستخدام في مجلدات `components/`، مع عزل منطق الألعاب في `components/games/` و`features/`.
-- **Declarative Route Management**: استخدام `react-router-dom` مع مسارات صريحة ومكون تخطيط عام (`AppLayout`) يحوي رأس الصفحة التفاعلي وشريط التنقل والتذييل ومحدد اللغة ونظام الصوت.
-- **Centralized Content Store (`src/data/`)**: فصل جميع نصوص الأسئلة والمستويات والخيارات عن مكونات العرض، مما يتيح التوسع بسهولة وإضافة ألعاب جديدة وتحديث اللغات بدون لمس كود المنطق.
+## 1. المبادئ المعمارية لمنصة تالين (Architectural Principles)
+- **Component-Driven Modular Architecture**: تجزئة الواجهات إلى مكونات مشتركة قابلة لإعادة الاستخدام في مجلدات `components/`، مع عزل منطق الألعاب في `components/games/` والقصص في `data/stories.ts` و`pages/`.
+- **Declarative Route Management**: استخدام `react-router-dom` مع مكوّن `ScrollToTop` لضمان بدء كل صفحة من الأعلى فورياً بدون مشكلات التمرير التلقائي.
+- **Centralized Content Store (`src/data/`)**:
+  - `games.ts` & `gameContent.ts`: تصنيف الـ 18 لعبة والأسئلة التعليمية.
+  - `stories.ts`: القصص التفاعلية، نصوص الصفحات، وأسئلة الفهم والاستيعاب.
 - **Child-Centered Accessibility & UX**:
-  - أحجام نقر لا تقل عن 48px بالأبعاد القياسية.
-  - ألوان متباينة تحفز التركيز.
-  - إشارات نصية وأيقونية مصاحبة للألوان لدعم التمييز البصري.
-  - مؤثرات صوتية مبنية عبر Web Audio API بدون تحميل أي ملفات صوت خارجية مهددة بالفقدان أو التأخير.
-- **Zero-Backend Privacy Compliance**:
-  - لا حاجة لتسجيل الدخول أو جمع بيانات شخصية عن الأطفال.
-  - حفظ النجوم والدرجات محلياً في `localStorage` مع معالجة آمنة لحالات الفشل وزر مسح للبيانات عند رغبة ولي الأمر أو المعلم.
+  - أحجام نقر واسعة لا تقل عن 48px بالأبعاد القياسية لسهولة اللمس.
+  - ألوان متباينة تحفز التركيز دون إجهاد بصري.
+  - مؤثرات صوتية داخلية مولدة عبر Web Audio API مع دعم كتم الصوت بنقرة واحدة.
+- **Founder & Clinical Consultation Integration**:
+  - الربط الصريح والآمن مع بوابة الأخصائي ومؤسس المنصة **محمد فكري الكفافي** ([https://mfekry.vercel.app/](https://mfekry.vercel.app/)).
+  - خلو التطبيق من جمع بيانات الدفع أو الحسابات؛ مما يضمن الامتثال الكامل لخصوصية وأمن الطفل.
+- **Enhanced Arabic SEO & Schema.org**:
+  - تكامل وسوم Meta وOpen Graph وTwitter Cards ومخطط Schema.org المنظم في `index.html`.
+  - ملفات `robots.txt` و`sitemap.xml` في المجلد العام `public/`.
 
 ---
 
@@ -20,36 +24,38 @@
 ```
 src/
 ├── components/          # المكونات المشتركة
-│   ├── common/          # مكونات الرأس والأصوات والاحتفال
-│   ├── games/           # مكونات الألعاب التفاعلية (18 لعبة)
-│   ├── layout/          # الهيدر، الفوتر، وشريط التنقل
-│   └── ui/              # بطاقات وأزرار وشارات
-├── data/                # محتوى الألعاب والمستويات والبيانات
+│   ├── common/          # ScrollToTop, GameHeader, WinCelebration
+│   ├── games/           # مكونات الألعاب التفاعلية الـ 18
+│   ├── layout/          # الهيدر (Navbar)، الفوتر (Footer)، والتخطيط (AppLayout)
+│   └── ui/              # بطاقات الألعاب، الأزرار، والشارات
+├── data/                # محتوى الألعاب والقصص
 │   ├── games.ts         # فهرس ومعلومات جميع الألعاب
-│   └── gameContent.ts   # الأسئلة والمفردات والأنماط
+│   ├── gameContent.ts   # الأسئلة والمفردات والأنماط
+│   └── stories.ts       # محتوى القصص التفاعلية وأسئلة الاستيعاب
 ├── i18n/                # محرك الترجمة والقواميس
-│   ├── ar.ts            # القاموس العربي
+│   ├── ar.ts            # القاموس العربي المحدث لهوية تالين
 │   ├── en.ts            # القاموس الإنجليزي
-│   └── index.ts         # سياق وهوك الترجمة وتغيير الاتجاه
+│   ├── types.ts         # واجهة الأنواع والقواميس
+│   └── LanguageContext.tsx # سياق اللغة وتغيير الاتجاه (RTL/LTR)
 ├── pages/               # صفحات التطبيق والمسارات
-│   ├── HomePage.tsx
-│   ├── AllGamesPage.tsx
-│   ├── CategoryPage.tsx
-│   ├── CategoriesOverviewPage.tsx
-│   ├── GamePlayPage.tsx
-│   ├── ProgressPage.tsx
-│   └── AboutPage.tsx
-├── test/                # إعدادات واختبارات Vitest
+│   ├── HomePage.tsx               # الصفحة الرئيسية
+│   ├── AllGamesPage.tsx           # جميع الألعاب
+│   ├── CategoriesOverviewPage.tsx # المسارات التعليمية
+│   ├── CategoryPage.tsx           # ألعاب مسار محدد
+│   ├── GamePlayPage.tsx           # تشغيل اللعبة
+│   ├── StoriesPage.tsx            # مكتبة القصص المصورة
+│   ├── StoryViewPage.tsx          # قراءة القصة وأسئلة الاستيعاب
+│   ├── ConsultationPage.tsx       # الاستشارات وحجز الجلسات
+│   ├── ProgressPage.tsx           # لوحة الإنجازات
+│   └── AboutPage.tsx              # عن المنصة والمؤسس
+├── test/                # اختبارات Vitest التلقائية
 ├── types/               # تعريفات TypeScript
 └── utils/               # الصوت والتخزين المساعد
 ```
 
 ---
 
-## 3. إرشادات إضافة لعبة جديدة (Adding a New Game)
-1. عرّف معرف اللعبة الجديد `GameId` في `src/types/index.ts`.
-2. أضف تفاصيل وبيانات اللعبة وفئتها في `src/data/games.ts` مع العنوان والوصف والأيقونة والأعمار.
-3. أضف أسئلة ومستويات اللعبة في `src/data/gameContent.ts`.
-4. أنشئ مكون اللعبة داخل `src/components/games/YourNewGame.tsx` مستخدماً `GameHeader` و`WinCelebration` ومساعد الصوت `sound`.
-5. اربط اللعبة في صفحة تشغيل الألعاب `src/pages/GamePlayPage.tsx`.
-6. أضف اختباراً بسيطاً لمنطق اللعبة في `src/test/games.test.tsx`.
+## 3. دورة حياة التمرير واستعادة الموضع (Scroll Lifecycle)
+يتم تركيب المكون `<ScrollToTop />` مباشرة داخل `<BrowserRouter>` في `src/App.tsx`. عند أي تغير في `location.pathname` أو `location.search`:
+- إذا وُجد وسم تجزئة (`#hash`)، يتم التمرير السلس إلى العنصر المستهدف.
+- وإلا، يتم استدعاء `window.scrollTo({ top: 0, left: 0, behavior: 'instant' })` مع إعادة ضبط حاوية التمرير الرئيسية، لضمان ظهور الصفحة من بدايتها العلوية فور الانتقال أو التحديث.

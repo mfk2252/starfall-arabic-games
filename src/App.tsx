@@ -8,6 +8,9 @@ import { AllGamesPage } from './pages/AllGamesPage';
 import { CategoriesOverviewPage } from './pages/CategoriesOverviewPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { GamePlayPage } from './pages/GamePlayPage';
+import { StoriesPage } from './pages/StoriesPage';
+import { StoryViewPage } from './pages/StoryViewPage';
+import { ConsultationPage } from './pages/ConsultationPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { AboutPage } from './pages/AboutPage';
 
@@ -23,6 +26,9 @@ export function App() {
             <Route path="games/:gameId" element={<GamePlayPage />} />
             <Route path="categories" element={<CategoriesOverviewPage />} />
             <Route path="categories/:categoryId" element={<CategoryPage />} />
+            <Route path="stories" element={<StoriesPage />} />
+            <Route path="stories/:storyId" element={<StoryViewPage />} />
+            <Route path="consultation" element={<ConsultationPage />} />
             <Route path="progress" element={<ProgressPage />} />
             <Route path="about" element={<AboutPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />

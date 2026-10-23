@@ -19,10 +19,13 @@ describe('i18n translation completeness', () => {
     });
   });
 
-  it('should have valid non-empty core UI labels', () => {
-    expect(arTranslations.appName).toBe('ستار فل بالعربي');
-    expect(enTranslations.appName).toBe('Starfall Arabic');
+  it('should have valid non-empty core UI labels with TALEEN brand', () => {
+    expect(arTranslations.appName).toContain('تالين');
+    expect(enTranslations.appName).toContain('TALEEN');
     expect(arTranslations.allGames.length).toBeGreaterThan(0);
     expect(enTranslations.allGames.length).toBeGreaterThan(0);
+    expect(arTranslations.stories.length).toBeGreaterThan(0);
+    expect(arTranslations.consultation.length).toBeGreaterThan(0);
+    expect(arTranslations.founderName).toBe('محمد فكري الكفافي');
   });
 });

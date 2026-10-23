@@ -1,40 +1,57 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-import { ShieldCheck, Sparkles, BookOpen, Heart, Brain, Lightbulb, Users, CheckCircle } from 'lucide-react';
+import { sound } from '../utils/audio';
+import {
+  ShieldCheck,
+  Sparkles,
+  BookOpen,
+  Heart,
+  Brain,
+  Lightbulb,
+  Award,
+  CheckCircle,
+  ExternalLink,
+  Stethoscope,
+  ArrowRight,
+  ArrowLeft
+} from 'lucide-react';
 
 export const AboutPage: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
+  const ArrowIcon = language === 'ar' ? ArrowLeft : ArrowRight;
+  const officialPortfolioUrl = 'https://mfekry.vercel.app/';
 
   const principles = [
     {
-      title: language === 'ar' ? 'التعلم القائم على اللعب' : 'Play-Based Learning',
+      title: language === 'ar' ? 'التعلم القائم على اللعب والاستكشاف' : 'Play-Based Discovery',
       desc: language === 'ar'
-        ? 'الألعاب مصممة لتحويل المفاهيم المجردة (الحروف، الأعداد، الأنماط) إلى تجارب تفاعلية مرحة تثير فضول الطفل.'
-        : 'Games transform abstract concepts (letters, numbers, patterns) into joyful tangible interactions that spark curiosity.',
+        ? 'تحويل المفاهيم المجردة (الحروف، الأعداد، الأنماط، العلوم) إلى تجارب تفاعلية مرحة تثير فضول الطفل الفطري وتنمي استيعابه.'
+        : 'Games transform abstract concepts (letters, numbers, patterns, science) into joyful tangible interactions that spark curiosity.',
       icon: Sparkles,
       color: 'text-amber-500 bg-amber-50',
     },
     {
       title: language === 'ar' ? 'التعزيز الإيجابي بدون إحباط' : 'Positive Reinforcement',
       desc: language === 'ar'
-        ? 'لا توجد عقوبات قاسية عند الخطأ؛ بل يتم تقديم تلميحات مشجعة ولطيفة تدعو الطفل لإعادة المحاولة بثقة.'
+        ? 'لا توجد عقوبات قاسية أو شاشات فشل؛ بل يتم تقديم تلميحات مشجعة ولطيفة تدعو الطفل لإعادة المحاولة بثقة واعتزاز.'
         : 'Zero punitive failures; gentle hints and supportive feedback empower children to retry with confidence.',
       icon: Heart,
       color: 'text-rose-500 bg-rose-50',
     },
     {
-      title: language === 'ar' ? 'تنمية الذكاء الشامل' : 'Holistic Cognitive Growth',
+      title: language === 'ar' ? 'تنمية الذكاء الشامل والتواصل' : 'Holistic Cognitive & Speech Growth',
       desc: language === 'ar'
-        ? 'لا تقتصر المنصة على الحفظ، بل تعزز التفكير المنطقي، التمييز البصري، الإدراك المكاني، والذكاء العاطفي.'
-        : 'Goes beyond rote memorization to nurture logical reasoning, visual distinction, spatial skills, and emotional empathy.',
+        ? 'تصميم أنشطة تستهدف التمييز البصري، الإدراك السمعي، التركيز، وتطور النطق والتعبير اللغوي بأسس علمية وتربوية.'
+        : 'Engineered activities targeting visual discrimination, auditory processing, attention, and expressive speech development.',
       icon: Brain,
       color: 'text-sky-500 bg-sky-50',
     },
     {
-      title: language === 'ar' ? 'الخصوصية والأمان التام' : '100% Privacy & Safety',
+      title: language === 'ar' ? 'الخصوصية والأمان التام للطفل' : '100% Privacy & Child Safety',
       desc: language === 'ar'
-        ? 'المنصة خالية من الإعلانات، ولا تتطلب تسجيل حساب، ولا تجمع أي بيانات شخصية عن الطفل أو أسرته.'
-        : 'Zero ads, no account registration required, and zero personal data collection from young children.',
+        ? 'المنصة خالية من أي إعلانات، ولا تتطلب تسجيل حساب، ولا تجمع أي بيانات شخصية عن الطفل أو أسرته على الإطلاق.'
+        : 'Zero advertisements, no account registration required, and absolutely zero personal data collection.',
       icon: ShieldCheck,
       color: 'text-emerald-500 bg-emerald-50',
     },
@@ -42,17 +59,17 @@ export const AboutPage: React.FC = () => {
 
   const parentTips = [
     language === 'ar'
-      ? 'اجلس بجانب طفلك وشجعه على التعبير بصوت عالٍ عما يراه في الشاشة.'
-      : 'Sit alongside your child and encourage them to vocalize what they observe.',
+      ? 'اجلس بجانب طفلك وشجعه على التعبير بصوت عالٍ عما يراه في الشاشة لتطوير مفرداته.'
+      : 'Sit alongside your child and encourage them to vocalize what they observe on screen.',
     language === 'ar'
-      ? 'امدح المحاولة والجهد وليس فقط الإجابة الصحيحة لتعزيز عقلية النمو.'
+      ? 'امدح المحاولة والجهد وليس فقط الإجابة الصحيحة لتعزيز عقلية النمو والفضول.'
       : 'Praise effort and exploration rather than solely correct answers.',
     language === 'ar'
-      ? 'حدد فترات استخدام مريحة (15-20 دقيقة لكل جلسة) حفاظاً على صحة عيني الطفل.'
-      : 'Keep sessions balanced (15-20 minutes) to maintain focus and eye health.',
+      ? 'حدد فترات استخدام متوازنة (15-20 دقيقة لكل جلسة) حفاظاً على صحة عيني الطفل وتركيزه.'
+      : 'Keep sessions balanced (15-20 minutes) to maintain focus and healthy screen habits.',
     language === 'ar'
-      ? 'اربط مفاهيم اللعبة بحياتكم اليومية، مثل عد الفواكه أو ملاحظة فصول السنة أثناء النزهة.'
-      : 'Connect game concepts to daily life, such as counting fruits or discussing the weather.',
+      ? 'اربط مفاهيم الألعاب بالحياة اليومية، مثل عد الفواكه أو ملاحظة فصول السنة أثناء النزهة.'
+      : 'Connect game concepts to daily life, such as counting fruits or discussing the seasons.',
   ];
 
   return (
@@ -61,16 +78,65 @@ export const AboutPage: React.FC = () => {
       <div className="text-center max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 bg-sky-100 px-3.5 py-1 rounded-full mb-3">
           <BookOpen className="w-3.5 h-3.5 text-sky-600" />
-          <span>{language === 'ar' ? 'دليل أولياء الأمور والمعلمين' : 'Guide for Parents & Educators'}</span>
+          <span>{language === 'ar' ? 'رؤيتنا ورسالتنا التربوية' : 'Our Pedagogical Mission'}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-800 mb-2">
-          {language === 'ar' ? 'عن منصة ستار فل بالعربي' : 'About Starfall Arabic'}
+          {language === 'ar' ? 'عن منصة تالين | TALEEN' : 'About TALEEN Platform'}
         </h1>
         <p className="text-sm text-slate-600 font-medium leading-relaxed">
           {language === 'ar'
-            ? 'مبادرة تربوية تقنية لإثراء المحتوى التعليمي الرقمي للأطفال باللغة العربية بجودة عالمية وتجربة مستخدم مخصصة'
-            : 'An educational software initiative empowering digital learning for children in Arabic with world-class pedagogical design'}
+            ? 'منصة عربية تفاعلية تجمع بين الألعاب التعليمية، والقصص المصورة، والأنشطة الإدراكية الهادفة لأطفال مرحلة ما قبل المدرسة والابتدائية'
+            : 'An Arabic interactive educational platform uniting cognitive games, illustrated stories, and early development activities'}
         </p>
+      </div>
+
+      {/* Founder Section */}
+      <div className="bg-gradient-to-br from-white to-sky-50/50 rounded-3xl p-6 sm:p-8 shadow-sm border border-sky-100 flex flex-col md:flex-row items-center gap-6">
+        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center text-5xl shadow-md shrink-0">
+          👨‍⚕️
+        </div>
+
+        <div className="flex-1 text-center md:text-start space-y-2">
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800 bg-sky-100 px-3 py-1 rounded-full">
+            <Award className="w-3.5 h-3.5 text-sky-600" />
+            <span>{language === 'ar' ? 'مؤسس ومصمم المنصة' : 'Platform Founder & Designer'}</span>
+          </div>
+          <h2 className="text-2xl font-black text-slate-800">
+            {language === 'ar' ? 'محمد فكري الكفافي' : 'Mohamed Fekry El-Kafafi'}
+          </h2>
+          <p className="text-sm font-bold text-sky-700">
+            {language === 'ar'
+              ? 'أخصائي التربية الخاصة والتخاطب ومطور حلول تكنولوجيا التعليم الرقمية'
+              : 'Special Education & Speech Therapist | EdTech Solutions Developer'}
+          </p>
+          <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-2xl">
+            {language === 'ar'
+              ? 'انطلقت منصة «تالين» لتكون مساحة تعليمية آمنة ومدروسة تترجم خبرات التخاطب والتربية الخاصة إلى ألعاب ممتعة وقصص تنمي مدارك الطفل اللغوية والإدراكية دون أي ضغوط نفسية أو إعلانات.'
+              : 'Taleen was created as a safe, pedagogically grounded digital space translating clinical speech and special education insights into playful cognitive activities and stories.'}
+          </p>
+
+          <div className="pt-2 flex flex-wrap items-center gap-3 justify-center md:justify-start">
+            <a
+              href={officialPortfolioUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => sound.playClick()}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-all hover:scale-105"
+            >
+              <span>{language === 'ar' ? 'الموقع الشخصي للأخصائي' : 'Specialist Official Website'}</span>
+              <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+            </a>
+
+            <Link
+              to="/consultation"
+              onClick={() => sound.playClick()}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-xs transition-all hover:scale-105"
+            >
+              <Stethoscope className="w-3.5 h-3.5 text-amber-300" />
+              <span>{language === 'ar' ? 'حجز استشارة أو جلسة' : 'Book Consultation'}</span>
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Core Principles */}
@@ -116,7 +182,7 @@ export const AboutPage: React.FC = () => {
         </h3>
         <p className="text-xs sm:text-sm text-slate-500 font-medium mb-6 max-w-xl mx-auto">
           {language === 'ar'
-            ? 'مبنية وفق أحدث معايير هندسة الويب لتوفير سرعة تحميل فائقة وتوافق تام مع مختلف الأجهزة والشاشات'
+            ? 'مبنية وفق أحدث معايير هندسة الويب لتوفير سرعة استجابة فائقة، دعم شاشات اللمس، وتوافق تام عبر الهواتف والأجهزة اللوحية والحواسيب'
             : 'Built with modern web engineering standards for instant loading and full cross-device responsiveness'}
         </p>
         <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold text-slate-700">
