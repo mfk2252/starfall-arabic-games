@@ -108,7 +108,7 @@ export const ConsultationPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-12">
       {/* Hero / Header */}
-      <div className="bg-gradient-to-r from-sky-600 via-sky-700 to-indigo-800 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden text-center sm:text-start">
+      <div className="bg-gradient-to-r from-sky-600 via-sky-700 to-indigo-800 dark:from-slate-900 dark:via-sky-950 dark:to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden text-center sm:text-start transition-colors">
         <div className="absolute top-4 right-8 text-4xl opacity-20 pointer-events-none">⭐</div>
         <div className="absolute bottom-4 left-8 text-5xl opacity-20 pointer-events-none">🌱</div>
 
@@ -128,7 +128,7 @@ export const ConsultationPage: React.FC = () => {
               : 'Book a Consultation with Our Speech & Special Ed Specialist'}
           </h1>
 
-          <p className="text-sm sm:text-base text-sky-100 font-medium leading-relaxed max-w-2xl">
+          <p className="text-sm sm:text-base text-sky-100 dark:text-sky-200 font-medium leading-relaxed max-w-2xl">
             {language === 'ar'
               ? 'تقديم خدمات التشخيص والتقييم، وخطط التدخل المبكر لعلاج تأخر الكلام وصعوبات التواصل للأطفال، بإشراف وتنسيق مباشر مع مؤسس المنصة محمد فكري الكفافي.'
               : 'Direct clinical and developmental consultations, speech evaluations, and early intervention roadmaps supervised directly by platform founder Mohamed Fekry El-Kafafi.'}
@@ -161,25 +161,25 @@ export const ConsultationPage: React.FC = () => {
       </div>
 
       {/* Specialist Bio Card */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 flex flex-col md:flex-row items-center gap-6">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center gap-6 transition-colors">
         <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center text-5xl shadow-md shrink-0">
           👨‍⚕️
         </div>
 
         <div className="flex-1 text-center md:text-start space-y-2">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800 bg-sky-100 px-3 py-1 rounded-full">
-            <Award className="w-3.5 h-3.5 text-sky-600" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800 dark:text-sky-300 bg-sky-100 dark:bg-sky-950/60 px-3 py-1 rounded-full">
+            <Award className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
             <span>{language === 'ar' ? 'مؤسس منصة تالين التعليمية' : 'Founder of Taleen Platform'}</span>
           </div>
-          <h2 className="text-2xl font-black text-slate-800">
+          <h2 className="text-2xl font-black text-slate-800 dark:text-white">
             {language === 'ar' ? 'محمد فكري الكفافي' : 'Mohamed Fekry El-Kafafi'}
           </h2>
-          <p className="text-sm font-bold text-sky-700">
+          <p className="text-sm font-bold text-sky-700 dark:text-sky-400">
             {language === 'ar'
               ? 'أخصائي التربية الخاصة والتخاطب وتطوير الحلول التعليمية للأطفال'
               : 'Special Education & Speech Therapist | EdTech Solutions Developer'}
           </p>
-          <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed max-w-2xl">
             {language === 'ar'
               ? 'خبرة تزيد عن 9 سنوات في تقييم وتشخيص اضطرابات النطق والكلام، تأهيل حالات اضطراب طيف التوحد وتأخر النمو اللغوي، وبناء الأدوات الرقمية والأنشطة التفاعلية الهادفة للطفل العربي.'
               : 'Over 9 years of clinical and educational experience in diagnosing speech impairments, early language delay, autism support, and authoring interactive digital therapy tools for children.'}
@@ -203,10 +203,10 @@ export const ConsultationPage: React.FC = () => {
       {/* Services Grid */}
       <div>
         <div className="text-center max-w-2xl mx-auto mb-8">
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 mb-2">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mb-2">
             {language === 'ar' ? 'المجالات والخدمات الاستشارية' : 'Consultation & Therapy Domains'}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
             {language === 'ar'
               ? 'برامج علمية مدروسة قائمة على الدليل تهدف لتنمية قدرات الطفل اللغوية والإدراكية'
               : 'Evidence-based developmental programs designed to nurture communication and cognitive growth'}
@@ -219,7 +219,7 @@ export const ConsultationPage: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-white rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-100 flex flex-col justify-between transition-all"
+                className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-100 dark:border-slate-800 flex flex-col justify-between transition-all"
               >
                 <div>
                   <div
@@ -227,8 +227,8 @@ export const ConsultationPage: React.FC = () => {
                   >
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-lg font-black text-slate-800 mb-2">{srv.title}</h3>
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  <h3 className="text-lg font-black text-slate-800 dark:text-white mb-2">{srv.title}</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                     {srv.desc}
                   </p>
                 </div>
@@ -239,12 +239,12 @@ export const ConsultationPage: React.FC = () => {
       </div>
 
       {/* Booking Procedure Steps */}
-      <div className="bg-gradient-to-br from-slate-50 to-sky-50/60 rounded-3xl p-6 sm:p-8 border border-sky-100">
+      <div className="bg-gradient-to-br from-slate-50 to-sky-50/60 dark:from-slate-900/40 dark:to-sky-950/20 rounded-3xl p-6 sm:p-8 border border-sky-100 dark:border-slate-800 transition-colors">
         <div className="text-center max-w-xl mx-auto mb-8">
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800 mb-2">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white mb-2">
             {language === 'ar' ? 'كيفية حجز الجلسة أو الاستشارة' : 'How Booking Works'}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
             {language === 'ar'
               ? 'خطوات بسيطة وواضحة لتنسيق الموعد والمتابعة الرسمية'
               : 'Simple steps to schedule your appointment and personalized follow-up'}
@@ -255,20 +255,20 @@ export const ConsultationPage: React.FC = () => {
           {steps.map((st, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl p-5 shadow-xs border border-sky-100 flex flex-col items-center text-center relative"
+              className="bg-white dark:bg-[#0b1329] rounded-2xl p-5 shadow-xs border border-sky-100 dark:border-slate-800 flex flex-col items-center text-center relative transition-colors"
             >
               <div className="w-10 h-10 rounded-full bg-sky-600 text-white font-black flex items-center justify-center text-sm shadow-xs mb-3">
                 {st.number}
               </div>
-              <h4 className="font-black text-base text-slate-800 mb-1.5">{st.title}</h4>
-              <p className="text-xs text-slate-600 leading-relaxed font-medium">{st.desc}</p>
+              <h4 className="font-black text-base text-slate-800 dark:text-white mb-1.5">{st.title}</h4>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{st.desc}</p>
             </div>
           ))}
         </div>
 
         {/* Security & Authenticity notice */}
-        <div className="mt-8 bg-white/90 border border-emerald-200 rounded-2xl p-4 flex items-start gap-3 max-w-2xl mx-auto text-emerald-900 text-xs sm:text-sm">
-          <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+        <div className="mt-8 bg-white/90 dark:bg-slate-900/60 border border-emerald-200 dark:border-emerald-900/60 rounded-2xl p-4 flex items-start gap-3 max-w-2xl mx-auto text-emerald-900 dark:text-emerald-400 text-xs sm:text-sm transition-colors">
+          <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-500 shrink-0 mt-0.5" />
           <p className="leading-relaxed font-semibold">
             {language === 'ar'
               ? 'ملاحظة للأمان والخصوصية: لضمان أمان بيانات أطفالكم وأسركم، لا نجمع أي مدفوعات أو بيانات اتصال حساسة عبر هذا التطبيق. يتم حجز كافة الجلسات وتنسيق المواعيد حصرًا عبر البوابة الشخصية المعتمدة للأخصائي.'

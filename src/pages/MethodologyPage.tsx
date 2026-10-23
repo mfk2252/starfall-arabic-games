@@ -121,7 +121,7 @@ export const MethodologyPage: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row gap-4 items-start"
+                className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row gap-4 items-start transition-colors"
               >
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${pillar.bg} text-white flex items-center justify-center shrink-0 shadow-md`}>
                   <Icon className="w-6 h-6" />
@@ -141,7 +141,7 @@ export const MethodologyPage: React.FC = () => {
       </div>
 
       {/* Target Educational Goals */}
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs space-y-4 transition-colors">
         <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
           <Award className="w-6 h-6 text-sky-500" />
           <span>{language === 'ar' ? 'الأهداف التعليمية المكتسبة' : 'Educational Outcomes'}</span>
