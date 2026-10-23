@@ -14,7 +14,8 @@ import {
   X,
   Trophy,
   Gamepad2,
-  ShieldCheck
+  ShieldCheck,
+  Info
 } from 'lucide-react';
 import { ButterflyIcon } from '../components/common/ButterflyIcon';
 
@@ -342,7 +343,7 @@ export const HomePage: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Action Buttons (Random Game & Stars Counter) */}
+          {/* Quick Action Buttons (Random Game, Stars Counter, and Info Button) */}
           <div className="flex items-center gap-2.5 shrink-0">
             <button
               onClick={handleRandomPlay}
@@ -364,6 +365,16 @@ export const HomePage: React.FC = () => {
               <span className="hidden sm:inline text-xs opacity-90">
                 {language === 'ar' ? 'نجمة' : 'Stars'}
               </span>
+            </Link>
+
+            <Link
+              to="/about"
+              onClick={() => sound.playClick()}
+              className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-md shadow-xs transition-all border border-white/20 hover:scale-110 active:scale-95"
+              title={language === 'ar' ? 'معلومات المطور والمنصة' : 'Developer & Platform Info'}
+              aria-label={language === 'ar' ? 'معلومات المطور والمنصة' : 'Developer & Platform Info'}
+            >
+              <Info className="w-5 h-5" />
             </Link>
           </div>
         </div>

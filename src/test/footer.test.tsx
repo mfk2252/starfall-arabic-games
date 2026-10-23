@@ -41,63 +41,36 @@ const LangSwitcher: React.FC<{ lang: 'ar' | 'en' }> = ({ lang }) => {
   return null;
 };
 
-describe('Footer Redesign Requirements', () => {
-  it('displays ONLY «تالين» in Arabic without English name or subtitle', () => {
+describe('Footer Info Mark Requirements', () => {
+  it('has completely removed the old bulky footer card and redundant buttons', () => {
     const { container } = render(<TestFooterWithLang lang="ar" />);
 
-    const brandElement = container.querySelector('a[aria-label="تالين"]');
-    expect(brandElement).not.toBeNull();
-    expect(brandElement?.textContent).toContain('تالين');
-    expect(brandElement?.textContent).not.toContain('TALEEN');
-
-    expect(container.textContent).not.toContain('منصة تالين التعليمية للأطفال');
-
-    const currentYear = new Date().getFullYear().toString();
-    expect(container.textContent).toContain(`© ${currentYear}`);
+    // Old large card elements must be gone
+    expect(container.textContent).not.toContain('احجز استشارة');
+    expect(container.textContent).not.toContain('احجز جلستك');
+    expect(container.textContent).not.toContain('سياسة الخصوصية');
+    expect(container.textContent).not.toContain('شروط الاستخدام');
+    expect(container.textContent).not.toContain('الموقع الشخصي للمطور');
   });
 
-  it('displays ONLY «TALEEN» in English without Arabic name or subtitle', () => {
+  it('renders the Info mark linking to developer information page (/about) in Arabic', () => {
+    const { container } = render(<TestFooterWithLang lang="ar" />);
+
+    const link = container.querySelector('a[href="/about"]');
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute('aria-label')).toBe('معلومات المطور والمنصة');
+
+    // Contains svg info icon
+    const svgIcon = link?.querySelector('svg');
+    expect(svgIcon).not.toBeNull();
+  });
+
+  it('renders the Info mark with English labels when language is English', () => {
     const { container } = render(<TestFooterWithLang lang="en" />);
 
-    const brandElement = container.querySelector('a[aria-label="TALEEN"]');
-    expect(brandElement).not.toBeNull();
-    expect(brandElement?.textContent).toContain('TALEEN');
-    expect(brandElement?.textContent).not.toContain('تالين');
-
-    expect(container.textContent).not.toContain('منصة تالين التعليمية للأطفال');
-    expect(container.textContent).not.toContain('TALEEN Kids Learning Platform');
-
-    const currentYear = new Date().getFullYear().toString();
-    expect(container.textContent).toContain(`© ${currentYear}`);
-  });
-
-  it('contains the butterfly icon inside the brand logo', () => {
-    const { container } = render(<TestFooterWithLang lang="ar" />);
-    const butterflyElement = container.querySelector('a[aria-label="تالين"] img, a[aria-label="تالين"] svg');
-    expect(butterflyElement).not.toBeNull();
-    expect(container.textContent).not.toContain('⭐');
-  });
-
-  it('contains founder portfolio link, consultation button, and legal links', () => {
-    const { container } = render(<TestFooterWithLang lang="ar" />);
-    
-    const links = Array.from(container.querySelectorAll('a')).map(a => a.getAttribute('href'));
-    expect(links).toContain('https://mfekry.vercel.app/');
-    expect(links).toContain('/about');
-    expect(links).toContain('/privacy');
-    expect(links).toContain('/terms');
-    expect(links).toContain('/consultation');
-
-    // Educational navigation links removed from footer
-    expect(links).not.toContain('/methodology');
-    expect(links).not.toContain('/self-learning');
-  });
-
-  it('contains a single «احجز استشارة» consultation button without duplicate «احجز جلستك»', () => {
-    const { container } = render(<TestFooterWithLang lang="ar" />);
-
-    expect(container.textContent).toContain('احجز استشارة');
-    expect(container.textContent).not.toContain('احجز جلستك');
+    const link = container.querySelector('a[href="/about"]');
+    expect(link).not.toBeNull();
+    expect(link?.getAttribute('aria-label')).toBe('Developer & Platform Info');
   });
 });
 

@@ -26,10 +26,13 @@ export function App() {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
+            {/* Standalone immersive fullscreen game play route (no AppLayout header/footer) */}
+            <Route path="/games/:gameId" element={<GamePlayPage />} />
+
+            {/* Standard platform layout for all other pages */}
             <Route path="/" element={<AppLayout />}>
               <Route index element={<HomePage />} />
               <Route path="games" element={<AllGamesPage />} />
-              <Route path="games/:gameId" element={<GamePlayPage />} />
               <Route path="categories" element={<CategoriesOverviewPage />} />
               <Route path="categories/:categoryId" element={<CategoryPage />} />
               <Route path="stories" element={<StoriesPage />} />

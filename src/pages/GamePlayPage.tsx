@@ -107,7 +107,7 @@ export const GamePlayPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full py-4 flex flex-col items-center flex-1">
+    <div className="min-h-screen w-full flex flex-col items-center justify-start bg-[#f8fafc] dark:bg-[#070e20] text-slate-800 dark:text-slate-100 transition-colors duration-200 py-3 sm:py-6 px-3 sm:px-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {renderGame()}
     </div>
   );
