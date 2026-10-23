@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
 import { CheckCircle2, ArrowRight, ArrowLeft, HelpCircle, Sparkles, Trophy } from 'lucide-react';
 import { RELATIONS_DATA, RelationPair } from '../../data/relationsData';
+import { RoundManager } from '../../utils/roundManager';
 import { useLanguage } from '../../i18n/LanguageContext';
 
 type Difficulty = 'easy' | 'medium' | 'advanced';
@@ -26,6 +27,9 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   const isAr = language === 'ar';
   const BackIcon = dir === 'rtl' ? ArrowRight : ArrowLeft;
 
+  // Persistent round manager across re-renders
+  const roundManagerRef = useRef(new RoundManager<RelationPair>(RELATIONS_DATA, 40));
+
   const [game, setGame] = useState<GameState>({
     status: 'menu',
     difficulty: null,
@@ -38,30 +42,18 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
     isProcessing: false,
   });
 
-  const shuffle = <T,>(array: T[]): T[] => {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
   const startNewGame = (diff: Difficulty) => {
     sound.playClick();
     
-    // Filter by difficulty
-    let pool: RelationPair[] = [];
-    if (diff === 'easy') {
-      pool = RELATIONS_DATA.filter(r => r.difficulty === 'easy');
-    } else if (diff === 'medium') {
-      pool = RELATIONS_DATA.filter(r => r.difficulty === 'easy' || r.difficulty === 'medium');
-    } else {
-      pool = RELATIONS_DATA; // All for advanced
-    }
-
+    // Filter by difficulty using RoundManager
     const count = diff === 'easy' ? 5 : diff === 'medium' ? 6 : 8;
-    const selected = shuffle(pool).slice(0, count);
+    const filterFn = (r: RelationPair) => {
+      if (diff === 'easy') return r.difficulty === 'easy';
+      if (diff === 'medium') return r.difficulty === 'easy' || r.difficulty === 'medium';
+      return true;
+    };
+
+    const selected = roundManagerRef.current.getNextRoundItems(count, filterFn);
 
     setGame({
       status: 'playing',
@@ -85,13 +77,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
       return;
     }
 
-    setGame(prev => {
-      const newState = { ...prev, selectedLeft: id };
-      if (newState.selectedRight) {
-        // Logic for evaluateMatch moved inside to avoid stale closure if needed or called after
-      }
-      return newState;
-    });
+    setGame(prev => ({ ...prev, selectedLeft: id }));
   };
 
   const handleSelectRight = (id: string) => {
@@ -156,8 +142,8 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   }, [game.selectedLeft, game.selectedRight, game.isProcessing, game.matchedIds, game.currentPairs, game.score, isAr]);
 
   // Shuffled columns for rendering
-  const leftColumn = useMemo(() => shuffle(game.currentPairs), [game.currentPairs]);
-  const rightColumn = useMemo(() => shuffle(game.currentPairs), [game.currentPairs]);
+  const leftColumn = useMemo(() => roundManagerRef.current.shuffle(game.currentPairs), [game.currentPairs]);
+  const rightColumn = useMemo(() => roundManagerRef.current.shuffle(game.currentPairs), [game.currentPairs]);
 
   // --------------------------------------------------------------------------
   // UI - MENU
@@ -184,28 +170,29 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
             <Sparkles className="w-12 h-12 text-sky-600 animate-pulse" />
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-white">
-            {isAr ? 'تحدي الربط المنطقي' : 'Logic Matching Challenge'}
+            {isAr ? 'تحدي الربط المنطقي والعلاقات' : 'Logic & Relations Matching'}
           </h1>
           <p className="text-base text-slate-600 dark:text-slate-400 font-medium max-w-lg mx-auto leading-relaxed">
             {isAr 
-              ? 'ساعد في ربط الأشياء التي تعمل معاً في حياتنا اليومية. اختر مستوى الصعوبة وابدأ المتعة!'
-              : 'Help pair objects that work together in our daily lives. Choose a level and start the fun!'}
+              ? 'أكثر من ١٠٠ علاقة تعليمية متنوعة! طابق بين الأشياء المترابطة باختيار المستوى المناسب.'
+              : 'Over 100 educational relationships! Match related concepts by picking a level.'}
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full max-w-3xl">
           {[
-            { id: 'easy', label: isAr ? 'سهل' : 'Easy', icon: '🐣', color: 'from-emerald-400 to-teal-600' },
-            { id: 'medium', label: isAr ? 'متوسط' : 'Medium', icon: '🚀', color: 'from-sky-400 to-blue-600' },
-            { id: 'advanced', label: isAr ? 'متقدم' : 'Advanced', icon: '🧠', color: 'from-purple-500 to-indigo-700' },
+            { id: 'easy', label: isAr ? 'سهل' : 'Easy', sublabel: isAr ? '٥ أزواج بسيطة' : '5 Easy Pairs', icon: '🐣', color: 'from-emerald-400 to-teal-600' },
+            { id: 'medium', label: isAr ? 'متوسط' : 'Medium', sublabel: isAr ? '٦ أزواج متنوعة' : '6 Fun Pairs', icon: '🚀', color: 'from-sky-400 to-blue-600' },
+            { id: 'advanced', label: isAr ? 'متقدم' : 'Advanced', sublabel: isAr ? '٨ أزواج ذكية' : '8 Smart Pairs', icon: '🧠', color: 'from-purple-500 to-indigo-700' },
           ].map((lvl) => (
             <button
               key={lvl.id}
               onClick={() => startNewGame(lvl.id as Difficulty)}
-              className={`p-6 rounded-3xl bg-gradient-to-br ${lvl.color} text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105 active:scale-95 flex flex-col items-center gap-3 cursor-pointer group`}
+              className={`p-6 rounded-3xl bg-gradient-to-br ${lvl.color} text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-105 active:scale-95 flex flex-col items-center gap-2 cursor-pointer group select-none`}
             >
               <span className="text-5xl group-hover:animate-bounce">{lvl.icon}</span>
-              <span className="text-xl font-black">{lvl.label}</span>
+              <span className="text-2xl font-black">{lvl.label}</span>
+              <span className="text-xs text-white/90 font-semibold">{lvl.sublabel}</span>
             </button>
           ))}
         </div>
@@ -244,14 +231,14 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         </div>
 
         {/* Two Matching Columns */}
-        <div className="grid grid-cols-2 gap-6 sm:gap-12 w-full relative">
+        <div className="grid grid-cols-2 gap-4 sm:gap-10 w-full relative">
           {/* Connector Decoration (Desktop only) */}
-          <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10">
+          <div className="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none">
             <Sparkles className="w-32 h-32 text-sky-500" />
           </div>
 
           {/* Left Column (Items A) */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3.5">
             <div className="flex items-center justify-center gap-2 mb-2">
               <HelpCircle className="w-4 h-4 text-slate-400" />
               <h3 className="font-black text-slate-500 text-xs sm:text-sm uppercase tracking-wider">
@@ -266,7 +253,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
                   key={`left-${rel.id}`}
                   onClick={() => handleSelectLeft(rel.id)}
                   disabled={isMatched || game.isProcessing}
-                  className={`relative p-4 sm:p-5 rounded-[1.5rem] flex flex-col sm:flex-row items-center gap-3 transition-all transform duration-300 select-none border-4 ${
+                  className={`relative p-4 sm:p-5 rounded-[1.5rem] flex flex-col sm:flex-row items-center gap-3 transition-all transform duration-200 select-none border-4 ${
                     isMatched
                       ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-400 opacity-60'
                       : isSelected
@@ -291,7 +278,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
           </div>
 
           {/* Right Column (Items B) */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3.5">
             <div className="flex items-center justify-center gap-2 mb-2">
               <h3 className="font-black text-slate-500 text-xs sm:text-sm uppercase tracking-wider">
                 {isAr ? 'المجموعة الثانية' : 'Group B'}
@@ -306,7 +293,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
                   key={`right-${rel.id}`}
                   onClick={() => handleSelectRight(rel.id)}
                   disabled={isMatched || game.isProcessing}
-                  className={`relative p-4 sm:p-5 rounded-[1.5rem] flex flex-col sm:flex-row-reverse items-center gap-3 transition-all transform duration-300 select-none border-4 ${
+                  className={`relative p-4 sm:p-5 rounded-[1.5rem] flex flex-col sm:flex-row-reverse items-center gap-3 transition-all transform duration-200 select-none border-4 ${
                     isMatched
                       ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-400 opacity-60'
                       : isSelected
@@ -332,7 +319,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         </div>
 
         {/* Progress Summary */}
-        <div className="mt-12 w-full border-t border-slate-100 dark:border-slate-800 pt-6">
+        <div className="mt-10 sm:mt-12 w-full border-t border-slate-100 dark:border-slate-800 pt-6">
           <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-slate-500 mb-4 px-2">
             <div className="flex items-center gap-2">
               <Trophy className="w-4 h-4 text-amber-500" />
@@ -340,10 +327,10 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
             </div>
             <span>{game.matchedIds.length} / {game.currentPairs.length}</span>
           </div>
-          <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden shadow-inner">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 h-3.5 rounded-full overflow-hidden shadow-inner">
             <div 
               className="h-full bg-gradient-to-r from-sky-400 to-indigo-500 transition-all duration-500 ease-out"
-              style={{ width: `${(game.matchedIds.length / game.currentPairs.length) * 100}%` }}
+              style={{ width: `${(game.matchedIds.length / (game.currentPairs.length || 1)) * 100}%` }}
             />
           </div>
         </div>

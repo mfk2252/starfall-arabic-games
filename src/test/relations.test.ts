@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { RELATIONS_DATA } from '../data/relationsData';
 
 describe('Relations Game Data & Logic', () => {
-  it('should have at least 50 relations', () => {
-    expect(RELATIONS_DATA.length).toBeGreaterThanOrEqual(50);
+  it('should have at least 100 relations', () => {
+    expect(RELATIONS_DATA.length).toBeGreaterThanOrEqual(100);
   });
 
   it('should have unique IDs for all relations', () => {
@@ -12,13 +12,13 @@ describe('Relations Game Data & Logic', () => {
     expect(uniqueIds.size).toBe(ids.length);
   });
 
-  it('should have at least 100 unique icons across all items', () => {
+  it('should have at least 150 unique icons across all items', () => {
     const icons = new Set<string>();
     RELATIONS_DATA.forEach(r => {
       icons.add(r.itemA.icon);
       icons.add(r.itemB.icon);
     });
-    expect(icons.size).toBeGreaterThanOrEqual(100);
+    expect(icons.size).toBeGreaterThanOrEqual(150);
   });
 
   it('should have both Arabic and English names/explanations for all relations', () => {

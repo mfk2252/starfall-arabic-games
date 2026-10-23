@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
 import { CheckCircle2, ArrowRight, ArrowLeft, HelpCircle, Sparkles, Trophy } from 'lucide-react';
 import { OPPOSITES_DATA, OppositePair, OppositeDifficulty } from '../../data/oppositesData';
+import { RoundManager } from '../../utils/roundManager';
 import { useLanguage } from '../../i18n/LanguageContext';
 
 interface GameState {
@@ -24,6 +25,9 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   const isAr = language === 'ar';
   const BackIcon = dir === 'rtl' ? ArrowRight : ArrowLeft;
 
+  // Persistent round manager across re-renders
+  const roundManagerRef = useRef(new RoundManager<OppositePair>(OPPOSITES_DATA, 50));
+
   const [game, setGame] = useState<GameState>({
     status: 'menu',
     difficulty: null,
@@ -36,30 +40,18 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
     isProcessing: false,
   });
 
-  const shuffle = <T,>(array: T[]): T[] => {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
-
   const startNewGame = (diff: OppositeDifficulty) => {
     sound.playClick();
 
-    // Filter by difficulty across the entire 125-pair dataset
-    let pool: OppositePair[] = [];
-    if (diff === 'easy') {
-      pool = OPPOSITES_DATA.filter((p) => p.difficulty === 'easy');
-    } else if (diff === 'medium') {
-      pool = OPPOSITES_DATA.filter((p) => p.difficulty === 'easy' || p.difficulty === 'medium');
-    } else {
-      pool = OPPOSITES_DATA; // All for advanced
-    }
-
+    // Filter by difficulty across the entire 125-pair dataset using RoundManager
     const count = diff === 'easy' ? 4 : diff === 'medium' ? 6 : 8;
-    const selected = shuffle(pool).slice(0, count);
+    const filterFn = (p: OppositePair) => {
+      if (diff === 'easy') return p.difficulty === 'easy';
+      if (diff === 'medium') return p.difficulty === 'easy' || p.difficulty === 'medium';
+      return true;
+    };
+
+    const selected = roundManagerRef.current.getNextRoundItems(count, filterFn);
 
     setGame({
       status: 'playing',
@@ -158,8 +150,8 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   ]);
 
   // Shuffled columns for rendering
-  const leftColumn = useMemo(() => shuffle(game.currentPairs), [game.currentPairs]);
-  const rightColumn = useMemo(() => shuffle(game.currentPairs), [game.currentPairs]);
+  const leftColumn = useMemo(() => roundManagerRef.current.shuffle(game.currentPairs), [game.currentPairs]);
+  const rightColumn = useMemo(() => roundManagerRef.current.shuffle(game.currentPairs), [game.currentPairs]);
 
   // --------------------------------------------------------------------------
   // UI - MENU (Child-friendly level selection starting from 4 years old)
