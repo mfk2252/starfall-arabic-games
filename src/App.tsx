@@ -16,6 +16,8 @@ import { ProgressPage } from './pages/ProgressPage';
 import { AboutPage } from './pages/AboutPage';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { TermsPage } from './pages/TermsPage';
+import { MethodologyPage } from './pages/MethodologyPage';
+import { SelfLearningPage } from './pages/SelfLearningPage';
 
 export function App() {
   return (
@@ -25,24 +27,26 @@ export function App() {
           <ScrollToTop />
           <Routes>
             <Route path="/" element={<AppLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="games" element={<AllGamesPage />} />
-            <Route path="games/:gameId" element={<GamePlayPage />} />
-            <Route path="categories" element={<CategoriesOverviewPage />} />
-            <Route path="categories/:categoryId" element={<CategoryPage />} />
-            <Route path="stories" element={<StoriesPage />} />
-            <Route path="stories/:storyId" element={<StoryViewPage />} />
-            <Route path="consultation" element={<ConsultationPage />} />
-            <Route path="progress" element={<ProgressPage />} />
-            <Route path="about" element={<AboutPage />} />
-            <Route path="privacy" element={<PrivacyPolicyPage />} />
-            <Route path="terms" element={<TermsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </LanguageProvider>
-  </ThemeProvider>
+              <Route index element={<HomePage />} />
+              <Route path="games" element={<AllGamesPage />} />
+              <Route path="games/:gameId" element={<GamePlayPage />} />
+              <Route path="categories" element={<CategoriesOverviewPage />} />
+              <Route path="categories/:categoryId" element={<CategoryPage />} />
+              <Route path="stories" element={<StoriesPage />} />
+              <Route path="stories/:storyId" element={<StoryViewPage />} />
+              <Route path="consultation" element={<ConsultationPage />} />
+              <Route path="progress" element={<ProgressPage />} />
+              <Route path="about" element={<AboutPage />} />
+              <Route path="privacy" element={<PrivacyPolicyPage />} />
+              <Route path="terms" element={<TermsPage />} />
+              <Route path="methodology" element={<MethodologyPage />} />
+              <Route path="self-learning" element={<SelfLearningPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

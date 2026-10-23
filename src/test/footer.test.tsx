@@ -78,7 +78,7 @@ describe('Footer Redesign Requirements', () => {
     expect(container.textContent).not.toContain('⭐');
   });
 
-  it('contains founder portfolio link and legal links', () => {
+  it('contains founder portfolio link, consultation button, and legal links', () => {
     const { container } = render(<TestFooterWithLang lang="ar" />);
     
     const links = Array.from(container.querySelectorAll('a')).map(a => a.getAttribute('href'));
@@ -87,13 +87,17 @@ describe('Footer Redesign Requirements', () => {
     expect(links).toContain('/privacy');
     expect(links).toContain('/terms');
     expect(links).toContain('/consultation');
+
+    // Educational navigation links removed from footer
+    expect(links).not.toContain('/methodology');
+    expect(links).not.toContain('/self-learning');
   });
 
-  it('contains both «احجز استشارة» and «احجز جلستك» action buttons in footer', () => {
+  it('contains a single «احجز استشارة» consultation button without duplicate «احجز جلستك»', () => {
     const { container } = render(<TestFooterWithLang lang="ar" />);
 
-    expect(container.textContent).toContain('احجز جلستك');
     expect(container.textContent).toContain('احجز استشارة');
+    expect(container.textContent).not.toContain('احجز جلستك');
   });
 });
 

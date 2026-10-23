@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
     }
   };
 
-  // Essential primary navigation links requested by the user
+  // Essential primary navigation links
   const navLinks = [
     {
       to: '/',
@@ -68,8 +68,8 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0b1329]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0b1329]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 transition-colors duration-200 w-full">
+      <div className="max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 xl:px-10">
         <div className="flex items-center justify-between h-20">
           {/* Brand Logo: Butterfly Icon + Single Name Only */}
           <Link
@@ -78,18 +78,18 @@ export const Navbar: React.FC = () => {
             className="flex items-center gap-2.5 group select-none shrink-0"
             aria-label={brandName}
           >
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-indigo-500 p-1 flex items-center justify-center shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform duration-200">
-              <ButterflyIcon className="w-8 h-8 rounded-xl object-contain" />
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-indigo-500 p-1 flex items-center justify-center shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform duration-200">
+              <ButterflyIcon className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl object-contain" />
             </div>
             <span className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               {brandName}
             </span>
           </Link>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links (Visible on XL screens to prevent wrap/clipping on 13" laptops) */}
           <nav
             aria-label={language === 'ar' ? 'التنقل الرئيسي' : 'Main Navigation'}
-            className="hidden lg:flex items-center gap-1 xl:gap-2"
+            className="hidden xl:flex items-center gap-1.5"
           >
             {navLinks.map((link) => {
               const isActive = location.pathname === link.to;
@@ -99,7 +99,7 @@ export const Navbar: React.FC = () => {
                   key={link.to}
                   to={link.to}
                   onClick={() => sound.playClick()}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-sm transition-all ${
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
                       ? 'bg-sky-50 text-sky-700 dark:bg-sky-950/70 dark:text-sky-300 shadow-xs border border-sky-200/80 dark:border-sky-800'
                       : 'text-slate-600 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-slate-100/70 dark:hover:bg-slate-800/60'
@@ -113,7 +113,7 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Controls: Dark/Light Mode, Language Switcher, Sound & Mobile Menu */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             {/* Dark / Light Mode Toggle Pill */}
             <button
               onClick={() => {
@@ -144,7 +144,7 @@ export const Navbar: React.FC = () => {
                 sound.playClick();
                 toggleLanguage();
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer shadow-xs"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors cursor-pointer shadow-xs"
               title={language === 'ar' ? 'Switch to English' : 'التحويل إلى العربية'}
               aria-label="Toggle language"
             >
@@ -167,10 +167,10 @@ export const Navbar: React.FC = () => {
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
             </button>
 
-            {/* Mobile menu trigger */}
+            {/* Mobile / Compact menu trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="xl:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               aria-label="Toggle mobile menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -181,7 +181,7 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-[#0b1329]/98 px-4 pt-3 pb-5 space-y-1.5 shadow-xl animate-pop-in">
+        <div className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-[#0b1329]/98 px-4 pt-3 pb-5 space-y-1.5 shadow-xl animate-pop-in">
           {navLinks.map((link) => {
             const isActive = location.pathname === link.to;
             const Icon = link.icon;
