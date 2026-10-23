@@ -81,28 +81,58 @@ export const HomePage: React.FC = () => {
       isNew: false,
     }));
 
-    return [...gameItems, ...storyItems];
+    const groupedStoriesItem = {
+      id: 'stories-group',
+      type: 'game' as const,
+      title: language === 'ar' ? 'قصص تالين' : 'Taleen Stories',
+      description: language === 'ar' ? 'مجموعة من القصص التفاعلية الممتعة' : 'Collection of interactive fun stories',
+      icon: '📖',
+      gradient: 'from-[#f59e0b] to-[#d97706]',
+      category: 'stories' as const,
+      minAge: 3,
+      maxAge: 8,
+      ageRange: language === 'ar' ? '٣-٨ سنوات' : '3-8 years',
+      link: '/stories',
+      stars: 0,
+      played: false,
+      featured: true,
+      isNew: false,
+    };
+
+    return [...gameItems, groupedStoriesItem, ...storyItems];
   }, [language, progress]);
 
   // Filtered items based on search and selected categories
   const filteredActivities = useMemo(() => {
     return allActivities.filter((item) => {
-      // Category filter
-      if (categoryFilter !== 'all') {
-        if (categoryFilter === 'stories' && item.type !== 'story') return false;
-        if (categoryFilter === 'letters' && !['letters', 'words'].includes(item.category)) return false;
-        if (categoryFilter === 'numbers' && item.category !== 'numbers') return false;
-        if (categoryFilter === 'visual' && item.category !== 'visual') return false;
-        if (categoryFilter === 'logic' && item.category !== 'logic') return false;
-        if (categoryFilter === 'science' && item.category !== 'science') return false;
+      const isSearching = !!searchQuery.trim();
+
+      // 1. Logic for grouping stories in 'All' view
+      if (categoryFilter === 'all') {
+        // If not searching, hide individual stories and show group icon
+        if (!isSearching && item.type === 'story') return false;
+        // If searching, hide the group icon to show results directly
+        if (isSearching && item.id === 'stories-group') return false;
+      } 
+      
+      // 2. Logic for 'Stories' tab
+      if (categoryFilter === 'stories') {
+        // Show individual stories, hide everything else (including group icon)
+        if (item.category !== 'stories' || item.id === 'stories-group') return false;
       }
 
-      // Age filter
+      // 3. Category filter for other tabs
+      if (categoryFilter !== 'all' && categoryFilter !== 'stories') {
+        if (categoryFilter === 'letters' && !['letters', 'words'].includes(item.category)) return false;
+        if (categoryFilter !== 'letters' && item.category !== categoryFilter) return false;
+      }
+
+      // 4. Age filter
       if (ageFilter === 'toddler' && item.minAge > 3) return false;
       if (ageFilter === 'preschool' && item.maxAge < 5) return false;
 
-      // Search query
-      if (searchQuery.trim()) {
+      // 5. Search query
+      if (isSearching) {
         const query = searchQuery.toLowerCase().trim();
         const matchesTitle = item.title.toLowerCase().includes(query);
         const matchesDesc = item.description.toLowerCase().includes(query);

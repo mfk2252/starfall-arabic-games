@@ -19,7 +19,8 @@ export type GameId =
   | 'emotions-kids'
   | 'math-game'
   | 'word-builder'
-  | 'xo-game';
+  | 'xo-game'
+  | 'shadow-game';
 
 export type GameCategory =
   | 'numbers'

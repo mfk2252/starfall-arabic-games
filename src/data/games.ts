@@ -364,8 +364,8 @@ export const GAMES_LIST: GameInfo[] = [
   // 21. XO Educational Game
   {
     id: 'xo-game',
-    title: 'تحدي إكس أو التعليمي',
-    titleEn: 'Educational XO Challenge',
+    title: 'XO',
+    titleEn: 'XO',
     description: 'لعبة الذكاء الشهيرة باستخدام الحروف والأرقام لتعزيز التركيز والمنافسة',
     descriptionEn: 'The famous strategy game using letters and numbers to boost focus and fun',
     icon: '❌⭕',
@@ -381,5 +381,26 @@ export const GAMES_LIST: GameInfo[] = [
     featured: true,
     skills: ['التفكير الاستراتيجي', 'التعرف على الرموز', 'التركيز العالي'],
     skillsEn: ['Strategic thinking', 'Symbol recognition', 'High focus'],
+  },
+  // 22. Shadow Game
+  {
+    id: 'shadow-game',
+    title: 'اكتشف الظل',
+    titleEn: 'Discover the Shadow',
+    description: 'لعبة مطابقة ممتعة تعتمد على التعرف على أشكال وصور الحيوانات والأشياء من خلال ظلالها',
+    descriptionEn: 'A fun matching game based on identifying animal and object shapes from their shadows',
+    icon: '👤',
+    gradient: 'from-[#475569] to-[#1e293b]',
+    accentColor: '#475569',
+    category: 'visual',
+    ageRange: '٣-٧ سنوات',
+    ageRangeEn: '3-7 years',
+    minAge: 3,
+    maxAge: 7,
+    difficulty: 'easy',
+    isNew: true,
+    featured: true,
+    skills: ['التمييز البصري', 'إدراك الأشكال', 'التركيز والانتباه'],
+    skillsEn: ['Visual discrimination', 'Shape perception', 'Focus & attention'],
   },
 ];

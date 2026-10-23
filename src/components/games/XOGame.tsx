@@ -180,7 +180,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
             <span>{isAr ? 'الرجوع للقائمة' : 'Back to Games'}</span>
           </button>
           <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-4 py-2 rounded-full font-black text-sm shadow-sm">
-            {isAr ? 'تحدي إكس أو التعليمي' : 'XO Challenge'}
+            XO
           </div>
         </div>
 
@@ -246,16 +246,21 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
 
   // Win View
   if (gameState === 'win') {
+    const isHumanWinner = winner === 'P1' || (gameMode === 'PvP' && winner === 'P2');
+    const isDraw = winner === 'Draw';
+
     return (
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center py-10 px-4 text-center space-y-6">
-        <WinCelebration score={winner === 'P1' || (gameMode === 'PvP' && winner === 'P2') ? 50 : 10} onRestart={resetGame} onGoHome={() => setGameState('menu')} />
+        {isHumanWinner && (
+          <WinCelebration score={50} onRestart={resetGame} onGoHome={() => setGameState('menu')} />
+        )}
         <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
-          <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-orange-600 flex items-center justify-center text-6xl shadow-md animate-bounce">
-            {winner === 'Draw' ? '🤝' : <Trophy className="w-12 h-12 text-white" />}
+          <div className={`w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr ${isDraw ? 'from-slate-400 to-slate-500' : 'from-amber-400 to-orange-600'} flex items-center justify-center text-6xl shadow-md animate-bounce`}>
+            {isDraw ? '🤝' : <Trophy className="w-12 h-12 text-white" />}
           </div>
           <h2 className="text-3xl font-black text-slate-800 dark:text-white">
-            {winner === 'Draw' 
-              ? (isAr ? 'تعادل رائع!' : 'It is a Draw!') 
+            {isDraw 
+              ? (isAr ? 'تعادل! حاول مرة أخرى' : 'It is a Draw!') 
               : (winner === 'P1' 
                   ? (isAr ? 'فوز مستحق للاعب الأول!' : 'Player 1 Wins!') 
                   : (gameMode === 'PvE' 
@@ -263,9 +268,9 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
                       : (isAr ? 'فوز مستحق للاعب الثاني!' : 'Player 2 Wins!')))}
           </h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-            <button onClick={resetGame} className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-orange-600 text-white px-8 py-3 rounded-2xl font-black text-sm shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2">
+            <button onClick={resetGame} className={`w-full sm:w-auto ${isDraw ? 'bg-slate-600' : 'bg-gradient-to-r from-amber-500 to-orange-600'} text-white px-8 py-3 rounded-2xl font-black text-sm shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2`}>
               <RotateCcw className="w-4 h-4" />
-              <span>{isAr ? 'إعادة اللعب' : 'Play Again'}</span>
+              <span>{isAr ? 'لعب مرة أخرى' : 'Play Again'}</span>
             </button>
             <button onClick={() => setGameState('menu')} className="w-full sm:w-auto bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-6 py-3 rounded-2xl font-black text-sm">
               {isAr ? 'تغيير النمط' : 'Change Mode'}
