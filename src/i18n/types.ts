@@ -45,6 +45,11 @@ export interface Translations {
   safeChildDesc: string;
   footerRights: string;
   footerSubtitle: string;
+  privacyPolicy: string;
+  termsOfUse: string;
+  contactUs: string;
+  allRightsReserved: string;
+  officialSite: string;
   categoryNames: Record<string, string>;
   categoryDescriptions: Record<string, string>;
 }

@@ -45,6 +45,11 @@ export const enTranslations: Translations = {
   safeChildDesc: 'Tailored for young children with zero ads or distracting links, focusing on active play-based learning.',
   footerRights: 'Taleen Educational Platform — All Rights Reserved',
   footerSubtitle: 'Arabic interactive platform designed to nurture language, cognitive, and early math skills in children',
+  privacyPolicy: 'Privacy Policy',
+  termsOfUse: 'Terms of Use',
+  contactUs: 'Contact Us',
+  allRightsReserved: 'All Rights Reserved',
+  officialSite: 'Founder Official Site',
   categoryNames: {
     numbers: 'Numbers & Math',
     letters: 'Letters & Phonics',

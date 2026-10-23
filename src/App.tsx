@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
+import { ThemeProvider } from './theme/ThemeContext';
 import { AppLayout } from './components/layout/AppLayout';
 import { ScrollToTop } from './components/common/ScrollToTop';
 import { HomePage } from './pages/HomePage';
@@ -13,14 +14,17 @@ import { StoryViewPage } from './pages/StoryViewPage';
 import { ConsultationPage } from './pages/ConsultationPage';
 import { ProgressPage } from './pages/ProgressPage';
 import { AboutPage } from './pages/AboutPage';
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
+import { TermsPage } from './pages/TermsPage';
 
 export function App() {
   return (
-    <LanguageProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<AppLayout />}>
+    <ThemeProvider>
+      <LanguageProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            <Route path="/" element={<AppLayout />}>
             <Route index element={<HomePage />} />
             <Route path="games" element={<AllGamesPage />} />
             <Route path="games/:gameId" element={<GamePlayPage />} />
@@ -31,11 +35,14 @@ export function App() {
             <Route path="consultation" element={<ConsultationPage />} />
             <Route path="progress" element={<ProgressPage />} />
             <Route path="about" element={<AboutPage />} />
+            <Route path="privacy" element={<PrivacyPolicyPage />} />
+            <Route path="terms" element={<TermsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
       </BrowserRouter>
     </LanguageProvider>
+  </ThemeProvider>
   );
 }
 
