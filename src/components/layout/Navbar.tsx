@@ -82,7 +82,7 @@ export const Navbar: React.FC = () => {
             <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-sky-400 via-sky-500 to-indigo-500 p-1 flex items-center justify-center shadow-md shadow-sky-500/20 group-hover:scale-105 transition-transform duration-200">
               <ButterflyIcon className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl object-contain" />
             </div>
-            <span className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+            <span className="font-heading text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
               {brandName}
             </span>
           </Link>

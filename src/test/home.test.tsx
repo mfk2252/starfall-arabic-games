@@ -29,9 +29,9 @@ describe('HomePage App Launcher Requirements', () => {
     const arabicLettersLink = container.querySelector('a[href="/games/arabic-letters"]');
     expect(arabicLettersLink).not.toBeNull();
 
-    // Check for story direct link
-    const storyLink = container.querySelector('a[href="/stories/tortoise-and-hare"]');
-    expect(storyLink).not.toBeNull();
+    // Check for story group link (since stories are grouped in 'all' view)
+    const storiesGroupLink = container.querySelector('a[href="/stories"]');
+    expect(storiesGroupLink).not.toBeNull();
   });
 
   it('provides a search bar that filters activities dynamically', () => {

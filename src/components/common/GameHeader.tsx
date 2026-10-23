@@ -91,7 +91,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         <div className="relative z-10 flex flex-col items-center justify-center">
           <div className="flex items-center justify-center gap-3 mb-1">
             <span className="text-3xl sm:text-4xl filter drop-shadow">{icon}</span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight drop-shadow-xs">
+            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight drop-shadow-xs">
               {title}
             </h1>
           </div>

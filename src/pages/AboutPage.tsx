@@ -175,25 +175,6 @@ export const AboutPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Technical Specifications */}
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 dark:border-slate-800 text-center transition-colors">
-        <h3 className="text-lg font-black text-slate-800 dark:text-white mb-2">
-          {language === 'ar' ? 'الهندسة التقنية للمنصة' : 'Technical Specifications'}
-        </h3>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mb-6 max-w-xl mx-auto">
-          {language === 'ar'
-            ? 'مبنية وفق أحدث معايير هندسة الويب لتوفير سرعة استجابة فائقة، دعم شاشات اللمس، وتوافق تام عبر الهواتف والأجهزة اللوحية والحواسيب'
-            : 'Built with modern web engineering standards for instant loading and full cross-device responsiveness'}
-        </p>
-        <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
-          <span className="bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">⚛️ React 19</span>
-          <span className="bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">🔷 TypeScript</span>
-          <span className="bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">⚡ Vite</span>
-          <span className="bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">🎨 Tailwind CSS v4</span>
-          <span className="bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">🧭 React Router v7</span>
-          <span className="bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700">🧪 Vitest</span>
-        </div>
-      </div>
     </div>
   );
 };
