@@ -16,7 +16,8 @@ export type GameId =
   | 'animal-habitats'
   | 'counting-compare'
   | 'color-shape-sorter'
-  | 'emotions-kids';
+  | 'emotions-kids'
+  | 'math-game';
 
 export type GameCategory =
   | 'numbers'

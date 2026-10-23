@@ -15,7 +15,7 @@ import { ImagesGame } from '../components/games/ImagesGame';
 import { RelationsGame } from '../components/games/RelationsGame';
 import { OppositesGame } from '../components/games/OppositesGame';
 import { Puzzle2Game } from '../components/games/Puzzle2Game';
-import { Puzzle4Game } from '../components/games/Puzzle4Game';
+import { PuzzleGame } from '../components/games/PuzzleGame';
 import { SeasonsGame } from '../components/games/SeasonsGame';
 import { DayNightGame } from '../components/games/DayNightGame';
 
@@ -26,6 +26,7 @@ import { AnimalHabitatsGame } from '../components/games/AnimalHabitatsGame';
 import { CountingCompareGame } from '../components/games/CountingCompareGame';
 import { ColorShapeSorterGame } from '../components/games/ColorShapeSorterGame';
 import { EmotionsKidsGame } from '../components/games/EmotionsKidsGame';
+import { MathGame } from '../components/games/MathGame';
 
 export const GamePlayPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -62,7 +63,7 @@ export const GamePlayPage: React.FC = () => {
       case 'puzzle-2':
         return <Puzzle2Game onGoHome={handleGoHome} />;
       case 'puzzle-4':
-        return <Puzzle4Game onGoHome={handleGoHome} />;
+        return <PuzzleGame onGoHome={handleGoHome} />;
       case 'seasons':
         return <SeasonsGame onGoHome={handleGoHome} />;
       case 'day-night':
@@ -79,6 +80,8 @@ export const GamePlayPage: React.FC = () => {
         return <ColorShapeSorterGame onGoHome={handleGoHome} />;
       case 'emotions-kids':
         return <EmotionsKidsGame onGoHome={handleGoHome} />;
+      case 'math-game':
+        return <MathGame onGoHome={handleGoHome} />;
       default:
         return (
           <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#0b1329] rounded-3xl p-8 text-center shadow-lg border border-slate-100 dark:border-slate-800">
