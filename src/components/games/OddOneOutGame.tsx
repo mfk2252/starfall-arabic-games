@@ -72,13 +72,13 @@ export const OddOneOutGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         badgeText={language === 'ar' ? `سؤال ${currentIndex + 1} من ${ODD_ONE_OUT_QUESTIONS.length}` : `Question ${currentIndex + 1} of ${ODD_ONE_OUT_QUESTIONS.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-amber-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-amber-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Question Title */}
         <div className="text-center mb-6 w-full">
-          <span className="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-1">
+          <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block mb-1">
             {language === 'ar' ? 'دقة الملاحظة والتصنيف' : 'Observation & Categorization'}
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800 leading-relaxed">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-relaxed">
             {language === 'ar' ? currentQ.title : currentQ.titleEn}
           </h2>
         </div>

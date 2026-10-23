@@ -34,8 +34,11 @@ export const GamePlayPage: React.FC = () => {
   const ArrowIcon = language === 'ar' ? ArrowRight : ArrowLeft;
 
   const handleGoHome = () => {
-    navigate('/games');
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    if (window.history.state && typeof window.history.state.idx === 'number' && window.history.state.idx > 0) {
+      navigate(-1);
+    } else {
+      navigate('/games', { replace: true });
+    }
   };
 
   const renderGame = () => {
@@ -78,24 +81,26 @@ export const GamePlayPage: React.FC = () => {
         return <EmotionsKidsGame onGoHome={handleGoHome} />;
       default:
         return (
-          <div className="max-w-md mx-auto my-16 bg-white rounded-3xl p-8 text-center shadow-lg border border-slate-100">
+          <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#0b1329] rounded-3xl p-8 text-center shadow-lg border border-slate-100 dark:border-slate-800">
             <div className="text-6xl mb-4">🎮</div>
-            <h2 className="text-2xl font-black text-slate-800 mb-2">
+            <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">
               {language === 'ar' ? 'اللعبة غير متوفرة' : 'Game Not Found'}
             </h2>
-            <p className="text-sm text-slate-600 mb-6 font-medium">
+            <p className="text-sm text-slate-600 dark:text-slate-300 mb-6 font-medium">
               {language === 'ar'
                 ? 'عذراً، لم يتم العثور على اللعبة المطلوبة. يمكنك اختيار إحدى الألعاب الممتعة الأخرى!'
                 : 'Sorry, the requested game could not be found. Please choose from our available games!'}
             </p>
-            <Link
-              to="/games"
-              onClick={() => sound.playClick()}
-              className="inline-flex items-center gap-2 bg-sky-600 text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-sky-700 transition-colors"
+            <button
+              onClick={() => {
+                sound.playClick();
+                handleGoHome();
+              }}
+              className="inline-flex items-center gap-2 bg-sky-600 dark:bg-sky-500 text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
             >
               <ArrowIcon className="w-4 h-4" />
               <span>{language === 'ar' ? 'الرجوع إلى قائمة الألعاب' : 'Back to Games List'}</span>
-            </Link>
+            </button>
           </div>
         );
     }

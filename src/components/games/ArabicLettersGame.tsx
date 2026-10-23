@@ -136,10 +136,10 @@ export const ArabicLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
         badgeText="لغة الضاد الجميلة"
       />
 
-      <div className="bg-white rounded-3xl p-4 sm:p-7 shadow-xl border border-emerald-100 max-w-3xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700">
-          <span className="font-bold text-emerald-800">{message}</span>
-          <span className="text-xs font-semibold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-7 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
+        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <span className="font-bold text-emerald-800 dark:text-emerald-400">{message}</span>
+          <span className="text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
             {matchedPairs} / {ARABIC_LETTERS.length} أزواج
           </span>
         </div>

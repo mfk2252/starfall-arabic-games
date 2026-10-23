@@ -53,20 +53,20 @@ export const WinCelebration: React.FC<WinCelebrationProps> = ({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl border-4 border-amber-300 animate-pop-in relative overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl border-4 border-amber-300 dark:border-amber-500 animate-pop-in relative overflow-hidden">
         {/* Decorative corner stars */}
         <div className="absolute top-2 left-2 text-2xl">⭐</div>
         <div className="absolute top-2 right-2 text-2xl">⭐</div>
 
-        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-tr from-amber-400 to-yellow-300 rounded-full flex items-center justify-center shadow-lg border-4 border-white">
+        <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-tr from-amber-400 to-yellow-300 rounded-full flex items-center justify-center shadow-lg border-4 border-white dark:border-slate-800">
           <Trophy className="w-10 h-10 text-amber-900" />
         </div>
 
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 mb-2">
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-800 dark:text-slate-100 mb-2">
           {t('congratulations')}
         </h2>
-        <p className="text-emerald-700 font-bold text-base sm:text-lg mb-6 leading-relaxed">
+        <p className="text-emerald-700 dark:text-emerald-400 font-bold text-base sm:text-lg mb-6 leading-relaxed">
           {defaultMsg}
         </p>
 
@@ -78,7 +78,7 @@ export const WinCelebration: React.FC<WinCelebrationProps> = ({
               className={`transform transition-all duration-500 ${
                 starIndex <= stars
                   ? 'scale-110 text-amber-400 drop-shadow-md'
-                  : 'text-slate-200'
+                  : 'text-slate-200 dark:text-slate-700'
               }`}
             >
               <Star
@@ -90,10 +90,10 @@ export const WinCelebration: React.FC<WinCelebrationProps> = ({
         </div>
 
         {/* Score badge */}
-        <div className="inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-5 py-2.5 rounded-full font-black text-lg mb-6">
-          <Award className="w-5 h-5 text-amber-500" />
+        <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 px-5 py-2.5 rounded-full font-black text-lg mb-6">
+          <Award className="w-5 h-5 text-amber-500 dark:text-amber-400" />
           <span>{t('score')}:</span>
-          <span className="text-2xl text-amber-600 font-black tabular-nums">{score}</span>
+          <span className="text-2xl text-amber-600 dark:text-amber-300 font-black tabular-nums">{score}</span>
         </div>
 
         {/* Action buttons */}
@@ -114,7 +114,7 @@ export const WinCelebration: React.FC<WinCelebrationProps> = ({
               sound.playClick();
               onGoHome();
             }}
-            className="flex-1 flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-2xl border border-slate-300 transition-all transform hover:scale-105 active:scale-95 cursor-pointer text-sm"
+            className="flex-1 flex items-center justify-center gap-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-3 px-4 rounded-2xl border border-slate-300 dark:border-slate-700 transition-all transform hover:scale-105 active:scale-95 cursor-pointer text-sm"
           >
             <Home className="w-4 h-4" />
             <span>{t('backToGames')}</span>

@@ -140,13 +140,13 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={`سؤال ${currentQuestionIdx + 1} من ${QUESTIONS.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 max-w-3xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
         {/* Question Box */}
-        <div className="w-full bg-gradient-to-r from-emerald-50 via-pink-50 to-amber-50 rounded-2xl p-6 text-center border-2 border-emerald-200 mb-6 shadow-xs">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">
+        <div className="w-full bg-gradient-to-r from-emerald-50 via-pink-50 to-amber-50 dark:from-slate-900 dark:via-pink-950/30 dark:to-slate-900 rounded-2xl p-6 text-center border-2 border-emerald-200 dark:border-slate-700 mb-6 shadow-xs">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
             سؤال الفصل
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800 leading-relaxed">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-relaxed">
             {currentQ.question}
           </h2>
         </div>
@@ -157,7 +157,7 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
             const isSelected = selectedSeason === season.id;
             const isCorrect = season.id === currentQ.answer;
 
-            let cardStateClasses = 'bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-pink-300 hover:shadow-lg hover:scale-102';
+            let cardStateClasses = 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border-2 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:border-pink-300 dark:hover:border-pink-500 hover:shadow-lg hover:scale-102';
 
             if (answered) {
               if (isCorrect) {

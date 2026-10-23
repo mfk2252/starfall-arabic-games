@@ -150,10 +150,10 @@ export const EnglishWordsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         badgeText="English Words & Pictures"
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 max-w-2xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700">
-          <span className="font-bold text-pink-900">{message}</span>
-          <span className="text-xs font-semibold bg-pink-50 text-pink-700 px-3 py-1 rounded-full border border-pink-200">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <span className="font-bold text-pink-900 dark:text-pink-300">{message}</span>
+          <span className="text-xs font-semibold bg-pink-50 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full border border-pink-200 dark:border-pink-800">
             {matchedPairs} / {ENGLISH_PAIRS.length} أزواج
           </span>
         </div>

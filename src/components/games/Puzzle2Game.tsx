@@ -156,13 +156,13 @@ export const Puzzle2Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={`مستوى ${currentLevel + 1} من ${PUZZLES_2.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-amber-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-amber-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Target name and guidance */}
         <div className="text-center mb-6">
-          <div className="inline-block bg-amber-50 border border-amber-200 text-amber-900 font-bold px-4 py-2 rounded-2xl text-sm sm:text-base mb-2">
+          <div className="inline-block bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 font-bold px-4 py-2 rounded-2xl text-sm sm:text-base mb-2">
             {message}
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100">
             المطلوب تكوين: <span className="text-amber-600">{target.name}</span>
           </h2>
         </div>

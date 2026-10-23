@@ -142,16 +142,16 @@ export const DayNightGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =
         badgeText={`عنصر ${currentIndex + 1} من ${ITEMS.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-purple-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-purple-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Item Display Card */}
-        <div className="w-full bg-gradient-to-r from-sky-50 via-purple-50 to-amber-50 rounded-3xl p-6 sm:p-8 text-center border-2 border-purple-200 mb-6 shadow-sm">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-2">
+        <div className="w-full bg-gradient-to-r from-sky-50 via-purple-50 to-amber-50 dark:from-slate-900 dark:via-purple-950/40 dark:to-slate-900 rounded-3xl p-6 sm:p-8 text-center border-2 border-purple-200 dark:border-slate-700 mb-6 shadow-sm">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
             انظر وتأمل في هذا الشيء:
           </span>
           <div className="text-7xl sm:text-8xl my-3 filter drop-shadow animate-bounce">
             {currentItem.icon}
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-800">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-slate-100">
             {currentItem.name}
           </h2>
         </div>

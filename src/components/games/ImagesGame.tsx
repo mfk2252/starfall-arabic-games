@@ -131,10 +131,10 @@ export const ImagesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
         badgeText="لعبة الذاكرة البصرية الممتعة"
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-purple-100 max-w-2xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700">
-          <span className="font-bold text-purple-900">{message}</span>
-          <span className="text-xs font-semibold bg-purple-50 text-purple-700 px-3 py-1 rounded-full border border-purple-200">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-purple-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <span className="font-bold text-purple-900 dark:text-purple-300">{message}</span>
+          <span className="text-xs font-semibold bg-purple-50 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full border border-purple-200 dark:border-purple-800">
             {matchedPairs} / {IMAGE_ITEMS.length} أزواج
           </span>
         </div>

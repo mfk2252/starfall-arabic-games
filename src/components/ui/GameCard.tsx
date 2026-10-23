@@ -24,7 +24,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
     <Link
       to={`/games/${game.id}`}
       onClick={() => sound.playClick()}
-      className="game-card bg-white rounded-3xl p-6 text-center shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden group border border-slate-100 flex flex-col justify-between select-none transform hover:-translate-y-1.5"
+      className="game-card bg-white dark:bg-[#0b1329] rounded-3xl p-6 text-center shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden group border border-slate-100 dark:border-slate-800/90 hover:border-sky-300 dark:hover:border-sky-700 flex flex-col justify-between select-none transform hover:-translate-y-1.5"
     >
       {/* Rainbow stripe on top */}
       <div className="absolute top-0 left-0 right-0 h-1.5 card-rainbow-strip" />
@@ -33,12 +33,12 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
       <div>
         <div className="flex items-center justify-between w-full mb-3 gap-2 flex-wrap">
           <div className="flex items-center gap-1.5">
-            <span className="text-[11px] font-bold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full border border-slate-200">
+            <span className="text-[11px] font-bold bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
               {ageRange}
             </span>
             {game.isNew && (
-              <span className="text-[10px] font-extrabold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-                <Sparkles className="w-3 h-3 text-emerald-600" />
+              <span className="text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                 <span>{language === 'ar' ? 'جديد' : 'NEW'}</span>
               </span>
             )}
@@ -52,7 +52,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
                 className={`w-4 h-4 ${
                   starIdx <= starsEarned
                     ? 'fill-amber-400 text-amber-400 drop-shadow-xs'
-                    : 'fill-slate-100 text-slate-200'
+                    : 'fill-slate-100 dark:fill-slate-800 text-slate-200 dark:text-slate-700'
                 }`}
               />
             ))}
@@ -70,10 +70,10 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
 
         {/* Title & Description */}
         <div className="my-3 text-center">
-          <h3 className="text-xl font-black text-slate-800 mb-1.5 group-hover:text-sky-600 transition-colors">
+          <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
             {title}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium line-clamp-2">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium line-clamp-2">
             {description}
           </p>
         </div>
@@ -83,7 +83,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
           {skills.slice(0, 2).map((skill, i) => (
             <span
               key={i}
-              className="text-[10px] bg-sky-50 text-sky-800 px-2 py-0.5 rounded-md font-bold border border-sky-100"
+              className="text-[10px] bg-sky-50 dark:bg-sky-950/70 text-sky-800 dark:text-sky-300 px-2 py-0.5 rounded-md font-bold border border-sky-100 dark:border-sky-800/60"
             >
               {skill}
             </span>
@@ -95,7 +95,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
       <div className="mt-4 pt-2">
         <button
           type="button"
-          className={`w-full py-2.5 px-5 rounded-full font-bold text-sm text-white shadow-md group-hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r ${game.gradient} group-hover:opacity-95`}
+          className={`w-full py-2.5 px-5 rounded-full font-bold text-sm text-white shadow-md group-hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r ${game.gradient} group-hover:opacity-95 cursor-pointer`}
         >
           <Play className="w-4 h-4 fill-white" />
           <span>{t('playNow')}</span>

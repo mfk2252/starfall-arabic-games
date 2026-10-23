@@ -29,24 +29,24 @@ export const CategoryPage: React.FC = () => {
         <Link
           to="/categories"
           onClick={() => sound.playClick()}
-          className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full font-bold text-sm text-slate-700 shadow-xs border border-slate-200 hover:bg-slate-50 transition-colors"
+          className="inline-flex items-center gap-2 bg-white dark:bg-[#0b1329] px-4 py-2 rounded-full font-bold text-sm text-slate-700 dark:text-slate-200 shadow-xs border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors"
         >
-          <ArrowIcon className="w-4 h-4 text-sky-600" />
+          <ArrowIcon className="w-4 h-4 text-sky-600 dark:text-sky-400" />
           <span>{language === 'ar' ? 'الرجوع إلى جميع الأقسام' : 'Back to Categories'}</span>
         </Link>
 
-        <span className="text-xs font-bold bg-sky-50 text-sky-800 px-3 py-1 rounded-full border border-sky-100">
+        <span className="text-xs font-bold bg-sky-50 dark:bg-sky-950/80 text-sky-800 dark:text-sky-300 px-3 py-1 rounded-full border border-sky-100 dark:border-sky-800">
           {categoryGames.length} {language === 'ar' ? 'ألعاب متوفرة' : 'Games available'}
         </span>
       </div>
 
       {/* Category Header Card */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-sky-100 mb-8 text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-sky-50 text-3xl mb-3 shadow-inner">
-          <BookOpen className="w-8 h-8 text-sky-600" />
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 shadow-md border border-sky-100 dark:border-slate-800 mb-8 text-center max-w-3xl mx-auto">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-sky-50 dark:bg-slate-800 text-3xl mb-3 shadow-inner">
+          <BookOpen className="w-8 h-8 text-sky-600 dark:text-sky-400" />
         </div>
-        <h1 className="text-3xl font-black text-slate-800 mb-2">{title}</h1>
-        <p className="text-sm sm:text-base text-slate-600 font-medium leading-relaxed">
+        <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-2">{title}</h1>
+        <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
           {description}
         </p>
       </div>

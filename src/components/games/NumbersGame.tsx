@@ -142,16 +142,16 @@ export const NumbersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText="لعبة الذاكرة والحساب"
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Sub-controls: Numeral style toggle */}
-        <div className="flex items-center justify-between w-full mb-4 px-2 text-sm text-slate-600">
+        <div className="flex items-center justify-between w-full mb-4 px-2 text-sm text-slate-600 dark:text-slate-300">
           <span className="font-semibold">{message}</span>
           <button
             onClick={() => {
               sound.playClick();
               setUseArabicNumerals(!useArabicNumerals);
             }}
-            className="text-xs font-bold bg-sky-50 hover:bg-sky-100 text-sky-700 px-3 py-1.5 rounded-full border border-sky-200 transition-colors"
+            className="text-xs font-bold bg-sky-50 dark:bg-sky-950/80 hover:bg-sky-100 dark:hover:bg-sky-900/80 text-sky-700 dark:text-sky-300 px-3 py-1.5 rounded-full border border-sky-200 dark:border-sky-800 transition-colors cursor-pointer"
           >
             {useArabicNumerals ? 'عرض أرقام إنجليزية (1 2 3)' : 'عرض أرقام عربية (١ ٢ ٣)'}
           </button>

@@ -159,10 +159,10 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         badgeText={`سؤال ${currentIndex + 1} من ${OPPOSITES_DATA.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-emerald-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* The Prompt Word */}
-        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 rounded-2xl p-6 mb-6 text-center border-2 border-emerald-200">
-          <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block mb-1">
+        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 dark:from-slate-900 dark:via-emerald-950/40 dark:to-slate-900 rounded-2xl p-6 mb-6 text-center border-2 border-emerald-200 dark:border-slate-700">
+          <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block mb-1">
             ما هو عكس هذه الكلمة؟
           </span>
           <div className="text-5xl sm:text-6xl my-2 filter drop-shadow">{currentQ.icon}</div>

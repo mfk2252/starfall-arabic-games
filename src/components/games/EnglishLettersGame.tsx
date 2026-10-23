@@ -131,15 +131,15 @@ export const EnglishLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
         badgeText="English Alphabet"
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-amber-100 max-w-2xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700">
-          <span className="font-bold text-amber-800">{message}</span>
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-amber-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <span className="font-bold text-amber-800 dark:text-amber-400">{message}</span>
           <button
             onClick={() => {
               sound.playClick();
               setMatchCase(!matchCase);
             }}
-            className="text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-800 px-3 py-1.5 rounded-full border border-amber-200"
+            className="text-xs font-bold bg-amber-50 dark:bg-amber-950/80 hover:bg-amber-100 dark:hover:bg-amber-900/80 text-amber-800 dark:text-amber-200 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800 cursor-pointer"
           >
             {matchCase ? 'مطابقة الكبير مع الصغير (A - a)' : 'مطابقة متطابقة (A - A)'}
           </button>

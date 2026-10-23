@@ -73,16 +73,16 @@ export const AnimalHabitatsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
         badgeText={language === 'ar' ? `حيوان ${currentIndex + 1} من ${ANIMAL_HABITATS.length}` : `Animal ${currentIndex + 1} of ${ANIMAL_HABITATS.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-teal-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-teal-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Animal Hero Display */}
-        <div className="w-full bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 rounded-3xl p-6 text-center border-2 border-teal-200 mb-6 shadow-sm">
-          <span className="text-xs font-bold text-teal-700 uppercase tracking-wider block mb-1">
+        <div className="w-full bg-gradient-to-r from-teal-50 via-emerald-50 to-cyan-50 dark:from-slate-900 dark:via-teal-950/40 dark:to-slate-900 rounded-3xl p-6 text-center border-2 border-teal-200 dark:border-slate-700 mb-6 shadow-sm">
+          <span className="text-xs font-bold text-teal-700 dark:text-teal-300 uppercase tracking-wider block mb-1">
             {language === 'ar' ? 'ساعد هذا الصديق في العثور على بيئته الطبيعية:' : 'Help this friend find their true natural home:'}
           </span>
           <div className="text-7xl sm:text-8xl my-2 filter drop-shadow animate-bounce">
             {currentQ.animal.icon}
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-800">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-slate-100">
             {language === 'ar' ? currentQ.animal.name : currentQ.animal.nameEn}
           </h2>
         </div>

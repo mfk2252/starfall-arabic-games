@@ -151,18 +151,18 @@ export const Puzzle4Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={`مستوى ${currentLevel + 1} من ${PUZZLES_4.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-orange-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-orange-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         <div className="text-center mb-5">
-          <div className="inline-block bg-orange-50 border border-orange-200 text-orange-950 font-bold px-4 py-2 rounded-2xl text-sm sm:text-base mb-2">
+          <div className="inline-block bg-orange-50 dark:bg-orange-950/80 border border-orange-200 dark:border-orange-800 text-orange-950 dark:text-orange-200 font-bold px-4 py-2 rounded-2xl text-sm sm:text-base mb-2">
             {message}
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800">
-            تركيب صورة: <span className="text-orange-600">{target.name} {target.emoji}</span>
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100">
+            تركيب صورة: <span className="text-orange-600 dark:text-orange-400">{target.name} {target.emoji}</span>
           </h2>
         </div>
 
         {/* 2x2 Puzzle Board */}
-        <div className="w-64 sm:w-80 h-64 sm:h-80 bg-slate-100 rounded-3xl border-4 border-dashed border-orange-300 grid grid-cols-2 p-3 gap-2 shadow-inner mb-6">
+        <div className="w-64 sm:w-80 h-64 sm:h-80 bg-slate-100 dark:bg-slate-900 rounded-3xl border-4 border-dashed border-orange-300 dark:border-slate-700 grid grid-cols-2 p-3 gap-2 shadow-inner mb-6">
           {[0, 1, 2, 3].map((slotIdx) => {
             const placedPiece = placedQuadrants[slotIdx];
             const isFilled = placedPiece !== undefined;

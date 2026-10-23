@@ -63,14 +63,14 @@ export const CategoriesOverviewPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
       <div className="text-center max-w-3xl mx-auto mb-12">
-        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 bg-sky-100 px-3.5 py-1 rounded-full mb-3">
-          <BookOpen className="w-3.5 h-3.5 text-sky-600" />
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 dark:text-sky-300 bg-sky-100 dark:bg-sky-950/80 px-3.5 py-1 rounded-full mb-3 border border-sky-200 dark:border-sky-800">
+          <BookOpen className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
           <span>{language === 'ar' ? 'المسارات والمجالات التعليمية' : 'Learning Curricular Domains'}</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-800 mb-2">
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-slate-100 mb-2">
           {t('categories')}
         </h1>
-        <p className="text-sm text-slate-600 font-medium leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
           {language === 'ar'
             ? 'تم تقسيم الألعاب إلى ٦ مسارات تربوية متخصصة لتنمية مهارات الطفل المختلفة بشكل متوازن'
             : 'Games are structured into 6 pedagogical tracks to foster comprehensive child development'}
@@ -83,7 +83,7 @@ export const CategoriesOverviewPage: React.FC = () => {
             key={cat.id}
             to={`/categories/${cat.id}`}
             onClick={() => sound.playClick()}
-            className="bg-white rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 group flex flex-col justify-between transform hover:-translate-y-1.5 select-none"
+            className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-800/90 group flex flex-col justify-between transform hover:-translate-y-1.5 select-none"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
@@ -92,20 +92,20 @@ export const CategoriesOverviewPage: React.FC = () => {
                 >
                   {cat.icon}
                 </div>
-                <span className="text-xs font-bold bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-200">
+                <span className="text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
                   {cat.count} {language === 'ar' ? 'ألعاب' : 'games'}
                 </span>
               </div>
 
-              <h3 className="text-2xl font-black text-slate-800 mb-2 group-hover:text-sky-600 transition-colors">
+              <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
                 {cat.title}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium mb-6">
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium mb-6">
                 {cat.description}
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-sm font-bold text-sky-600 group-hover:text-sky-700 pt-3 border-t border-slate-100">
+            <div className="flex items-center gap-2 text-sm font-bold text-sky-600 dark:text-sky-400 group-hover:text-sky-700 dark:group-hover:text-sky-300 pt-3 border-t border-slate-100 dark:border-slate-800">
               <span>{language === 'ar' ? 'تصفح ألعاب هذا القسم' : 'Browse games in track'}</span>
               <ArrowIcon className="w-4 h-4 transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" />
             </div>

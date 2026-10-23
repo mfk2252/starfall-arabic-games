@@ -146,9 +146,9 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         badgeText="ربط الأشياء المترابطة في حياتنا"
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 max-w-3xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
         <div className="w-full text-center mb-6">
-          <div className="inline-block bg-sky-50 border border-sky-200 text-sky-900 font-bold px-4 py-2 rounded-2xl text-sm sm:text-base">
+          <div className="inline-block bg-sky-50 dark:bg-sky-950/80 border border-sky-200 dark:border-sky-800 text-sky-900 dark:text-sky-300 font-bold px-4 py-2 rounded-2xl text-sm sm:text-base">
             {message}
           </div>
         </div>

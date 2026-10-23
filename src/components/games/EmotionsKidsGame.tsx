@@ -73,14 +73,14 @@ export const EmotionsKidsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         badgeText={language === 'ar' ? `موقف ${currentIndex + 1} من ${EMOTION_SCENARIOS.length}` : `Scenario ${currentIndex + 1} of ${EMOTION_SCENARIOS.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-emerald-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Scenario Card */}
-        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 border-2 border-emerald-200 rounded-3xl p-6 text-center mb-6 shadow-sm">
-          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-700 uppercase tracking-wider mb-2">
+        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-emerald-950/40 dark:to-slate-900 border-2 border-emerald-200 dark:border-slate-700 rounded-3xl p-6 text-center mb-6 shadow-sm">
+          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-2">
             <Heart className="w-4 h-4 fill-emerald-500 text-emerald-500" />
             <span>{language === 'ar' ? 'تأمل في هذا الموقف الإنساني:' : 'Reflect on this social situation:'}</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800 leading-relaxed">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-relaxed">
             {language === 'ar' ? currentQ.situation : currentQ.situationEn}
           </h2>
         </div>

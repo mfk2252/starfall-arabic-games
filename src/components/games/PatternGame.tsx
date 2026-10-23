@@ -72,13 +72,13 @@ export const PatternGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={language === 'ar' ? `نمط ${currentIndex + 1} من ${PATTERN_QUESTIONS.length}` : `Pattern ${currentIndex + 1} of ${PATTERN_QUESTIONS.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Guidance Prompt */}
         <div className="text-center mb-6">
-          <span className="text-xs font-bold text-sky-600 uppercase tracking-wider block mb-1">
+          <span className="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider block mb-1">
             {language === 'ar' ? 'لاحظ القاعدة المنطقية واكتشف الشكل المفقود' : 'Observe the sequence and find the missing piece'}
           </span>
-          <h2 className="text-lg sm:text-xl font-black text-slate-800">
+          <h2 className="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-100">
             {language === 'ar' ? 'ما هو الشكل المناسب لعلامة الاستفهام؟' : 'Which item replaces the question mark?'}
           </h2>
         </div>

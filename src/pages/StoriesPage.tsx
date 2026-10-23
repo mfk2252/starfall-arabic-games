@@ -13,14 +13,14 @@ export const StoriesPage: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-12">
-        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-100 px-3.5 py-1 rounded-full mb-3">
-          <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/80 px-3.5 py-1 rounded-full mb-3 border border-amber-200 dark:border-amber-800">
+          <BookOpen className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
           <span>{language === 'ar' ? 'القصص المصورة والأنشطة التفاعلية' : 'Interactive Illustrated Stories'}</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-800 mb-2">
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-slate-100 mb-2">
           {language === 'ar' ? 'قصص تالين الهادفة' : 'Taleen Educational Stories'}
         </h1>
-        <p className="text-sm text-slate-600 font-medium leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
           {language === 'ar'
             ? 'قصص تفاعلية مصورة تنمي الخيال واللغة والقيم الإيجابية، مع أسئلة استيعاب خفيفة تشارك الطفل في أحداث القصة'
             : 'Illustrated stories nurturing imagination, language, and positive values with engaging questions'}
@@ -39,15 +39,15 @@ export const StoriesPage: React.FC = () => {
           return (
             <div
               key={story.id}
-              className="bg-white rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col justify-between group transform hover:-translate-y-1.5"
+              className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-800/90 flex flex-col justify-between group transform hover:-translate-y-1.5"
             >
               <div>
                 {/* Meta pills */}
                 <div className="flex items-center justify-between gap-2 mb-4">
-                  <span className="text-[11px] font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full border border-slate-200">
+                  <span className="text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
                     {ageRange}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500">
+                  <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                     <Clock className="w-3.5 h-3.5" />
                     <span>{duration}</span>
                   </div>
@@ -64,19 +64,19 @@ export const StoriesPage: React.FC = () => {
 
                 {/* Title & Summary */}
                 <div className="text-center my-3">
-                  <h3 className="text-xl font-black text-slate-800 mb-1.5 group-hover:text-amber-600 transition-colors">
+                  <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 mb-1.5 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
                     {title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed mb-4">
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed mb-4">
                     {summary}
                   </p>
                 </div>
 
                 {/* Moral lesson badge */}
-                <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-3 mb-6 text-xs text-amber-900 font-bold flex items-start gap-2">
+                <div className="bg-amber-50/80 dark:bg-amber-950/60 border border-amber-200/80 dark:border-amber-800 rounded-2xl p-3 mb-6 text-xs text-amber-900 dark:text-amber-200 font-bold flex items-start gap-2">
                   <Heart className="w-4 h-4 text-rose-500 fill-rose-500 shrink-0 mt-0.5" />
                   <div>
-                    <span className="block text-[10px] text-amber-700 font-extrabold uppercase">
+                    <span className="block text-[10px] text-amber-700 dark:text-amber-400 font-extrabold uppercase">
                       {language === 'ar' ? 'العبرة والهدف التربوي:' : 'Educational Value:'}
                     </span>
                     <span>{moral}</span>

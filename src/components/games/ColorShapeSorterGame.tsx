@@ -86,13 +86,13 @@ export const ColorShapeSorterGame: React.FC<{ onGoHome: () => void }> = ({ onGoH
         badgeText={language === 'ar' ? `قطعة ${currentIdx + 1} من ${SHAPES_LIST.length}` : `Piece ${currentIdx + 1} of ${SHAPES_LIST.length}`}
       />
 
-      <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Sorter Mode Toggle */}
         <div className="flex items-center justify-between w-full mb-6 gap-2">
-          <span className="text-xs font-bold text-slate-500">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
             {language === 'ar' ? 'طريقة الفرز الحالية:' : 'Current Sorting Mode:'}
           </span>
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-full border border-slate-200">
+          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-full border border-slate-200 dark:border-slate-700">
             <button
               onClick={() => {
                 sound.playClick();
