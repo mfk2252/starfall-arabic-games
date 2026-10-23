@@ -47,6 +47,9 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
     wrongChoices: [],
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [audioError, setAudioError] = useState<string | null>(null);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -69,21 +72,73 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
   const playQuestionAudio = useCallback((question: ListenChooseQuestion) => {
     if (!question) return;
 
-    // Cleanup previous
+    // Reset error and loading
+    setAudioError(null);
+    setIsLoading(true);
+
+    // Stop current SpeechSynthesis
+    window.speechSynthesis.cancel();
+
+    // Cleanup previous audio element
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.src = "";
+      audioRef.current.load();
       audioRef.current = null;
     }
 
     if (question.type === 'sound' && question.audioUrl) {
       const audio = new Audio(question.audioUrl);
+      audio.crossOrigin = "anonymous";
       audioRef.current = audio;
-      audio.play().catch(err => console.error("Audio play failed:", err));
+
+      const handleCanPlay = () => {
+        setIsLoading(false);
+        audio.play().catch(err => {
+          console.error("Audio play failed:", err);
+          setAudioError(isAr ? "فشل تشغيل الصوت. حاول مرة أخرى." : "Failed to play audio. Try again.");
+        });
+      };
+
+      const handleError = (e: any) => {
+        console.error("Audio loading error:", e);
+        setIsLoading(false);
+        setAudioError(isAr ? "تعذر تحميل ملف الصوت." : "Could not load audio file.");
+      };
+
+      audio.addEventListener('canplaythrough', handleCanPlay, { once: true });
+      audio.addEventListener('error', handleError, { once: true });
+      
+      // Safety timeout for loading
+      setTimeout(() => {
+        setIsLoading(prev => {
+          if (prev) {
+            // Still loading? Maybe it failed silently
+            return false;
+          }
+          return prev;
+        });
+      }, 8000);
+
     } else {
-      // Words mode or fallback: use SpeechSynthesis
+      // Words mode: use SpeechSynthesis
+      setIsLoading(false);
       const utterance = new SpeechSynthesisUtterance(isAr ? question.nameAr : question.nameEn);
+      
+      // Try to find a good Arabic voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const arVoice = voices.find(v => v.lang.includes('ar'));
+      if (arVoice) utterance.voice = arVoice;
+      
       utterance.lang = isAr ? 'ar-SA' : 'en-US';
-      utterance.rate = 0.9;
+      utterance.rate = 0.8;
+      utterance.pitch = 1.1;
+      
+      utterance.onerror = (e) => {
+        console.error("SpeechSynthesis error:", e);
+        setAudioError(isAr ? "فشل نطق الكلمة." : "Speech synthesis failed.");
+      };
+
       window.speechSynthesis.speak(utterance);
     }
   }, [isAr]);
@@ -91,6 +146,13 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
   const startNewGame = (mode: ListenChooseType, difficulty: Difficulty) => {
     sound.playClick();
     
+    // Resume audio context
+    if (window.AudioContext || (window as any).webkitAudioContext) {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      const tempCtx = new AudioCtx();
+      tempCtx.resume();
+    }
+
     const filtered = LISTEN_CHOOSE_DATA.filter(q => q.type === mode);
     const roundQuestions = shuffle(filtered).slice(0, 10);
 
@@ -107,7 +169,7 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
     });
 
     // Play first sound after state update
-    setTimeout(() => playQuestionAudio(roundQuestions[0]), 500);
+    setTimeout(() => playQuestionAudio(roundQuestions[0]), 800);
   };
 
   const currentQuestion = game.questions[game.currentQuestionIndex];
@@ -142,7 +204,8 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         isCorrect: null,
         wrongChoices: [],
       }));
-      playQuestionAudio(game.questions[nextIdx]);
+      // Small delay before playing next audio
+      setTimeout(() => playQuestionAudio(game.questions[nextIdx]), 500);
     } else {
       sound.playWin();
       saveGameProgress('listen-choose', game.score, true);
@@ -162,12 +225,18 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         score: prev.score + (prev.wrongChoices.length === 0 ? 10 : 5)
       }));
 
+      // Stop any playing question audio
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      window.speechSynthesis.cancel();
+
       // Auto transition after 1.5s
       transitionTimerRef.current = setTimeout(() => {
         nextQuestion();
       }, 1500);
     } else {
-      sound.playClick();
+      sound.playWrong(); // Using synthesized wrong sound
       setGame(prev => ({
         ...prev,
         userChoice: choiceId,
@@ -178,15 +247,20 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
   };
 
   const handleRepeatAudio = () => {
+    if (isLoading) return;
     sound.playClick();
     playQuestionAudio(currentQuestion);
   };
 
   useEffect(() => {
+    // Pre-fetch voices
+    window.speechSynthesis.getVoices();
+    
     return () => {
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = "";
         audioRef.current = null;
       }
       window.speechSynthesis.cancel();
@@ -356,19 +430,52 @@ export const ListenChooseGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         
         {/* Big Play Button */}
         <div className="flex flex-col items-center space-y-4">
-          <button
-            onClick={handleRepeatAudio}
-            disabled={game.isCorrect === true}
-            className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-xl hover:shadow-2xl transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center relative overflow-hidden group cursor-pointer"
-          >
-            <div className="absolute inset-0 bg-white/20 scale-0 group-hover:scale-150 transition-transform duration-700 rounded-full opacity-0 group-hover:opacity-100" />
-            <Volume2 className="w-16 h-16 sm:w-20 sm:h-20 animate-pulse relative z-10" />
-          </button>
+          <div className="relative">
+            <button
+              onClick={handleRepeatAudio}
+              disabled={game.isCorrect === true || isLoading}
+              className={`
+                w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-xl transition-all transform active:scale-95 flex items-center justify-center relative overflow-hidden group cursor-pointer
+                ${isLoading ? 'animate-pulse opacity-80' : 'hover:shadow-2xl hover:scale-105'}
+                ${audioError ? 'border-4 border-rose-400' : ''}
+              `}
+            >
+              {isLoading ? (
+                <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <>
+                  <div className="absolute inset-0 bg-white/20 scale-0 group-hover:scale-150 transition-transform duration-700 rounded-full opacity-0 group-hover:opacity-100" />
+                  <Volume2 className="w-16 h-16 sm:w-20 sm:h-20 relative z-10" />
+                </>
+              )}
+            </button>
+            
+            {audioError && (
+              <button
+                onClick={(e) => { e.stopPropagation(); handleRepeatAudio(); }}
+                className="absolute -bottom-2 -right-2 bg-rose-500 text-white p-2 rounded-full shadow-lg hover:bg-rose-600 transition-colors cursor-pointer"
+                title={isAr ? 'إعادة المحاولة' : 'Retry'}
+              >
+                <RotateCcw className="w-5 h-5" />
+              </button>
+            )}
+          </div>
+
           <div className="text-center">
-            <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">
-              {isAr ? 'استمع جيداً للصوت...' : 'Listen carefully to the sound...'}
-            </h2>
-            <p className="text-xs text-slate-400 font-bold mt-1 uppercase tracking-widest">{isAr ? 'اضغط للسماع مرة أخرى' : 'Tap to hear again'}</p>
+            {audioError ? (
+              <p className="text-rose-500 font-bold text-sm bg-rose-50 dark:bg-rose-950/20 px-4 py-1 rounded-full border border-rose-100 dark:border-rose-900/40">
+                {audioError}
+              </p>
+            ) : (
+              <>
+                <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white">
+                  {isAr ? 'استمع جيداً للصوت...' : 'Listen carefully to the sound...'}
+                </h2>
+                <p className="text-xs text-slate-400 font-bold mt-1 uppercase tracking-widest">
+                  {isLoading ? (isAr ? 'جاري التحميل...' : 'Loading...') : (isAr ? 'اضغط للسماع مرة أخرى' : 'Tap to hear again')}
+                </p>
+              </>
+            )}
           </div>
         </div>
 

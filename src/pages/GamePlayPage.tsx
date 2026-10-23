@@ -29,6 +29,7 @@ import { WordBuilderGame } from '../components/games/WordBuilderGame';
 import { XOGame } from '../components/games/XOGame';
 import { ShadowGame } from '../components/games/ShadowGame';
 import { ListenChooseGame } from '../components/games/ListenChooseGame';
+import { LearningClockGame } from '../components/games/LearningClockGame';
 
 export const GamePlayPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -88,6 +89,8 @@ export const GamePlayPage: React.FC = () => {
         return <ShadowGame onGoHome={handleGoHome} />;
       case 'listen-choose':
         return <ListenChooseGame onGoHome={handleGoHome} />;
+      case 'learning-clock':
+        return <LearningClockGame onGoHome={handleGoHome} />;
       default:
         return (
           <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#0b1329] rounded-3xl p-8 text-center shadow-lg border border-slate-100 dark:border-slate-800">
