@@ -80,7 +80,9 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [selectedSeason, setSelectedSeason] = useState<string | null>(null);
+  const [wrongSeason, setWrongSeason] = useState<string | null>(null);
   const [answered, setAnswered] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('اختر الفصل الصحيح للإجابة على السؤال');
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
 
@@ -88,7 +90,9 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
     setCurrentQuestionIdx(0);
     setScore(0);
     setSelectedSeason(null);
+    setWrongSeason(null);
     setAnswered(false);
+    setIsProcessing(false);
     setMessage('اختر الفصل الصحيح للإجابة على السؤال');
     setIsGameOver(false);
   }, []);
@@ -100,31 +104,39 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   const currentQ = QUESTIONS[currentQuestionIdx];
 
   const handleSelectSeason = (seasonId: string) => {
-    if (answered) return;
-    setSelectedSeason(seasonId);
-    setAnswered(true);
+    if (isProcessing || answered) return;
 
     if (seasonId === currentQ.answer) {
+      setSelectedSeason(seasonId);
+      setAnswered(true);
+      setIsProcessing(true);
       sound.playMatch();
       const newScore = score + 10;
       setScore(newScore);
       setMessage(`✅ إجابة صحيحة! ${currentQ.explanation}`);
+
+      setTimeout(() => {
+        if (currentQuestionIdx + 1 < QUESTIONS.length) {
+          setCurrentQuestionIdx((prev) => prev + 1);
+          setSelectedSeason(null);
+          setWrongSeason(null);
+          setAnswered(false);
+          setIsProcessing(false);
+          setMessage('اختر الفصل الصحيح للإجابة على السؤال');
+        } else {
+          saveGameProgress('seasons', newScore, true);
+          setIsGameOver(true);
+        }
+      }, 1100);
     } else {
       sound.playWrong();
-      setMessage(`❌ إجابة خاطئة. ${currentQ.explanation}`);
-    }
-  };
+      setWrongSeason(seasonId);
+      setMessage(`❌ حاول مجدداً! فكر في أصحاب هذا الفصل.`);
+      setScore((prev) => Math.max(0, prev - 2));
 
-  const handleNext = () => {
-    sound.playClick();
-    if (currentQuestionIdx + 1 < QUESTIONS.length) {
-      setCurrentQuestionIdx((prev) => prev + 1);
-      setSelectedSeason(null);
-      setAnswered(false);
-      setMessage('اختر الفصل الصحيح للإجابة على السؤال');
-    } else {
-      saveGameProgress('seasons', score, true);
-      setIsGameOver(true);
+      setTimeout(() => {
+        setWrongSeason(null);
+      }, 700);
     }
   };
 
@@ -140,46 +152,45 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={`سؤال ${currentQuestionIdx + 1} من ${QUESTIONS.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
         {/* Question Box */}
-        <div className="w-full bg-gradient-to-r from-emerald-50 via-pink-50 to-amber-50 dark:from-slate-900 dark:via-pink-950/30 dark:to-slate-900 rounded-2xl p-6 text-center border-2 border-emerald-200 dark:border-slate-700 mb-6 shadow-xs">
+        <div className="w-full bg-gradient-to-r from-emerald-50 via-pink-50 to-amber-50 dark:from-slate-900 dark:via-pink-950/30 dark:to-slate-900 rounded-2xl p-5 text-center border-2 border-emerald-200 dark:border-slate-700 mb-4 shadow-xs">
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
             سؤال الفصل
           </span>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100 leading-relaxed">
+          <h2 className="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-100 leading-relaxed">
             {currentQ.question}
           </h2>
         </div>
 
         {/* 4 Seasons Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full mb-4">
           {SEASONS.map((season) => {
             const isSelected = selectedSeason === season.id;
+            const isWrong = wrongSeason === season.id;
             const isCorrect = season.id === currentQ.answer;
 
             let cardStateClasses = 'bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border-2 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 hover:border-pink-300 dark:hover:border-pink-500 hover:shadow-lg hover:scale-102';
 
-            if (answered) {
-              if (isCorrect) {
-                cardStateClasses = 'bg-gradient-to-br from-emerald-50 to-green-100 border-3 border-emerald-500 ring-4 ring-emerald-200 shadow-md scale-102';
-              } else if (isSelected) {
-                cardStateClasses = 'bg-gradient-to-br from-rose-50 to-red-100 border-3 border-rose-500 ring-4 ring-rose-200';
-              } else {
-                cardStateClasses = 'bg-slate-50 border-slate-200 opacity-60';
-              }
+            if (answered && isCorrect) {
+              cardStateClasses = 'bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-950 dark:to-green-900 border-3 border-emerald-500 ring-4 ring-emerald-200 shadow-md scale-102';
+            } else if (isWrong) {
+              cardStateClasses = 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-200 animate-shake';
+            } else if (isSelected) {
+              cardStateClasses = 'bg-pink-600 text-white border-pink-700';
             }
 
             return (
               <button
                 key={season.id}
                 onClick={() => handleSelectSeason(season.id)}
-                disabled={answered}
-                className={`p-5 rounded-2xl flex items-center gap-4 text-right transition-all transform duration-200 cursor-pointer select-none ${cardStateClasses}`}
+                disabled={isProcessing || answered}
+                className={`p-4 rounded-2xl flex items-center gap-3.5 text-right transition-all transform duration-150 cursor-pointer select-none ${cardStateClasses}`}
               >
-                <div className="text-5xl filter drop-shadow">{season.icon}</div>
+                <div className="text-4xl sm:text-5xl filter drop-shadow">{season.icon}</div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-black text-slate-800 mb-1">{season.name}</h3>
-                  <p className="text-xs sm:text-sm text-slate-600 font-semibold">{season.description}</p>
+                  <h3 className="text-lg font-black mb-0.5">{season.name}</h3>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 font-semibold">{season.description}</p>
                 </div>
               </button>
             );
@@ -187,19 +198,13 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         </div>
 
         {/* Feedback / Explanation Box */}
-        <div className="w-full text-center p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 font-bold mb-6 text-sm sm:text-base">
+        <div className={`w-full text-center p-2.5 rounded-2xl font-bold text-xs sm:text-sm animate-pop-in ${
+          answered
+            ? 'bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+            : 'bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+        }`}>
           {message}
         </div>
-
-        {/* Next Question / Finish Button */}
-        {answered && (
-          <button
-            onClick={handleNext}
-            className="w-full sm:w-auto px-8 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all"
-          >
-            {currentQuestionIdx + 1 < QUESTIONS.length ? 'السؤال التالي ⬅️' : 'عرض النتيجة النهائية 🏆'}
-          </button>
-        )}
       </div>
 
       {isGameOver && (

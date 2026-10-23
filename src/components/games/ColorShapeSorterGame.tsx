@@ -30,6 +30,7 @@ export const ColorShapeSorterGame: React.FC<{ onGoHome: () => void }> = ({ onGoH
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<string>('');
   const [sortMode, setSortMode] = useState<'shape' | 'color'>('shape');
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
   const currentItem = SHAPES_LIST[currentIdx];
 
@@ -37,6 +38,7 @@ export const ColorShapeSorterGame: React.FC<{ onGoHome: () => void }> = ({ onGoH
     setCurrentIdx(0);
     setScore(0);
     setFeedback('');
+    setIsProcessing(false);
     setIsGameOver(false);
   }, []);
 
@@ -45,7 +47,7 @@ export const ColorShapeSorterGame: React.FC<{ onGoHome: () => void }> = ({ onGoH
   }, [initGame]);
 
   const handleBasketClick = (basketKey: string) => {
-    if (!currentItem) return;
+    if (!currentItem || isProcessing) return;
 
     const isMatch =
       sortMode === 'shape'
@@ -53,6 +55,7 @@ export const ColorShapeSorterGame: React.FC<{ onGoHome: () => void }> = ({ onGoH
         : basketKey === currentItem.colorType;
 
     if (isMatch) {
+      setIsProcessing(true);
       sound.playMatch();
       const newScore = score + 15;
       setScore(newScore);
@@ -62,11 +65,12 @@ export const ColorShapeSorterGame: React.FC<{ onGoHome: () => void }> = ({ onGoH
         if (currentIdx + 1 < SHAPES_LIST.length) {
           setCurrentIdx((prev) => prev + 1);
           setFeedback('');
+          setIsProcessing(false);
         } else {
           saveGameProgress('color-shape-sorter', newScore, true);
           setIsGameOver(true);
         }
-      }, 700);
+      }, 800);
     } else {
       sound.playWrong();
       setFeedback(`❌ ${language === 'ar' ? 'هذه ليست السلة الصحيحة، حاول مجدداً!' : 'This is not the correct basket, try again!'}`);

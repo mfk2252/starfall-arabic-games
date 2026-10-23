@@ -61,6 +61,7 @@ export const Puzzle4Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   const [placedQuadrants, setPlacedQuadrants] = useState<Record<number, number>>({}); // slotIdx -> quadrantId
   const [selectedPiece, setSelectedPiece] = useState<number | null>(null);
   const [score, setScore] = useState<number>(0);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('اختر قطعة ثم ضعها في مكانها المناسب في البازل!');
   const [shuffledPieces, setShuffledPieces] = useState<number[]>([]);
@@ -70,6 +71,7 @@ export const Puzzle4Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   const initLevel = useCallback((lvl: number) => {
     setPlacedQuadrants({});
     setSelectedPiece(null);
+    setIsProcessing(false);
     setMessage('اختر قطعة ثم ضعها في مكانها المناسب في البازل!');
 
     const pieces = [0, 1, 2, 3];
@@ -92,13 +94,14 @@ export const Puzzle4Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   }, [initGame]);
 
   const handleSelectTrayPiece = (quadrantId: number) => {
+    if (isProcessing) return;
     sound.playClick();
     setSelectedPiece(quadrantId);
     setMessage(`اختر المكان الصحيح للقطعة: ${target.quadrants[quadrantId].name}`);
   };
 
   const handleSlotClick = (slotIdx: number) => {
-    if (placedQuadrants[slotIdx] !== undefined) return;
+    if (isProcessing || placedQuadrants[slotIdx] !== undefined) return;
     if (selectedPiece === null) {
       setMessage('يرجى اختيار قطعة من الأسفل أولاً!');
       return;
@@ -116,6 +119,7 @@ export const Puzzle4Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
 
       // Check if all 4 are placed
       if (Object.keys(updated).length === 4) {
+        setIsProcessing(true);
         setTimeout(() => {
           sound.playWin();
           if (currentLevel + 1 < PUZZLES_4.length) {

@@ -99,7 +99,9 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [wrongOption, setWrongOption] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<string>('');
 
@@ -107,7 +109,9 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
     setCurrentIndex(0);
     setScore(0);
     setSelectedOption(null);
+    setWrongOption(null);
     setIsAnswered(false);
+    setIsProcessing(false);
     setIsGameOver(false);
     setFeedback('');
   }, []);
@@ -119,31 +123,39 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   const currentQ = OPPOSITES_DATA[currentIndex];
 
   const handleSelectOption = (idx: number, isCorrect: boolean) => {
-    if (isAnswered) return;
-    setSelectedOption(idx);
-    setIsAnswered(true);
+    if (isProcessing || isAnswered) return;
 
     if (isCorrect) {
+      setSelectedOption(idx);
+      setIsAnswered(true);
+      setIsProcessing(true);
       sound.playMatch();
       const newScore = score + 15;
       setScore(newScore);
       setFeedback(`🎉 صحيح! عكس (${currentQ.word}) هو (${currentQ.oppositeWord} ${currentQ.oppositeIcon})`);
+
+      setTimeout(() => {
+        if (currentIndex + 1 < OPPOSITES_DATA.length) {
+          setCurrentIndex((prev) => prev + 1);
+          setSelectedOption(null);
+          setWrongOption(null);
+          setIsAnswered(false);
+          setIsProcessing(false);
+          setFeedback('');
+        } else {
+          saveGameProgress('opposites', newScore, true);
+          setIsGameOver(true);
+        }
+      }, 1100);
     } else {
       sound.playWrong();
-      setFeedback(`❌ ليس تماماً! عكس (${currentQ.word}) هو (${currentQ.oppositeWord} ${currentQ.oppositeIcon})`);
-    }
-  };
+      setWrongOption(idx);
+      setFeedback(`❌ ليس تماماً! فكر مجدداً في عكس (${currentQ.word})`);
+      setScore((prev) => Math.max(0, prev - 2));
 
-  const handleNext = () => {
-    sound.playClick();
-    if (currentIndex + 1 < OPPOSITES_DATA.length) {
-      setCurrentIndex((prev) => prev + 1);
-      setSelectedOption(null);
-      setIsAnswered(false);
-      setFeedback('');
-    } else {
-      saveGameProgress('opposites', score, true);
-      setIsGameOver(true);
+      setTimeout(() => {
+        setWrongOption(null);
+      }, 700);
     }
   };
 
@@ -159,44 +171,45 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         badgeText={`سؤال ${currentIndex + 1} من ${OPPOSITES_DATA.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* The Prompt Word */}
-        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 dark:from-slate-900 dark:via-emerald-950/40 dark:to-slate-900 rounded-2xl p-6 mb-6 text-center border-2 border-emerald-200 dark:border-slate-700">
+        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-green-50 dark:from-slate-900 dark:via-emerald-950/40 dark:to-slate-900 rounded-2xl p-5 mb-4 text-center border-2 border-emerald-200 dark:border-slate-700">
           <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block mb-1">
             ما هو عكس هذه الكلمة؟
           </span>
-          <div className="text-5xl sm:text-6xl my-2 filter drop-shadow">{currentQ.icon}</div>
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-800 my-1">{currentQ.word}</h2>
-          <p className="text-slate-600 text-sm sm:text-base font-semibold mt-2">
+          <div className="text-4xl sm:text-5xl my-1 filter drop-shadow">{currentQ.icon}</div>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-slate-100 my-1">{currentQ.word}</h2>
+          <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-semibold mt-1">
             {currentQ.contextSentence}
           </p>
         </div>
 
         {/* Options */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 w-full mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full mb-4">
           {currentQ.options.map((opt, idx) => {
-            let btnStyle = 'bg-slate-50 hover:bg-emerald-50 border-slate-200 text-slate-800 hover:border-emerald-300';
-            if (isAnswered) {
-              if (opt.isCorrect) {
-                btnStyle = 'bg-emerald-500 text-white border-emerald-600 ring-4 ring-emerald-200 shadow-md';
-              } else if (selectedOption === idx) {
-                btnStyle = 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-200';
-              } else {
-                btnStyle = 'bg-slate-100 text-slate-400 border-slate-200 opacity-60';
-              }
+            const isSelected = selectedOption === idx;
+            const isWrong = wrongOption === idx;
+            let btnStyle = 'bg-slate-50 hover:bg-emerald-50 border-slate-200 text-slate-800 hover:border-emerald-300 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-100';
+
+            if (isAnswered && opt.isCorrect) {
+              btnStyle = 'bg-emerald-500 text-white border-emerald-600 ring-4 ring-emerald-200 shadow-md scale-102';
+            } else if (isWrong) {
+              btnStyle = 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-200 animate-shake';
+            } else if (isSelected) {
+              btnStyle = 'bg-emerald-600 text-white border-emerald-700';
             }
 
             return (
               <button
                 key={idx}
                 onClick={() => handleSelectOption(idx, opt.isCorrect)}
-                disabled={isAnswered}
-                className={`p-4 rounded-2xl border-2 flex flex-col items-center justify-center gap-2 transition-all transform duration-200 cursor-pointer ${
-                  !isAnswered ? 'hover:scale-105 active:scale-95' : ''
+                disabled={isProcessing || isAnswered}
+                className={`p-3.5 sm:p-4 rounded-2xl border-2 flex flex-col items-center justify-center gap-1.5 transition-all transform duration-150 cursor-pointer select-none ${
+                  !isAnswered && !isProcessing ? 'hover:scale-105 active:scale-95' : ''
                 } ${btnStyle}`}
               >
-                <span className="text-4xl filter drop-shadow">{opt.icon}</span>
-                <span className="text-xl font-black">{opt.word}</span>
+                <span className="text-3xl sm:text-4xl filter drop-shadow">{opt.icon}</span>
+                <span className="text-lg font-black">{opt.word}</span>
               </button>
             );
           })}
@@ -204,19 +217,13 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
 
         {/* Feedback message */}
         {feedback && (
-          <div className="w-full text-center p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 font-bold mb-5 animate-pop-in text-sm sm:text-base">
+          <div className={`w-full text-center p-2.5 rounded-xl font-bold text-xs sm:text-sm animate-pop-in ${
+            isAnswered
+              ? 'bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+              : 'bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+          }`}>
             {feedback}
           </div>
-        )}
-
-        {/* Next Question Button */}
-        {isAnswered && (
-          <button
-            onClick={handleNext}
-            className="w-full sm:w-auto px-8 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-extrabold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all"
-          >
-            {currentIndex + 1 < OPPOSITES_DATA.length ? 'السؤال التالي ⬅️' : 'عرض النتيجة النهائية 🏆'}
-          </button>
         )}
       </div>
 

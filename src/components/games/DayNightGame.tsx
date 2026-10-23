@@ -77,6 +77,8 @@ export const DayNightGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =
   const [score, setScore] = useState<number>(0);
   const [message, setMessage] = useState<string>('هل هذا الشيء يحدث في النهار ☀️ أم في الليل 🌙؟');
   const [answeredState, setAnsweredState] = useState<'correct' | 'wrong' | null>(null);
+  const [wrongChoice, setWrongChoice] = useState<'day' | 'night' | null>(null);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [shuffledItems, setShuffledItems] = useState<DayNightItem[]>([]);
 
@@ -90,6 +92,8 @@ export const DayNightGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =
     setCurrentIndex(0);
     setScore(0);
     setAnsweredState(null);
+    setWrongChoice(null);
+    setIsProcessing(false);
     setMessage('هل هذا الشيء يحدث في النهار ☀️ أم في الليل 🌙؟');
     setIsGameOver(false);
   }, []);
@@ -101,30 +105,37 @@ export const DayNightGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =
   const currentItem = shuffledItems[currentIndex];
 
   const handleChoose = (choice: 'day' | 'night') => {
-    if (answeredState !== null || !currentItem) return;
+    if (isProcessing || answeredState === 'correct' || !currentItem) return;
 
     if (choice === currentItem.timeOfDay) {
       sound.playMatch();
       setAnsweredState('correct');
+      setIsProcessing(true);
       const newScore = score + 15;
       setScore(newScore);
       setMessage(`✅ أحسنت! ${currentItem.description}`);
+
+      setTimeout(() => {
+        if (currentIndex + 1 < shuffledItems.length) {
+          setCurrentIndex((prev) => prev + 1);
+          setAnsweredState(null);
+          setWrongChoice(null);
+          setIsProcessing(false);
+          setMessage('هل هذا الشيء يحدث في النهار ☀️ أم في الليل 🌙؟');
+        } else {
+          saveGameProgress('day-night', newScore, true);
+          setIsGameOver(true);
+        }
+      }, 1200);
     } else {
       sound.playWrong();
-      setAnsweredState('wrong');
-      setMessage(`❌ حاول أن تتذكر: ${currentItem.description}`);
-    }
-  };
+      setWrongChoice(choice);
+      setMessage(`❌ فكّر جيداً: ${currentItem.description} حاول مجدداً!`);
+      setScore((prev) => Math.max(0, prev - 2));
 
-  const handleNext = () => {
-    sound.playClick();
-    if (currentIndex + 1 < shuffledItems.length) {
-      setCurrentIndex((prev) => prev + 1);
-      setAnsweredState(null);
-      setMessage('هل هذا الشيء يحدث في النهار ☀️ أم في الليل 🌙؟');
-    } else {
-      saveGameProgress('day-night', score, true);
-      setIsGameOver(true);
+      setTimeout(() => {
+        setWrongChoice(null);
+      }, 700);
     }
   };
 
@@ -142,78 +153,71 @@ export const DayNightGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =
         badgeText={`عنصر ${currentIndex + 1} من ${ITEMS.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-purple-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-purple-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Item Display Card */}
-        <div className="w-full bg-gradient-to-r from-sky-50 via-purple-50 to-amber-50 dark:from-slate-900 dark:via-purple-950/40 dark:to-slate-900 rounded-3xl p-6 sm:p-8 text-center border-2 border-purple-200 dark:border-slate-700 mb-6 shadow-sm">
-          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-2">
+        <div className="w-full bg-gradient-to-r from-sky-50 via-purple-50 to-amber-50 dark:from-slate-900 dark:via-purple-950/40 dark:to-slate-900 rounded-3xl p-5 sm:p-6 text-center border-2 border-purple-200 dark:border-slate-700 mb-4 shadow-sm">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
             انظر وتأمل في هذا الشيء:
           </span>
-          <div className="text-7xl sm:text-8xl my-3 filter drop-shadow animate-bounce">
+          <div className="text-6xl sm:text-7xl my-2 filter drop-shadow animate-bounce">
             {currentItem.icon}
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-slate-100">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-slate-100">
             {currentItem.name}
           </h2>
         </div>
 
         {/* Question & Feedback Prompt */}
-        <div className="w-full text-center p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 font-bold mb-6 text-sm sm:text-base">
+        <div className={`w-full text-center p-3 rounded-2xl font-bold mb-5 text-xs sm:text-sm animate-pop-in ${
+          answeredState === 'correct'
+            ? 'bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
+            : wrongChoice
+            ? 'bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-200'
+            : 'bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200'
+        }`}>
           {message}
         </div>
 
         {/* Big Interactive Decision Buttons */}
-        <div className="grid grid-cols-2 gap-4 w-full mb-6">
+        <div className="grid grid-cols-2 gap-4 w-full mb-2">
           {/* Day Button */}
           <button
             onClick={() => handleChoose('day')}
-            disabled={answeredState !== null}
-            className={`p-6 rounded-3xl border-3 flex flex-col items-center justify-center gap-2 transition-all transform duration-200 cursor-pointer select-none ${
-              answeredState !== null
-                ? currentItem.timeOfDay === 'day'
-                  ? 'bg-gradient-to-b from-amber-300 to-yellow-400 text-amber-950 border-amber-500 ring-4 ring-amber-200 scale-102 shadow-lg'
-                  : 'bg-slate-100 border-slate-200 text-slate-400 opacity-50'
+            disabled={isProcessing || answeredState === 'correct'}
+            className={`p-5 rounded-3xl border-3 flex flex-col items-center justify-center gap-1.5 transition-all transform duration-200 cursor-pointer select-none ${
+              answeredState === 'correct' && currentItem.timeOfDay === 'day'
+                ? 'bg-gradient-to-b from-amber-300 to-yellow-400 text-amber-950 border-amber-500 ring-4 ring-amber-200 scale-102 shadow-lg'
+                : wrongChoice === 'day'
+                ? 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-200 animate-shake'
                 : 'bg-gradient-to-b from-amber-100 to-yellow-200 hover:from-amber-200 hover:to-yellow-300 border-amber-300 text-amber-950 hover:scale-105 shadow-md active:scale-95'
             }`}
           >
-            <div className="w-16 h-16 rounded-full bg-amber-400/50 flex items-center justify-center">
-              <Sun className="w-10 h-10 text-amber-700 animate-spin-slow" />
+            <div className="w-12 h-12 rounded-full bg-amber-400/50 flex items-center justify-center">
+              <Sun className="w-8 h-8 text-amber-700 animate-spin-slow" />
             </div>
-            <span className="text-2xl font-black mt-1">النهار ☀️</span>
-            <span className="text-xs font-semibold text-amber-800">وقت النور والحركة</span>
+            <span className="text-xl font-black mt-1">النهار ☀️</span>
+            <span className="text-[10px] sm:text-xs font-semibold text-amber-800">وقت النور والحركة</span>
           </button>
 
           {/* Night Button */}
           <button
             onClick={() => handleChoose('night')}
-            disabled={answeredState !== null}
-            className={`p-6 rounded-3xl border-3 flex flex-col items-center justify-center gap-2 transition-all transform duration-200 cursor-pointer select-none ${
-              answeredState !== null
-                ? currentItem.timeOfDay === 'night'
-                  ? 'bg-gradient-to-b from-indigo-500 to-purple-600 text-white border-indigo-700 ring-4 ring-indigo-200 scale-102 shadow-lg'
-                  : 'bg-slate-100 border-slate-200 text-slate-400 opacity-50'
+            disabled={isProcessing || answeredState === 'correct'}
+            className={`p-5 rounded-3xl border-3 flex flex-col items-center justify-center gap-1.5 transition-all transform duration-200 cursor-pointer select-none ${
+              answeredState === 'correct' && currentItem.timeOfDay === 'night'
+                ? 'bg-gradient-to-b from-indigo-500 to-purple-600 text-white border-indigo-700 ring-4 ring-indigo-200 scale-102 shadow-lg'
+                : wrongChoice === 'night'
+                ? 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-200 animate-shake'
                 : 'bg-gradient-to-b from-indigo-100 to-purple-200 hover:from-indigo-200 hover:to-purple-300 border-indigo-300 text-indigo-950 hover:scale-105 shadow-md active:scale-95'
             }`}
           >
-            <div className="w-16 h-16 rounded-full bg-indigo-300/40 flex items-center justify-center">
-              <Moon className="w-10 h-10 text-indigo-800" />
+            <div className="w-12 h-12 rounded-full bg-indigo-300/40 flex items-center justify-center">
+              <Moon className="w-8 h-8 text-indigo-800" />
             </div>
-            <span className="text-2xl font-black mt-1">الليل 🌙</span>
-            <span className="text-xs font-semibold text-indigo-900">وقت الهدوء والراحة</span>
+            <span className="text-xl font-black mt-1">الليل 🌙</span>
+            <span className="text-[10px] sm:text-xs font-semibold text-indigo-900">وقت الهدوء والراحة</span>
           </button>
         </div>
-
-        {/* Next Button */}
-        {answeredState !== null && (
-          <button
-            onClick={handleNext}
-            className="w-full sm:w-auto px-8 py-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-extrabold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"
-          >
-            <Sparkles className="w-5 h-5" />
-            <span>
-              {currentIndex + 1 < shuffledItems.length ? 'العنصر التالي ⬅️' : 'عرض النتيجة النهائية 🏆'}
-            </span>
-          </button>
-        )}
       </div>
 
       {isGameOver && (

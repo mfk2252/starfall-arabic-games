@@ -56,6 +56,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   const [selectedRight, setSelectedRight] = useState<string | null>(null);
   const [matchedIds, setMatchedIds] = useState<string[]>([]);
   const [score, setScore] = useState<number>(0);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('اختر عنصراً من اليمين وما يناسبه من اليسار!');
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [rightItems, setRightItems] = useState<{ id: string; name: string; icon: string }[]>([]);
@@ -78,6 +79,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
     setSelectedRight(null);
     setMatchedIds([]);
     setScore(0);
+    setIsProcessing(false);
     setIsGameOver(false);
     setMessage('اختر عنصراً من اليمين وما يناسبه من اليسار!');
   }, []);
@@ -87,7 +89,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   }, [initGame]);
 
   const handleSelectLeft = (id: string) => {
-    if (matchedIds.includes(id)) return;
+    if (matchedIds.includes(id) || isProcessing) return;
     sound.playClick();
     setSelectedLeft(id);
 
@@ -97,7 +99,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
   };
 
   const handleSelectRight = (id: string) => {
-    if (matchedIds.includes(id)) return;
+    if (matchedIds.includes(id) || isProcessing) return;
     sound.playClick();
     setSelectedRight(id);
 
@@ -124,12 +126,14 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         setIsGameOver(true);
       }
     } else {
+      setIsProcessing(true);
       sound.playWrong();
       setMessage('❌ هذان الشيئان غير مترابطين، حاول مرة أخرى!');
       setScore((prev) => Math.max(0, prev - 2));
       setTimeout(() => {
         setSelectedLeft(null);
         setSelectedRight(null);
+        setIsProcessing(false);
       }, 700);
     }
   };

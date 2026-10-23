@@ -60,6 +60,7 @@ export const Puzzle2Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   const [selectedRight, setSelectedRight] = useState<string | null>(null);
   const [solvedLevels, setSolvedLevels] = useState<number[]>([]);
   const [score, setScore] = useState<number>(0);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('اختر النصف الأيمن والنصف الأيسر لتكوين الصورة كاملة!');
   const [shuffledRightList, setShuffledRightList] = useState<string[]>([]);
@@ -67,6 +68,7 @@ export const Puzzle2Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   const initLevel = useCallback((level: number) => {
     setSelectedLeft(null);
     setSelectedRight(null);
+    setIsProcessing(false);
     setMessage('اختر النصف الأيمن والنصف الأيسر لتكوين الصورة كاملة!');
 
     // Shuffle other puzzle IDs for candidate pieces
@@ -99,6 +101,7 @@ export const Puzzle2Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   const target = PUZZLES_2[currentLevel];
 
   const handleSelectPiece = (side: 'left' | 'right', puzzleId: string) => {
+    if (isProcessing) return;
     sound.playClick();
     if (side === 'left') {
       setSelectedLeft(puzzleId);
@@ -114,6 +117,7 @@ export const Puzzle2Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
   };
 
   const checkAssembly = (leftId: string, rightId: string) => {
+    setIsProcessing(true);
     if (leftId === target.id && rightId === target.id) {
       // Puzzle completed!
       sound.playMatch();
@@ -131,14 +135,15 @@ export const Puzzle2Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
           saveGameProgress('puzzle-2', newScore, true);
           setIsGameOver(true);
         }
-      }, 1500);
+      }, 1200);
     } else {
       sound.playWrong();
       setMessage('❌ النصفان لا يكوّنان نفس الصورة! حاول مجدداً.');
       setTimeout(() => {
         setSelectedLeft(null);
         setSelectedRight(null);
-      }, 900);
+        setIsProcessing(false);
+      }, 800);
     }
   };
 
