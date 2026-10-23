@@ -28,6 +28,7 @@ import { ColorShapeSorterGame } from '../components/games/ColorShapeSorterGame';
 import { EmotionsKidsGame } from '../components/games/EmotionsKidsGame';
 import { MathGame } from '../components/games/MathGame';
 import { WordBuilderGame } from '../components/games/WordBuilderGame';
+import { XOGame } from '../components/games/XOGame';
 
 export const GamePlayPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -85,6 +86,8 @@ export const GamePlayPage: React.FC = () => {
         return <MathGame onGoHome={handleGoHome} />;
       case 'word-builder':
         return <WordBuilderGame onGoHome={handleGoHome} />;
+      case 'xo-game':
+        return <XOGame onGoHome={handleGoHome} />;
       default:
         return (
           <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#0b1329] rounded-3xl p-8 text-center shadow-lg border border-slate-100 dark:border-slate-800">

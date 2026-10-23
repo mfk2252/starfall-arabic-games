@@ -18,7 +18,8 @@ export type GameId =
   | 'color-shape-sorter'
   | 'emotions-kids'
   | 'math-game'
-  | 'word-builder';
+  | 'word-builder'
+  | 'xo-game';
 
 export type GameCategory =
   | 'numbers'
