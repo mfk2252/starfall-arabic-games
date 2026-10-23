@@ -17,7 +17,8 @@ export type GameId =
   | 'counting-compare'
   | 'color-shape-sorter'
   | 'emotions-kids'
-  | 'math-game';
+  | 'math-game'
+  | 'word-builder';
 
 export type GameCategory =
   | 'numbers'
