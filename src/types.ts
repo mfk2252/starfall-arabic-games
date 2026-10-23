@@ -20,7 +20,8 @@ export type GameId =
   | 'math-game'
   | 'word-builder'
   | 'xo-game'
-  | 'shadow-game';
+  | 'shadow-game'
+  | 'listen-choose';
 
 export type GameCategory =
   | 'numbers'

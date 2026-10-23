@@ -14,8 +14,6 @@ import { EnglishWordsGame } from '../components/games/EnglishWordsGame';
 import { ImagesGame } from '../components/games/ImagesGame';
 import { RelationsGame } from '../components/games/RelationsGame';
 import { OppositesGame } from '../components/games/OppositesGame';
-import { Puzzle2Game } from '../components/games/Puzzle2Game';
-import { PuzzleGame } from '../components/games/PuzzleGame';
 import { SeasonsGame } from '../components/games/SeasonsGame';
 import { DayNightGame } from '../components/games/DayNightGame';
 
@@ -30,6 +28,7 @@ import { MathGame } from '../components/games/MathGame';
 import { WordBuilderGame } from '../components/games/WordBuilderGame';
 import { XOGame } from '../components/games/XOGame';
 import { ShadowGame } from '../components/games/ShadowGame';
+import { ListenChooseGame } from '../components/games/ListenChooseGame';
 
 export const GamePlayPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -63,10 +62,6 @@ export const GamePlayPage: React.FC = () => {
         return <RelationsGame onGoHome={handleGoHome} />;
       case 'opposites':
         return <OppositesGame onGoHome={handleGoHome} />;
-      case 'puzzle-2':
-        return <Puzzle2Game onGoHome={handleGoHome} />;
-      case 'puzzle-4':
-        return <PuzzleGame onGoHome={handleGoHome} />;
       case 'seasons':
         return <SeasonsGame onGoHome={handleGoHome} />;
       case 'day-night':
@@ -91,6 +86,8 @@ export const GamePlayPage: React.FC = () => {
         return <XOGame onGoHome={handleGoHome} />;
       case 'shadow-game':
         return <ShadowGame onGoHome={handleGoHome} />;
+      case 'listen-choose':
+        return <ListenChooseGame onGoHome={handleGoHome} />;
       default:
         return (
           <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#0b1329] rounded-3xl p-8 text-center shadow-lg border border-slate-100 dark:border-slate-800">
