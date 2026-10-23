@@ -14,3 +14,9 @@ precache  2 entries (0.12 KiB)
 files generated
   dev-dist/sw.js
   dev-dist/workbox-afac4cd2.js
+8:50:02 PM [vite] (client) hmr update /src/index.css
+8:50:05 PM [vite] (client) hmr update /src/components/layout/AppLayout.tsx, /src/index.css
+8:50:19 PM [vite] (client) hmr update /src/components/layout/Navbar.tsx, /src/index.css
+8:50:31 PM [vite] (client) hmr update /src/components/layout/Footer.tsx, /src/index.css
+8:51:28 PM [vite] (client) hmr update /src/components/games/RelationsGame.tsx, /src/index.css
+8:51:50 PM [vite] (client) hmr update /src/components/games/OppositesGame.tsx, /src/index.css
