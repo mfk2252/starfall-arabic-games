@@ -111,6 +111,8 @@ export const HomePage: React.FC = () => {
       if (categoryFilter === 'all') {
         // If not searching, hide individual stories and show group icon
         if (!isSearching && item.type === 'story') return false;
+        // If not searching and is the group icon, show it
+        if (!isSearching && item.id === 'stories-group') return true;
         // If searching, hide the group icon to show results directly
         if (isSearching && item.id === 'stories-group') return false;
       } 

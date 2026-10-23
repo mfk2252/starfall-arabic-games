@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
-import { EMOTION_SCENARIOS } from '../../data/gameContent';
+import { EMOTIONS_DATA, EmotionItem } from '../../data/gameContent';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { Heart } from 'lucide-react';
+import { Heart, Sparkles } from 'lucide-react';
 
 export const EmotionsKidsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   const { language } = useLanguage();
@@ -15,19 +15,19 @@ export const EmotionsKidsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
   const [wrongIdx, setWrongIdx] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [feedback, setFeedback] = useState<string>('');
   const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [roundQuestions, setRoundQuestions] = useState<EmotionItem[]>([]);
 
-  const currentQ = EMOTION_SCENARIOS[currentIndex];
-
+  // Initialize a round of 8 questions
   const initGame = useCallback(() => {
+    const shuffled = [...EMOTIONS_DATA].sort(() => Math.random() - 0.5);
+    setRoundQuestions(shuffled.slice(0, 8));
     setCurrentIndex(0);
     setScore(0);
     setSelectedIdx(null);
     setWrongIdx(null);
     setIsAnswered(false);
     setIsProcessing(false);
-    setFeedback('');
     setIsGameOver(false);
   }, []);
 
@@ -35,35 +35,43 @@ export const EmotionsKidsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
     initGame();
   }, [initGame]);
 
-  const handleSelectEmotion = (optIdx: number, isCorrect: boolean, explanation: string, explanationEn: string) => {
+  const targetEmotion = roundQuestions[currentIndex];
+
+  // Generate 3 options: 1 correct, 2 random distractors
+  const options = useMemo(() => {
+    if (!targetEmotion) return [];
+    const distractors = EMOTIONS_DATA.filter(e => e.id !== targetEmotion.id)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 2);
+    return [targetEmotion, ...distractors].sort(() => Math.random() - 0.5);
+  }, [targetEmotion]);
+
+  const handleSelect = (idx: number, emotionId: string) => {
     if (isProcessing || isAnswered) return;
 
-    if (isCorrect) {
-      setSelectedIdx(optIdx);
+    if (emotionId === targetEmotion.id) {
+      setSelectedIdx(idx);
       setIsAnswered(true);
       setIsProcessing(true);
       sound.playMatch();
-      const newScore = score + 25;
-      setScore(newScore);
-      setFeedback(`🎉 ${language === 'ar' ? 'أحسنت فهم المشاعر!' : 'Great emotional understanding!'} ${language === 'ar' ? explanation : explanationEn}`);
+      const newScore = score + 12.5; // 8 questions * 12.5 = 100
+      setScore(Math.min(100, newScore));
 
       setTimeout(() => {
-        if (currentIndex + 1 < EMOTION_SCENARIOS.length) {
+        if (currentIndex + 1 < roundQuestions.length) {
           setCurrentIndex((prev) => prev + 1);
           setSelectedIdx(null);
           setWrongIdx(null);
           setIsAnswered(false);
           setIsProcessing(false);
-          setFeedback('');
         } else {
-          saveGameProgress('emotions-kids', newScore, true);
+          saveGameProgress('emotions-kids', Math.round(newScore), true);
           setIsGameOver(true);
         }
       }, 1200);
     } else {
       sound.playWrong();
-      setWrongIdx(optIdx);
-      setFeedback(`❌ ${language === 'ar' ? 'فكر في هذا الموقف:' : 'Think about this situation:'} ${language === 'ar' ? explanation : explanationEn} ${language === 'ar' ? 'حاول مجدداً!' : 'Try again!'}`);
+      setWrongIdx(idx);
       setScore((prev) => Math.max(0, prev - 2));
 
       setTimeout(() => {
@@ -72,86 +80,87 @@ export const EmotionsKidsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
     }
   };
 
+  if (!targetEmotion) return null;
+
   return (
-    <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh]">
+    <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh] animate-in fade-in duration-500">
       <GameHeader
-        title={language === 'ar' ? 'التعرف على المشاعر والتواصل' : 'Emotions & Feelings'}
+        title={language === 'ar' ? 'لعبة المشاعر' : 'Emotions Game'}
         icon="😊💖"
-        score={score}
+        score={Math.round(score)}
         onRestart={initGame}
         onGoHome={onGoHome}
         accentGradient="from-[#06d6a0] to-[#118ab2]"
-        badgeText={language === 'ar' ? `موقف ${currentIndex + 1} من ${EMOTION_SCENARIOS.length}` : `Scenario ${currentIndex + 1} of ${EMOTION_SCENARIOS.length}`}
+        badgeText={language === 'ar' ? `تحدي ${currentIndex + 1} من ${roundQuestions.length}` : `Challenge ${currentIndex + 1} of ${roundQuestions.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
-        {/* Scenario Card */}
-        <div className="w-full bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 dark:from-slate-900 dark:via-emerald-950/40 dark:to-slate-900 border-2 border-emerald-200 dark:border-slate-700 rounded-3xl p-5 text-center mb-4 shadow-sm">
-          <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-1.5">
-            <Heart className="w-4 h-4 fill-emerald-500 text-emerald-500" />
-            <span>{language === 'ar' ? 'تأمل في هذا الموقف الإنساني:' : 'Reflect on this social situation:'}</span>
+      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center gap-8">
+        
+        {/* Target Display */}
+        <div className="w-full flex flex-col items-center gap-4 text-center">
+          <div className="relative group">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 border-4 border-emerald-200 dark:border-emerald-800 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform duration-300">
+              <span className="text-6xl sm:text-7xl drop-shadow-md animate-bounce-slow">
+                {targetEmotion.emoji}
+              </span>
+            </div>
+            <div className="absolute -top-2 -right-2 bg-amber-400 text-white p-2 rounded-full shadow-lg animate-pulse">
+              <Heart className="w-5 h-5 fill-white" />
+            </div>
           </div>
-          <h2 className="text-lg sm:text-xl font-black text-slate-800 dark:text-slate-100 leading-relaxed">
-            {language === 'ar' ? currentQ.situation : currentQ.situationEn}
-          </h2>
+          
+          <div className="space-y-1">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-white">
+              {language === 'ar' ? targetEmotion.labelAr : targetEmotion.labelEn}
+            </h2>
+            <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+              {language === 'ar' ? 'طابق هذا الشعور!' : 'Match this feeling!'}
+            </p>
+          </div>
         </div>
 
-        {/* Question Prompt */}
-        <div className="w-full text-center mb-3">
-          <h3 className="text-xs sm:text-sm font-bold text-slate-600 dark:text-slate-300">
-            {language === 'ar' ? 'كيف يشعر الطفل في هذا الموقف؟' : 'How does the child feel in this situation?'}
-          </h3>
-        </div>
-
-        {/* Emotion Options */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full mb-4">
-          {currentQ.options.map((opt, idx) => {
-            const isSelected = selectedIdx === idx;
+        {/* Options Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+          {options.map((opt, idx) => {
+            const isCorrect = isAnswered && opt.id === targetEmotion.id;
             const isWrong = wrongIdx === idx;
-            let btnStyle = 'bg-slate-50 hover:bg-emerald-50 border-slate-200 text-slate-800 hover:border-emerald-300 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-100';
+            
+            let btnStyle = 'bg-slate-50 hover:bg-emerald-50 border-slate-200 text-slate-800 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-100';
 
-            if (isAnswered && opt.isCorrect) {
-              btnStyle = 'bg-emerald-500 text-white border-emerald-600 ring-4 ring-emerald-200 shadow-lg scale-102';
+            if (isCorrect) {
+              btnStyle = 'bg-emerald-500 text-white border-emerald-600 ring-4 ring-emerald-200 shadow-lg scale-105';
             } else if (isWrong) {
-              btnStyle = 'bg-rose-500 text-white border-rose-600 ring-2 ring-rose-200 animate-shake';
-            } else if (isSelected) {
-              btnStyle = 'bg-emerald-600 text-white border-emerald-700';
+              btnStyle = 'bg-rose-500 text-white border-rose-600 ring-4 ring-rose-200 animate-shake';
             }
 
             return (
               <button
-                key={idx}
-                onClick={() => handleSelectEmotion(idx, opt.isCorrect, opt.explanation, opt.explanationEn)}
+                key={`${opt.id}-${idx}`}
+                onClick={() => handleSelect(idx, opt.id)}
                 disabled={isProcessing || isAnswered}
-                className={`p-4 rounded-2xl border-2 flex flex-col items-center justify-center gap-1.5 transition-all transform duration-150 cursor-pointer select-none ${
-                  !isAnswered && !isProcessing ? 'hover:scale-105 active:scale-95 shadow-sm' : ''
+                className={`p-6 rounded-3xl border-4 flex flex-col items-center justify-center gap-3 transition-all transform duration-200 cursor-pointer select-none ${
+                  !isAnswered && !isProcessing ? 'hover:scale-105 active:scale-95 shadow-md' : ''
                 } ${btnStyle}`}
               >
-                <span className="text-4xl sm:text-5xl filter drop-shadow animate-pulse">{opt.icon}</span>
-                <span className="text-sm font-black text-center mt-0.5">
-                  {language === 'ar' ? opt.emotion : opt.emotionEn}
-                </span>
+                <span className="text-5xl sm:text-6xl filter drop-shadow-sm">{opt.emoji}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Feedback Alert */}
-        {feedback && (
-          <div className={`w-full text-center p-2.5 rounded-2xl font-bold text-xs sm:text-sm animate-pop-in ${
-            isAnswered
-              ? 'bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200'
-              : 'bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200'
-          }`}>
-            {feedback}
+        {/* Info / Hint */}
+        {!isAnswered && (
+          <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 font-bold text-xs uppercase tracking-widest">
+            <Sparkles className="w-4 h-4" />
+            <span>{language === 'ar' ? 'اختر الشكل المطابق' : 'Pick the matching face'}</span>
           </div>
         )}
       </div>
 
       {isGameOver && (
         <WinCelebration
-          score={score}
-          message={language === 'ar' ? '🎉 قلبك طيب وذكي! لقد تعرفت على مشاعر الآخرين وتعلمت التعبير عنها بلطف!' : '🎉 Kind & Empathetic! You understood feelings and emotional communication!'}
+          score={Math.round(score)}
+          message={language === 'ar' ? '🎉 رائع! أنت بارع في التعرف على المشاعر!' : '🎉 Amazing! You are an expert at recognizing feelings!'}
           onRestart={initGame}
           onGoHome={onGoHome}
           stars={score >= 80 ? 3 : score >= 50 ? 2 : 1}

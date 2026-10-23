@@ -403,28 +403,7 @@ export const GAMES_LIST: GameInfo[] = [
     skills: ['التمييز البصري', 'إدراك الأشكال', 'التركيز والانتباه'],
     skillsEn: ['Visual discrimination', 'Shape perception', 'Focus & attention'],
   },
-  // 23. Listen & Choose Game
-  {
-    id: 'listen-choose',
-    title: 'اسمع واختر',
-    titleEn: 'Listen & Choose',
-    description: 'لعبة ممتعة لتنمية مهارات التمييز السمعي من خلال ربط الأصوات والكلمات بالصور الصحيحة',
-    descriptionEn: 'A fun game to develop auditory discrimination by linking sounds and words to correct images',
-    icon: '👂',
-    gradient: 'from-[#8b5cf6] to-[#6d28d9]',
-    accentColor: '#8b5cf6',
-    category: 'logic',
-    ageRange: '٣-٨ سنوات',
-    ageRangeEn: '3-8 years',
-    minAge: 3,
-    maxAge: 8,
-    difficulty: 'easy',
-    isNew: true,
-    featured: true,
-    skills: ['التمييز السمعي', 'الربط الصوتي البصري', 'المفردات اللغوية'],
-    skillsEn: ['Auditory discrimination', 'Audio-visual linking', 'Vocabulary building'],
-  },
-  // 24. Learning Clock
+  // 23. Learning Clock
   {
     id: 'learning-clock',
     title: 'تعلم الساعة',

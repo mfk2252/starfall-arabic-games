@@ -180,59 +180,23 @@ export const ANIMAL_HABITATS: AnimalHabitatQuestion[] = [
   },
 ];
 
-export interface EmotionScenario {
-  id: number;
-  situation: string;
-  situationEn: string;
-  options: {
-    emotion: string;
-    emotionEn: string;
-    icon: string;
-    isCorrect: boolean;
-    explanation: string;
-    explanationEn: string;
-  }[];
+export interface EmotionItem {
+  id: string;
+  emoji: string;
+  labelAr: string;
+  labelEn: string;
 }
 
-export const EMOTION_SCENARIOS: EmotionScenario[] = [
-  {
-    id: 1,
-    situation: 'تلقى أحمد هدية جميلة ومفاجأة مبهجة في يوم ميلاده!',
-    situationEn: 'Ahmad received a wonderful surprise gift on his birthday!',
-    options: [
-      { emotion: 'سعيد ومبتهج', emotionEn: 'Happy & Joyful', icon: '😊', isCorrect: true, explanation: 'المفاجآت السارة تجعلنا نشعر بالسعادة والبهجة وابتسامة جميلة!', explanationEn: 'Pleasant surprises bring big smiles and happiness!' },
-      { emotion: 'غاضب', emotionEn: 'Angry', icon: '😡', isCorrect: false, explanation: 'الهدايا اللطيفة تسعدنا ولا تغضبنا', explanationEn: 'Nice gifts make us happy, not angry' },
-      { emotion: 'حزين', emotionEn: 'Sad', icon: '😢', isCorrect: false, explanation: 'الاحتفال بيوم الميلاد مناسبة سعيدة', explanationEn: 'Birthday is a joyful event' },
-    ],
-  },
-  {
-    id: 2,
-    situation: 'سقط برج المكعبات الذي بنته سارة باجتهاد!',
-    situationEn: 'Sara worked hard to build a block tower, but it accidentally fell down!',
-    options: [
-      { emotion: 'حزينة وتحتاج تشجيعاً', emotionEn: 'Sad & Needs Encouragement', icon: '😢', isCorrect: true, explanation: 'من الطبيعي أن نحزن قليلاً عندما يقع ما بنيناه، ثم نشجع أنفسنا ونبنيه من جديد!', explanationEn: 'It is okay to feel sad, then take a deep breath and rebuild it stronger!' },
-      { emotion: 'متحمسة جداً', emotionEn: 'Super Excited', icon: '🤩', isCorrect: false, explanation: 'سقوط البرج يسبب الحزن لحظياً', explanationEn: 'The tower falling causes momentary sadness' },
-      { emotion: 'نائمة', emotionEn: 'Sleeping', icon: '😴', isCorrect: false, explanation: 'سارة مستيقظة وتلعب', explanationEn: 'Sara is awake and playing' },
-    ],
-  },
-  {
-    id: 3,
-    situation: 'سمع عمر صوت رعد مفاجئ وقوي من النافذة!',
-    situationEn: 'Omar heard a sudden, loud thunder rumble outside the window!',
-    options: [
-      { emotion: 'متفاجئ وخائف قليلاً', emotionEn: 'Surprised & A Bit Scared', icon: '😲', isCorrect: true, explanation: 'الأصوات المفاجئة تفاجئنا، ويمكننا مسك يد أمنا أو أبينا لنشعر بالأمان!', explanationEn: 'Sudden loud sounds surprise us, holding a parent hand brings comfort!' },
-      { emotion: 'يضحك بصوت عالٍ', emotionEn: 'Laughing aloud', icon: '😂', isCorrect: false, explanation: 'الرعد القوي صوت مفاجئ', explanationEn: 'Thunder is sudden and loud' },
-      { emotion: 'يشعر بالملل', emotionEn: 'Bored', icon: '🥱', isCorrect: false, explanation: 'الصوت المفاجئ جذب انتباهه فوراً', explanationEn: 'The loud sound caught his immediate attention' },
-    ],
-  },
-  {
-    id: 4,
-    situation: 'يجلس الطفل في حديقة هادئة مع نسيم عليل وأصوات زقزقة العصافير.',
-    situationEn: 'The child sits in a quiet park enjoying gentle breeze and chirping birds.',
-    options: [
-      { emotion: 'هادئ ومطمئن', emotionEn: 'Calm & Peaceful', icon: '😌', isCorrect: true, explanation: 'الطبيعة والهدوء يمنحانا شعوراً بالراحة والسكينة والاطمئنان!', explanationEn: 'Peaceful nature fills our hearts with calm and tranquility!' },
-      { emotion: 'غضبان', emotionEn: 'Furious', icon: '😡', isCorrect: false, explanation: 'الحديقة الهادئة مكان للراحة', explanationEn: 'A calm garden is a place for rest' },
-      { emotion: 'باكٍ', emotionEn: 'Crying', icon: '😭', isCorrect: false, explanation: 'النسيم والعصافير يبعثان على السكينة', explanationEn: 'Birds chirping brings pleasant peace' },
-    ],
-  },
+export const EMOTIONS_DATA: EmotionItem[] = [
+  { id: 'happy', emoji: '😊', labelAr: 'مبتسم', labelEn: 'Smiling' },
+  { id: 'sad', emoji: '😢', labelAr: 'حزين', labelEn: 'Sad' },
+  { id: 'angry', emoji: '😡', labelAr: 'غاضب', labelEn: 'Angry' },
+  { id: 'surprised', emoji: '😲', labelAr: 'متفاجئ', labelEn: 'Surprised' },
+  { id: 'calm', emoji: '😌', labelAr: 'هادئ', labelEn: 'Calm' },
+  { id: 'bored', emoji: '🥱', labelAr: 'منزعج', labelEn: 'Bored' },
+  { id: 'scared', emoji: '😨', labelAr: 'خائف', labelEn: 'Scared' },
+  { id: 'love', emoji: '😍', labelAr: 'محب', labelEn: 'Loving' },
+  { id: 'laugh', emoji: '😂', labelAr: 'يضحك', labelEn: 'Laughing' },
+  { id: 'shy', emoji: '😊', labelAr: 'خجول', labelEn: 'Shy' },
 ];
+

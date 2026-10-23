@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { PATTERN_QUESTIONS, ODD_ONE_OUT_QUESTIONS, ANIMAL_HABITATS, EMOTION_SCENARIOS } from '../data/gameContent';
+import { PATTERN_QUESTIONS, ODD_ONE_OUT_QUESTIONS, ANIMAL_HABITATS, EMOTIONS_DATA } from '../data/gameContent';
 
 describe('Educational Game Content Logic', () => {
   it('each pattern question must have exactly one correct answer', () => {
@@ -28,11 +28,12 @@ describe('Educational Game Content Logic', () => {
     });
   });
 
-  it('each emotion scenario must have exactly one correct empathetic response', () => {
-    EMOTION_SCENARIOS.forEach((q) => {
-      const correctEmotions = q.options.filter((o) => o.isCorrect);
-      expect(correctEmotions.length).toBe(1);
-      expect(q.situation.length).toBeGreaterThan(0);
+  it('emotions data must have valid entries', () => {
+    expect(EMOTIONS_DATA.length).toBeGreaterThan(0);
+    EMOTIONS_DATA.forEach((e) => {
+      expect(e.emoji.length).toBeGreaterThan(0);
+      expect(e.labelAr.length).toBeGreaterThan(0);
+      expect(e.labelEn.length).toBeGreaterThan(0);
     });
   });
 });

@@ -28,7 +28,6 @@ import { MathGame } from '../components/games/MathGame';
 import { WordBuilderGame } from '../components/games/WordBuilderGame';
 import { XOGame } from '../components/games/XOGame';
 import { ShadowGame } from '../components/games/ShadowGame';
-import { ListenChooseGame } from '../components/games/ListenChooseGame';
 import { LearningClockGame } from '../components/games/LearningClockGame';
 
 export const GamePlayPage: React.FC = () => {
@@ -87,8 +86,6 @@ export const GamePlayPage: React.FC = () => {
         return <XOGame onGoHome={handleGoHome} />;
       case 'shadow-game':
         return <ShadowGame onGoHome={handleGoHome} />;
-      case 'listen-choose':
-        return <ListenChooseGame onGoHome={handleGoHome} />;
       case 'learning-clock':
         return <LearningClockGame onGoHome={handleGoHome} />;
       default:

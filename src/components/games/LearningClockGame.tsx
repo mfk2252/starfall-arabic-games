@@ -69,10 +69,12 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
     let h = Math.floor(Math.random() * 12) + 1;
     let m = 0;
 
-    if (diff === 'medium') {
-      m = Math.random() > 0.5 ? 0 : 30;
+    if (diff === 'easy') {
+      m = 0; // Full hours
+    } else if (diff === 'medium') {
+      m = Math.random() > 0.5 ? 0 : 30; // Half hours
     } else if (diff === 'advanced') {
-      const options = [0, 15, 30, 45];
+      const options = [0, 15, 30, 45]; // Quarter hours
       m = options[Math.floor(Math.random() * options.length)];
     }
 
@@ -110,25 +112,24 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
     const normalizedAngle = (angle + 360) % 360;
 
     if (isDragging === 'minute') {
+      // Snap to 5 mins for easier interaction for kids, but 1 min precision in advanced?
+      // Let's keep it 5 mins for now as it's for 4-5 year olds
       const m = Math.round(normalizedAngle / 6) % 60;
-      // Snap to 5 mins if not advanced? No, let them move freely but maybe snap to target if close
-      setGameState(prev => ({ ...prev, minute: m }));
+      const snappedM = Math.round(m / 5) * 5 % 60;
+      setGameState(prev => ({ ...prev, minute: snappedM }));
     } else if (isDragging === 'hour') {
-      let h = Math.floor(normalizedAngle / 30);
+      let h = Math.round(normalizedAngle / 30);
       if (h === 0) h = 12;
+      if (h > 12) h = 12;
       setGameState(prev => ({ ...prev, hour: h }));
     }
   }, [isDragging]);
 
   const checkAnswer = () => {
-    const { hour, minute, targetHour, targetMinute, currentMode } = gameState;
-    
-    // For clock reading, the hands can be a bit tricky. 
-    // Usually people don't get the exact minute right by dragging.
-    // Let's allow a small tolerance or snap to nearest 5 mins for easier interaction for kids.
+    const { hour, minute, targetHour, targetMinute } = gameState;
     
     const isHourMatch = hour === targetHour;
-    // Allow +/- 2 minutes tolerance for kids dragging
+    // For kids, if they are within 2 mins, it's correct
     const isMinuteMatch = Math.abs(minute - targetMinute) <= 2 || (targetMinute === 0 && minute >= 58);
 
     if (isHourMatch && isMinuteMatch) {
@@ -172,9 +173,6 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
           saveGameProgress('learning-clock', gameState.score + 10, true);
         } else {
           const nextTarget = generateNewTarget(gameState.difficulty);
-          // For digital quiz, the analog clock is the "target"
-          // actually target is what we show, and choices are digital
-          // so we update the analog display
           setGameState(prev => ({
             ...prev,
             round: prev.round + 1,
@@ -200,7 +198,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
     while (options.length < 3) {
       const h = Math.floor(Math.random() * 12) + 1;
       let m = 0;
-      if (gameState.difficulty === 'medium') m = Math.random() > 0.5 ? 0 : 30;
+      if (gameState.difficulty === 'medium') m = [0, 30][Math.floor(Math.random() * 2)];
       else if (gameState.difficulty === 'advanced') m = [0, 15, 30, 45][Math.floor(Math.random() * 4)];
       
       if (!options.find(o => o.h === h && o.m === m)) {

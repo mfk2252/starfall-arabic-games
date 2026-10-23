@@ -29,6 +29,59 @@ interface GameState {
   wrongChoices: string[];
 }
 
+// Resilient image component with CDN fallback and emoji fallback
+const ImageWithFallback: React.FC<{
+  src: string;
+  fallbackSrc?: string;
+  emoji?: string;
+  alt: string;
+  className?: string;
+  isShadow?: boolean;
+}> = ({ src, fallbackSrc, emoji, alt, className, isShadow }) => {
+  const [currentSrc, setCurrentSrc] = useState(src);
+  const [hasFailed, setHasFailed] = useState(false);
+
+  useEffect(() => {
+    setCurrentSrc(src);
+    setHasFailed(false);
+  }, [src]);
+
+  const handleError = () => {
+    if (fallbackSrc && currentSrc !== fallbackSrc) {
+      setCurrentSrc(fallbackSrc);
+    } else {
+      setHasFailed(true);
+    }
+  };
+
+  if (hasFailed && emoji) {
+    return (
+      <span 
+        className={`text-5xl sm:text-7xl select-none transition-transform ${
+          isShadow 
+            ? 'filter grayscale-[1] brightness-0 opacity-80 contrast-[2]' 
+            : 'drop-shadow-md'
+        }`}
+        role="img" 
+        aria-label={alt}
+      >
+        {emoji}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={currentSrc}
+      alt={alt}
+      onError={handleError}
+      className={`${className} ${isShadow ? 'filter brightness-0 contrast-125' : ''}`}
+      loading="eager"
+      decoding="async"
+    />
+  );
+};
+
 export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   const { language } = useLanguage();
   const isAr = language === 'ar';
@@ -83,6 +136,12 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       wrongChoices: [],
     });
     setShowHint(false);
+
+    // Preload round images in background for instant display
+    roundQuestions.forEach(q => {
+      const img = new Image();
+      img.src = q.image;
+    });
   };
 
   const currentQuestion = game.questions[game.currentQuestionIndex];
@@ -123,7 +182,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       // Auto-advance after a short delay
       setTimeout(() => {
         nextQuestion();
-      }, 1200);
+      }, 800);
     } else {
       sound.playClick();
       setGame(prev => ({
@@ -325,8 +384,10 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
         <div className="flex flex-col items-center space-y-4">
           <div className="relative group">
             <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-[2rem] bg-slate-50 dark:bg-slate-900/50 border-4 border-white dark:border-slate-800 shadow-xl flex items-center justify-center p-8 transition-transform group-hover:scale-105">
-              <img 
+              <ImageWithFallback 
                 src={currentQuestion.image} 
+                fallbackSrc={currentQuestion.fallbackImage}
+                emoji={currentQuestion.emoji}
                 alt={isAr ? currentQuestion.nameAr : currentQuestion.nameEn}
                 className="w-full h-full object-contain drop-shadow-md animate-in zoom-in duration-300"
               />
@@ -385,9 +446,12 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
                     'border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 hover:border-indigo-400 dark:hover:border-indigo-600 hover:scale-105 cursor-pointer shadow-sm'}
                 `}
               >
-                <img 
+                <ImageWithFallback 
                   src={option.image} 
+                  fallbackSrc={option.fallbackImage}
+                  emoji={option.emoji}
                   alt="Shadow candidate"
+                  isShadow={true}
                   className={`w-full h-full object-contain filter brightness-0 transition-opacity ${isWrong ? 'opacity-30' : 'opacity-100'}`}
                 />
                 
