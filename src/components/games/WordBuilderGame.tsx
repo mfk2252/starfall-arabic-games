@@ -71,6 +71,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [wrongAttempt, setWrongAttempt] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
 
   // Shuffle array utility
   const shuffle = <T,>(array: T[]): T[] => {
@@ -114,6 +115,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
     setAvailableLetters(scrambled);
     setShowHint(false);
     setWrongAttempt(false);
+    setIsCorrect(false);
   };
 
   const handleLetterClick = (letterObj: {char: string, id: number, isUsed: boolean}) => {
@@ -140,6 +142,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
       if (builtWord === activeWords[currentWordIndex].word) {
         // Success!
         sound.playMatch();
+        setIsCorrect(true);
         setScore(s => s + 20);
         
         setTimeout(() => {
@@ -302,20 +305,35 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
       <div className="w-full bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-lg flex flex-col items-center space-y-8">
         
         {/* The Image */}
-        <div className="relative group">
-          <div className="w-40 h-40 sm:w-56 sm:h-56 rounded-full bg-gradient-to-tr from-emerald-100 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/20 flex items-center justify-center text-7xl sm:text-8xl shadow-inner border-4 border-white dark:border-slate-800 transition-transform group-hover:scale-110">
+        <div className="relative group flex flex-col items-center">
+          <div className="w-40 h-40 sm:w-56 sm:h-56 rounded-full bg-gradient-to-tr from-emerald-100 to-teal-50 dark:from-emerald-900/30 dark:to-teal-900/20 flex items-center justify-center text-7xl sm:text-8xl shadow-inner border-4 border-white dark:border-slate-800 transition-transform group-hover:scale-105">
             {currentWord.image}
           </div>
+          
+          {/* Live Word Display Container */}
+          <div className="mt-6 min-h-[50px] flex flex-col items-center justify-center">
+            <div className="px-8 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-100 dark:border-emerald-800/50 shadow-sm">
+              <span className="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-wider">
+                {userLetters.filter(l => l !== null).join('') || '...'}
+              </span>
+            </div>
+            {isCorrect && (
+              <div className="mt-2 text-xs font-bold text-slate-400 animate-pulse">
+                {currentWord.titleEn}
+              </div>
+            )}
+          </div>
+
           <button 
             onClick={() => setShowHint(!showHint)}
-            className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-amber-400 text-white flex items-center justify-center shadow-md hover:bg-amber-500 transition-colors"
+            className="absolute top-0 end-0 w-10 h-10 rounded-full bg-amber-400 text-white flex items-center justify-center shadow-md hover:bg-amber-500 transition-colors"
           >
             <Lightbulb className="w-5 h-5" />
           </button>
         </div>
 
         {/* The Slots */}
-        <div className="flex flex-row-reverse items-center justify-center gap-3 sm:gap-4 flex-wrap">
+        <div className="flex flex-row items-center justify-center gap-3 sm:gap-4 flex-wrap">
           {userLetters.map((letter, idx) => (
             <div
               key={idx}
