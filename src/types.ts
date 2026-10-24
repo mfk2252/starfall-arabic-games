@@ -21,7 +21,8 @@ export type GameId =
   | 'word-builder'
   | 'xo-game'
   | 'shadow-game'
-  | 'learning-clock';
+  | 'learning-clock'
+  | 'chronological-sequence';
 
 export type GameCategory =
   | 'numbers'
