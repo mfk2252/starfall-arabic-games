@@ -69,25 +69,25 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#200b1e]/95 backdrop-blur-md border-b border-pink-100 dark:border-pink-950/60 transition-colors duration-200 w-full shadow-xs">
+    <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#20091b]/95 backdrop-blur-md border-b border-pink-100/90 dark:border-[#3d122f] transition-colors duration-200 w-full">
       <div className="max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 xl:px-10">
         <div className="flex items-center justify-between h-20">
-          {/* Brand Logo: Butterfly Icon + Single Name Only in Taleen Pink */}
+          {/* Brand Logo: Butterfly Icon + Single Name Only */}
           <Link
             to="/"
             onClick={() => sound.playClick()}
             className="flex items-center gap-2.5 group select-none shrink-0"
             aria-label={brandName}
           >
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-fuchsia-600 p-1 flex items-center justify-center shadow-md shadow-pink-500/25 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-pink-600 p-1 flex items-center justify-center shadow-md shadow-pink-500/25 group-hover:scale-105 transition-transform duration-200">
               <ButterflyIcon className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl object-contain" />
             </div>
-            <span className="font-heading text-2xl sm:text-3xl font-black tracking-tight text-pink-600 dark:text-pink-300 group-hover:text-pink-700 dark:group-hover:text-pink-200 transition-colors">
+            <span className="font-heading text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors">
               {brandName}
             </span>
           </Link>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links (Visible on XL screens to prevent wrap/clipping on 13" laptops) */}
           <nav
             aria-label={language === 'ar' ? 'التنقل الرئيسي' : 'Main Navigation'}
             className="hidden xl:flex items-center gap-1.5"
@@ -102,11 +102,11 @@ export const Navbar: React.FC = () => {
                   onClick={() => sound.playClick()}
                   className={`flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
-                      ? 'bg-pink-50 text-pink-700 dark:bg-pink-950/80 dark:text-pink-200 shadow-xs border border-pink-200/80 dark:border-pink-800'
-                      : 'text-slate-600 dark:text-pink-100/90 hover:text-pink-600 dark:hover:text-pink-300 hover:bg-pink-50/60 dark:hover:bg-pink-900/40'
+                      ? 'bg-pink-50 text-pink-700 dark:bg-pink-950/80 dark:text-pink-200 shadow-xs border border-pink-200/80 dark:border-pink-800/80'
+                      : 'text-slate-600 dark:text-pink-100/85 hover:text-pink-600 dark:hover:text-pink-300 hover:bg-pink-50/70 dark:hover:bg-[#2d0e26]'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-pink-600 dark:text-pink-300' : 'text-slate-400 dark:text-pink-300/60'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'text-pink-600 dark:text-pink-400' : 'text-slate-400 dark:text-pink-300/60'}`} />
                   <span className="whitespace-nowrap">{link.label}</span>
                 </Link>
               );
@@ -124,7 +124,7 @@ export const Navbar: React.FC = () => {
                 sound.playClick();
                 toggleTheme();
               }}
-              className="relative p-1.5 sm:px-3 sm:py-1.5 rounded-full border border-pink-200 dark:border-pink-900/60 bg-pink-50/80 dark:bg-pink-950/60 text-pink-800 dark:text-pink-200 hover:bg-pink-100 dark:hover:bg-pink-900/60 transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
+              className="relative p-1.5 sm:px-3 sm:py-1.5 rounded-full border border-pink-200/80 dark:border-[#421334] bg-pink-50/80 dark:bg-[#2a0c24] text-slate-700 dark:text-pink-200 hover:bg-pink-100 dark:hover:bg-[#381030] transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
               title={theme === 'dark' ? (language === 'ar' ? 'تفعيل الوضع النهاري' : 'Switch to Light Mode') : (language === 'ar' ? 'تفعيل الوضع الليلي' : 'Switch to Dark Mode')}
               aria-label="Toggle theme"
             >
@@ -148,13 +148,13 @@ export const Navbar: React.FC = () => {
                 sound.playClick();
                 toggleLanguage();
               }}
-              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold border border-pink-200 dark:border-pink-900/60 bg-white dark:bg-pink-950/60 hover:bg-pink-50 dark:hover:bg-pink-900/60 text-pink-800 dark:text-pink-200 transition-colors cursor-pointer shadow-xs"
+              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold border border-pink-200/80 dark:border-[#421334] bg-white dark:bg-[#2a0c24] hover:bg-pink-50 dark:hover:bg-[#381030] text-slate-700 dark:text-pink-200 transition-colors cursor-pointer shadow-xs"
               title={language === 'ar' ? 'Switch to English' : 'التحويل إلى العربية'}
               aria-label="Toggle language"
             >
-              <Globe className="w-3.5 h-3.5 text-pink-600 dark:text-pink-300" />
+              <Globe className="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
               <span>{language === 'ar' ? 'العربية' : 'English'}</span>
-              <ChevronDown className="w-3 h-3 text-pink-300 dark:text-pink-400" />
+              <ChevronDown className="w-3 h-3 text-slate-400 dark:text-pink-300/60" />
             </button>
 
             {/* Sound Toggle */}
@@ -174,7 +174,7 @@ export const Navbar: React.FC = () => {
             {/* Mobile / Compact menu trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-xl text-pink-700 dark:text-pink-200 hover:bg-pink-100/60 dark:hover:bg-pink-900/60 transition-colors"
+              className="xl:hidden p-2 rounded-xl text-slate-600 dark:text-pink-200 hover:bg-pink-50 dark:hover:bg-[#2d0e26] transition-colors"
               aria-label="Toggle mobile menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -185,9 +185,9 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="xl:hidden border-t border-pink-100 dark:border-pink-900/60 bg-white/98 dark:bg-[#200b1e]/98 px-4 pt-3 pb-5 space-y-2 shadow-xl animate-pop-in">
-          <div className="pb-2 border-b border-pink-100 dark:border-pink-900/60 flex items-center justify-between">
-            <span className="text-xs font-bold text-pink-400">{language === 'ar' ? 'تطبيق تالين PWA' : 'Taleen PWA App'}</span>
+        <div className="xl:hidden border-t border-pink-100 dark:border-[#3d122f] bg-white/98 dark:bg-[#20091b]/98 px-4 pt-3 pb-5 space-y-2 shadow-xl animate-pop-in">
+          <div className="pb-2 border-b border-pink-100 dark:border-[#3d122f] flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-400 dark:text-pink-300/70">{language === 'ar' ? 'تطبيق تالين PWA' : 'Taleen PWA App'}</span>
             <PWAInstallButton />
           </div>
           {navLinks.map((link) => {
@@ -204,10 +204,10 @@ export const Navbar: React.FC = () => {
                 className={`flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-base transition-colors ${
                   isActive
                     ? 'bg-pink-50 dark:bg-pink-950/80 text-pink-700 dark:text-pink-200'
-                    : 'text-slate-700 dark:text-pink-100 hover:bg-pink-50 dark:hover:bg-pink-900/60'
+                    : 'text-slate-700 dark:text-pink-100/90 hover:bg-pink-50 dark:hover:bg-[#2d0e26]'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-pink-600 dark:text-pink-300' : 'text-pink-300'}`} />
+                <Icon className={`w-5 h-5 ${isActive ? 'text-pink-600 dark:text-pink-400' : 'text-slate-400 dark:text-pink-300/60'}`} />
                 <span>{link.label}</span>
               </Link>
             );

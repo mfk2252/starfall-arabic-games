@@ -167,7 +167,7 @@ export const HomePage: React.FC = () => {
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-pink-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
@@ -177,12 +177,12 @@ export const HomePage: React.FC = () => {
                 ? 'ابحث عن لعبة أو مهارة (مثال: أرقام، حروف، ذاكرة)...'
                 : 'Search any game or story...'
             }
-            className="w-full ps-10 pe-9 py-2.5 bg-white dark:bg-[#0b1329] border border-slate-200 dark:border-slate-800 rounded-2xl text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-xs transition-colors"
+            className="w-full ps-10 pe-9 py-2.5 bg-white dark:bg-[#20091b] border border-pink-200/80 dark:border-[#3d122f] rounded-2xl text-xs sm:text-sm font-semibold text-slate-800 dark:text-pink-50 placeholder:text-slate-400 dark:placeholder:text-pink-300/50 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:border-pink-400 shadow-xs transition-colors"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="absolute end-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-pink-200"
               aria-label="Clear search"
             >
               <X className="w-4 h-4" />
@@ -191,7 +191,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         {/* Age Filter Selector */}
-        <div className="flex items-center gap-1 p-1 bg-slate-200/70 dark:bg-slate-800/80 rounded-2xl self-start sm:self-auto">
+        <div className="flex items-center gap-1 p-1 bg-pink-100/70 dark:bg-[#2a0c24] rounded-2xl self-start sm:self-auto border border-pink-200/50 dark:border-[#3d122f]">
           <button
             onClick={() => {
               sound.playClick();
@@ -199,8 +199,8 @@ export const HomePage: React.FC = () => {
             }}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               ageFilter === 'all'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                ? 'bg-white dark:bg-[#3d122f] text-pink-900 dark:text-pink-100 shadow-xs'
+                : 'text-slate-600 dark:text-pink-200/80 hover:text-pink-900 dark:hover:text-pink-100'
             }`}
           >
             {language === 'ar' ? 'جميع الأعمار' : 'All Ages'}
@@ -212,8 +212,8 @@ export const HomePage: React.FC = () => {
             }}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               ageFilter === 'toddler'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                ? 'bg-white dark:bg-[#3d122f] text-pink-900 dark:text-pink-100 shadow-xs'
+                : 'text-slate-600 dark:text-pink-200/80 hover:text-pink-900 dark:hover:text-pink-100'
             }`}
           >
             {language === 'ar' ? '٢-٤ سنوات' : '2-4 yrs'}
@@ -225,8 +225,8 @@ export const HomePage: React.FC = () => {
             }}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               ageFilter === 'preschool'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+                ? 'bg-white dark:bg-[#3d122f] text-pink-900 dark:text-pink-100 shadow-xs'
+                : 'text-slate-600 dark:text-pink-200/80 hover:text-pink-900 dark:hover:text-pink-100'
             }`}
           >
             {language === 'ar' ? '٥-٧ سنوات' : '5-7 yrs'}
@@ -247,8 +247,8 @@ export const HomePage: React.FC = () => {
               }}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-bold shrink-0 transition-all cursor-pointer ${
                 isActive
-                  ? 'bg-sky-500 text-white shadow-xs shadow-sky-500/20 scale-[1.02]'
-                  : 'bg-white dark:bg-[#0b1329] text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-800'
+                  ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-xs shadow-pink-500/25 scale-[1.02]'
+                  : 'bg-white dark:bg-[#20091b] text-slate-700 dark:text-pink-100 hover:bg-pink-50 dark:hover:bg-[#2d0e26] border border-pink-100 dark:border-[#3d122f]'
               }`}
             >
               <span>{cat.icon}</span>
@@ -259,7 +259,7 @@ export const HomePage: React.FC = () => {
       </div>
 
       {/* Count Header */}
-      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium px-1">
+      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-pink-300/80 font-medium px-1">
         <span>
           {language === 'ar'
             ? `عرض ${filteredActivities.length} نشاط ولعبة`
@@ -272,7 +272,7 @@ export const HomePage: React.FC = () => {
               setCategoryFilter('all');
               setAgeFilter('all');
             }}
-            className="text-sky-600 dark:text-sky-400 hover:underline font-bold"
+            className="text-pink-600 dark:text-pink-400 hover:underline font-bold"
           >
             {language === 'ar' ? 'إعادة ضبط التصفية' : 'Reset filters'}
           </button>
@@ -281,12 +281,12 @@ export const HomePage: React.FC = () => {
 
       {/* App Launcher Fluid Grid */}
       {filteredActivities.length === 0 ? (
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-10 text-center border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-10 text-center border border-pink-100 dark:border-[#3d122f] shadow-xs">
           <div className="text-5xl mb-3">🔍</div>
-          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">
+          <h3 className="text-lg font-bold text-slate-800 dark:text-pink-100">
             {language === 'ar' ? 'لم نجد ألعابًا تطابق بحثك' : 'No activities matched your search'}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-pink-300/70 mt-1">
             {language === 'ar'
               ? 'جرّب كتابة كلمة أخرى مثل "حروف" أو "أرقام" أو اختر قسماً آخر'
               : 'Try searching for something else or reset the filter'}
@@ -297,7 +297,7 @@ export const HomePage: React.FC = () => {
               setCategoryFilter('all');
               setAgeFilter('all');
             }}
-            className="mt-4 px-4 py-2 bg-sky-500 text-white rounded-full text-xs font-bold hover:bg-sky-600 transition-colors cursor-pointer"
+            className="mt-4 px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full text-xs font-bold hover:opacity-95 shadow-sm shadow-pink-500/20 transition-all cursor-pointer"
           >
             {language === 'ar' ? 'إظهار جميع الألعاب' : 'Show all games'}
           </button>
@@ -309,7 +309,7 @@ export const HomePage: React.FC = () => {
               key={item.id}
               to={item.link}
               onClick={() => sound.playClick()}
-              className="group bg-white dark:bg-[#0b1329] rounded-3xl p-3.5 sm:p-4 border border-slate-200/90 dark:border-slate-800/90 shadow-xs hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 active:scale-95 flex flex-col items-center text-center relative select-none"
+              className="group bg-white dark:bg-[#20091b] rounded-3xl p-3.5 sm:p-4 border border-pink-100/90 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 shadow-xs hover:shadow-md hover:shadow-pink-500/10 transition-all duration-200 transform hover:-translate-y-1 active:scale-95 flex flex-col items-center text-center relative select-none"
             >
               {/* Completed / Star Badge */}
               {item.played && item.stars > 0 && (
@@ -329,12 +329,12 @@ export const HomePage: React.FC = () => {
               </div>
 
               {/* Title Underneath (Short, Clear & Non-overflowing) */}
-              <h3 className="font-black text-xs sm:text-sm text-slate-800 dark:text-slate-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-1 w-full leading-snug">
+              <h3 className="font-black text-xs sm:text-sm text-slate-800 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors line-clamp-1 w-full leading-snug">
                 {item.title}
               </h3>
 
               {/* Metadata */}
-              <div className="flex items-center justify-center gap-1 text-[11px] text-slate-400 dark:text-slate-400 mt-0.5">
+              <div className="flex items-center justify-center gap-1 text-[11px] text-slate-400 dark:text-pink-300/70 mt-0.5">
                 <span>{item.ageRange}</span>
                 {item.type === 'story' && (
                   <>
@@ -351,7 +351,7 @@ export const HomePage: React.FC = () => {
       )}
 
       {/* Bottom Taleen Interactive Banner Container (relocated above bottom footer) */}
-      <div className="mt-4 bg-gradient-to-r from-sky-400 via-sky-500 to-indigo-500 dark:from-slate-900 dark:via-sky-950 dark:to-slate-900 rounded-3xl p-4 sm:p-6 text-white shadow-xs relative overflow-hidden transition-all duration-300">
+      <div className="mt-4 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 dark:from-[#2a061d] dark:via-[#420a2e] dark:to-[#1e0415] border border-pink-400/30 dark:border-pink-900/50 rounded-3xl p-4 sm:p-6 text-white shadow-md shadow-pink-500/15 relative overflow-hidden transition-all duration-300">
         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Brand Logo + Welcome Text */}
           <div className="flex items-center gap-3.5 text-center sm:text-start">
@@ -367,7 +367,7 @@ export const HomePage: React.FC = () => {
                   {language === 'ar' ? 'منصة الألعاب والأنشطة' : 'Interactive Games App'}
                 </span>
               </div>
-              <p className="text-xs text-sky-100 dark:text-sky-200 font-medium mt-0.5">
+              <p className="text-xs text-pink-100 dark:text-pink-200 font-medium mt-0.5">
                 {language === 'ar'
                   ? 'اضغط على أي لعبة وابدأ التعلم والاستكشاف فوراً'
                   : 'Tap any activity card to jump directly into learning and fun'}

@@ -232,7 +232,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
         <div className="w-full flex items-center justify-between">
           <button
             onClick={() => { sound.playClick(); onGoHome(); }}
-            className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all"
+            className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all"
           >
             <BackIcon className="w-5 h-5 text-indigo-500" />
             <span>{isAr ? 'الرجوع للقائمة' : 'Back to Games'}</span>
@@ -297,7 +297,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
           onGoHome={() => setGame(prev => ({ ...prev, status: 'menu' }))}
         />
         
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6 animate-in zoom-in duration-500">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6 animate-in zoom-in duration-500">
           <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-orange-600 flex items-center justify-center text-6xl shadow-md animate-bounce">
             🏆
           </div>
@@ -346,7 +346,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       <div className="w-full flex items-center justify-between gap-3 flex-wrap">
         <button
           onClick={() => setGame(prev => ({ ...prev, status: 'menu' }))}
-          className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all"
+          className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all"
         >
           <BackIcon className="w-4 h-4 text-indigo-500" />
           <span>{isAr ? 'خروج' : 'Exit'}</span>
@@ -354,7 +354,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
 
         <div className="flex items-center gap-2">
           {/* Progress badge */}
-          <div className="flex items-center gap-2 bg-white dark:bg-[#0b1329] text-slate-700 dark:text-slate-100 px-4 py-1.5 rounded-full font-black text-xs sm:text-sm shadow-sm border border-slate-200 dark:border-slate-800">
+          <div className="flex items-center gap-2 bg-white dark:bg-[#20091b] text-slate-700 dark:text-slate-100 px-4 py-1.5 rounded-full font-black text-xs sm:text-sm shadow-sm border border-slate-200 dark:border-slate-800">
             <span>{isAr ? 'السؤال' : 'Question'}</span>
             <span className="text-indigo-600 dark:text-indigo-400">{game.currentQuestionIndex + 1}</span>
             <span className="opacity-30">/</span>
@@ -378,7 +378,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       </div>
 
       {/* Main Game Area */}
-      <div className="w-full bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-10 border border-slate-100 dark:border-slate-800 shadow-lg flex flex-col items-center space-y-8">
+      <div className="w-full bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-10 border border-slate-100 dark:border-slate-800 shadow-lg flex flex-col items-center space-y-8">
         
         {/* Current Item Image */}
         <div className="flex flex-col items-center space-y-4">

@@ -175,7 +175,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
     return (
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center space-y-8 py-4 px-2">
         <div className="w-full flex items-center justify-between">
-          <button onClick={() => { sound.playClick(); onGoHome(); }} className="flex items-center gap-2 bg-white dark:bg-[#0b1329] px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800">
+          <button onClick={() => { sound.playClick(); onGoHome(); }} className="flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800">
             <BackIcon className="w-5 h-5 text-amber-500" />
             <span>{isAr ? 'الرجوع للقائمة' : 'Back to Games'}</span>
           </button>
@@ -195,7 +195,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl">
           {/* PvE Section */}
-          <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-2xl text-blue-600">
                 <Monitor className="w-6 h-6" />
@@ -218,7 +218,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
           </div>
 
           {/* PvP Section */}
-          <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl text-emerald-600">
                 <User className="w-6 h-6" />
@@ -254,7 +254,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
         {isHumanWinner && (
           <WinCelebration score={50} onRestart={resetGame} onGoHome={() => setGameState('menu')} />
         )}
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
           <div className={`w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr ${isDraw ? 'from-slate-400 to-slate-500' : 'from-amber-400 to-orange-600'} flex items-center justify-center text-6xl shadow-md animate-bounce`}>
             {isDraw ? '🤝' : <Trophy className="w-12 h-12 text-white" />}
           </div>
@@ -285,7 +285,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col items-center py-4 space-y-8 px-2">
       <div className="w-full flex items-center justify-between">
-        <button onClick={() => setGameState('menu')} className="flex items-center gap-2 bg-white dark:bg-[#0b1329] px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800">
+        <button onClick={() => setGameState('menu')} className="flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800">
           <BackIcon className="w-5 h-5 text-amber-500" />
           <span>{isAr ? 'الرجوع' : 'Back'}</span>
         </button>
@@ -296,7 +296,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
       </div>
 
       {/* Status Bar */}
-      <div className="flex items-center gap-8 bg-white dark:bg-[#0b1329] p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm w-full max-w-md justify-around">
+      <div className="flex items-center gap-8 bg-white dark:bg-[#20091b] p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm w-full max-w-md justify-around">
         <div className={`flex flex-col items-center gap-2 transition-all duration-300 ${currentPlayer === 'P1' ? 'scale-110 opacity-100' : 'opacity-40'}`}>
           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl font-black bg-blue-500 text-white shadow-md ${currentPlayer === 'P1' ? 'ring-4 ring-blue-500/20' : ''}`}>
             {currentPair.p1}
@@ -325,7 +325,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
               disabled={square !== null || !!winner || (gameMode === 'PvE' && currentPlayer === 'P2')}
               className={`aspect-square rounded-2xl text-4xl sm:text-5xl font-black transition-all transform active:scale-95 flex items-center justify-center ${
                 !square 
-                  ? 'bg-white dark:bg-[#0b1329] hover:bg-blue-50 dark:hover:bg-blue-900/10 cursor-pointer shadow-sm' 
+                  ? 'bg-white dark:bg-[#20091b] hover:bg-blue-50 dark:hover:bg-blue-900/10 cursor-pointer shadow-sm' 
                   : square === 'P1'
                     ? (isWinningSquare ? 'bg-blue-500 text-white scale-105 z-10' : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600')
                     : (isWinningSquare ? 'bg-rose-500 text-white scale-105 z-10' : 'bg-rose-100 dark:bg-rose-900/30 text-rose-600')
@@ -338,7 +338,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
       </div>
 
       <div className="flex gap-4">
-        <button onClick={resetGame} className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-full font-bold transition-all cursor-pointer">
+        <button onClick={resetGame} className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-full font-bold transition-all cursor-pointer">
           <RotateCcw className="w-4 h-4" />
           <span>{isAr ? 'إعادة البدء' : 'Reset Board'}</span>
         </button>

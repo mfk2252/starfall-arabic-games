@@ -94,7 +94,7 @@ export const EmotionsKidsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         badgeText={language === 'ar' ? `تحدي ${currentIndex + 1} من ${roundQuestions.length}` : `Challenge ${currentIndex + 1} of ${roundQuestions.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center gap-8">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-10 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center gap-8">
         
         {/* Target Display */}
         <div className="w-full flex flex-col items-center gap-4 text-center">

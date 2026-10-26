@@ -83,7 +83,7 @@ export const PatternGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={language === 'ar' ? `نمط ${currentIndex + 1} من ${PATTERN_QUESTIONS.length}` : `Pattern ${currentIndex + 1} of ${PATTERN_QUESTIONS.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-4 sm:p-6 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Guidance Prompt */}
         <div className="text-center mb-4">
           <span className="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider block mb-1">

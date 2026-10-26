@@ -152,7 +152,7 @@ export const SeasonsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={`سؤال ${currentQuestionIdx + 1} من ${QUESTIONS.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-4 sm:p-6 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
         {/* Question Box */}
         <div className="w-full bg-gradient-to-r from-emerald-50 via-pink-50 to-amber-50 dark:from-slate-900 dark:via-pink-950/30 dark:to-slate-900 rounded-2xl p-5 text-center border-2 border-emerald-200 dark:border-slate-700 mb-4 shadow-xs">
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">

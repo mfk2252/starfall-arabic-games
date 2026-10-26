@@ -24,7 +24,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
     <Link
       to={`/games/${game.id}`}
       onClick={() => sound.playClick()}
-      className="game-card bg-white dark:bg-[#0b1329] rounded-3xl p-6 text-center shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden group border border-slate-100 dark:border-slate-800/90 hover:border-sky-300 dark:hover:border-sky-700 flex flex-col justify-between select-none transform hover:-translate-y-1.5"
+      className="game-card bg-white dark:bg-[#20091b] rounded-3xl p-6 text-center shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden group border border-pink-100 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 flex flex-col justify-between select-none transform hover:-translate-y-1.5"
     >
       {/* Rainbow stripe on top */}
       <div className="absolute top-0 left-0 right-0 h-1.5 card-rainbow-strip" />
@@ -33,7 +33,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
       <div>
         <div className="flex items-center justify-between w-full mb-3 gap-2 flex-wrap">
           <div className="flex items-center gap-1.5">
-            <span className="text-[11px] font-bold bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 px-2.5 py-0.5 rounded-full border border-slate-200 dark:border-slate-700">
+            <span className="text-[11px] font-bold bg-pink-50 dark:bg-[#2a0c24] text-slate-700 dark:text-pink-200 px-2.5 py-0.5 rounded-full border border-pink-200/80 dark:border-[#421334]">
               {ageRange}
             </span>
             {game.isNew && (
@@ -52,7 +52,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
                 className={`w-4 h-4 ${
                   starIdx <= starsEarned
                     ? 'fill-amber-400 text-amber-400 drop-shadow-xs'
-                    : 'fill-slate-100 dark:fill-slate-800 text-slate-200 dark:text-slate-700'
+                    : 'fill-slate-100 dark:fill-[#2a0c24] text-slate-200 dark:text-pink-900/60'
                 }`}
               />
             ))}
@@ -70,10 +70,10 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
 
         {/* Title & Description */}
         <div className="my-3 text-center">
-          <h3 className="text-xl font-black text-slate-800 dark:text-slate-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+          <h3 className="text-xl font-black text-slate-800 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors">
             {title}
           </h3>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium line-clamp-2">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 leading-relaxed font-medium line-clamp-2">
             {description}
           </p>
         </div>
@@ -83,7 +83,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
           {skills.slice(0, 2).map((skill, i) => (
             <span
               key={i}
-              className="text-[10px] bg-sky-50 dark:bg-sky-950/70 text-sky-800 dark:text-sky-300 px-2 py-0.5 rounded-md font-bold border border-sky-100 dark:border-sky-800/60"
+              className="text-[10px] bg-pink-50 dark:bg-pink-950/80 text-pink-800 dark:text-pink-200 px-2 py-0.5 rounded-md font-bold border border-pink-100 dark:border-pink-900/60"
             >
               {skill}
             </span>

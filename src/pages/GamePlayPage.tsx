@@ -90,12 +90,12 @@ export const GamePlayPage: React.FC = () => {
         return <LearningClockGame onGoHome={handleGoHome} />;
       default:
         return (
-          <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#0b1329] rounded-3xl p-8 text-center shadow-lg border border-slate-100 dark:border-slate-800">
+          <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#20091b] rounded-3xl p-8 text-center shadow-lg border border-pink-100 dark:border-[#3d122f]">
             <div className="text-6xl mb-4">🎮</div>
-            <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-2">
+            <h2 className="text-2xl font-black text-slate-800 dark:text-pink-100 mb-2">
               {language === 'ar' ? 'اللعبة غير متوفرة' : 'Game Not Found'}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-6 font-medium">
+            <p className="text-sm text-slate-600 dark:text-pink-200/80 mb-6 font-medium">
               {language === 'ar'
                 ? 'عذراً، لم يتم العثور على اللعبة المطلوبة. يمكنك اختيار إحدى الألعاب الممتعة الأخرى!'
                 : 'Sorry, the requested game could not be found. Please choose from our available games!'}
@@ -105,7 +105,7 @@ export const GamePlayPage: React.FC = () => {
                 sound.playClick();
                 handleGoHome();
               }}
-              className="inline-flex items-center gap-2 bg-sky-600 dark:bg-sky-500 text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:bg-sky-700 dark:hover:bg-sky-600 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2.5 rounded-full font-bold shadow-md hover:opacity-95 transition-all cursor-pointer"
             >
               <ArrowIcon className="w-4 h-4" />
               <span>{language === 'ar' ? 'الرجوع إلى قائمة الألعاب' : 'Back to Games List'}</span>
@@ -116,7 +116,7 @@ export const GamePlayPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-start bg-[#f8fafc] dark:bg-[#070e20] text-slate-800 dark:text-slate-100 transition-colors duration-200 py-3 sm:py-6 px-3 sm:px-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen w-full flex flex-col items-center justify-start bg-gradient-to-br from-[#fff1f5] via-[#fdf2f8] to-[#fce7f3] dark:from-[#160612] dark:via-[#1e0819] dark:to-[#12040f] text-slate-800 dark:text-pink-50 transition-colors duration-200 py-3 sm:py-6 px-3 sm:px-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {renderGame()}
     </div>
   );

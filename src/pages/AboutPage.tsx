@@ -91,25 +91,25 @@ export const AboutPage: React.FC = () => {
       </div>
 
       {/* Founder Section */}
-      <div className="bg-gradient-to-br from-white to-sky-50/50 dark:from-[#0b1329] dark:to-slate-900/60 rounded-3xl p-6 sm:p-8 shadow-sm border border-sky-100 dark:border-slate-800 flex flex-col md:flex-row items-center gap-6">
-        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center text-5xl shadow-md shrink-0">
+      <div className="bg-gradient-to-br from-white to-pink-50/60 dark:from-[#20091b] dark:to-[#170613] rounded-3xl p-6 sm:p-8 shadow-sm border border-pink-100 dark:border-[#3d122f] flex flex-col md:flex-row items-center gap-6">
+        <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex items-center justify-center text-5xl shadow-md shrink-0">
           👨‍⚕️
         </div>
 
         <div className="flex-1 text-center md:text-start space-y-2">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800 dark:text-sky-300 bg-sky-100 dark:bg-sky-950/60 px-3 py-1 rounded-full">
-            <Award className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-pink-800 dark:text-pink-200 bg-pink-100 dark:bg-pink-950/60 px-3 py-1 rounded-full">
+            <Award className="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
             <span>{language === 'ar' ? 'مؤسس ومصمم المنصة' : 'Platform Founder & Designer'}</span>
           </div>
-          <h2 className="text-2xl font-black text-slate-800 dark:text-white">
+          <h2 className="text-2xl font-black text-slate-800 dark:text-pink-100">
             {language === 'ar' ? 'محمد فكري الكفافي' : 'Mohamed Fekry El-Kafafi'}
           </h2>
-          <p className="text-sm font-bold text-sky-700 dark:text-sky-400">
+          <p className="text-sm font-bold text-pink-700 dark:text-pink-300">
             {language === 'ar'
               ? 'أخصائي التربية الخاصة والتخاطب ومطور حلول تكنولوجيا التعليم الرقمية'
               : 'Special Education & Speech Therapist | EdTech Solutions Developer'}
           </p>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 font-medium leading-relaxed max-w-2xl">
             {language === 'ar'
               ? 'انطلقت منصة «تالين» لتكون مساحة تعليمية آمنة ومدروسة تترجم خبرات التخاطب والتربية الخاصة إلى ألعاب ممتعة وقصص تنمي مدارك الطفل اللغوية والإدراكية دون أي ضغوط نفسية أو إعلانات.'
               : 'Taleen was created as a safe, pedagogically grounded digital space translating clinical speech and special education insights into playful cognitive activities and stories.'}
@@ -130,7 +130,7 @@ export const AboutPage: React.FC = () => {
             <Link
               to="/consultation"
               onClick={() => sound.playClick()}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-xs transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:opacity-95 text-white font-bold text-xs shadow-xs transition-all hover:scale-105"
             >
               <Stethoscope className="w-3.5 h-3.5 text-amber-300" />
               <span>{language === 'ar' ? 'حجز استشارة أو جلسة' : 'Book Consultation'}</span>
@@ -144,7 +144,7 @@ export const AboutPage: React.FC = () => {
         {principles.map((p, idx) => {
           const Icon = p.icon;
           return (
-            <div key={idx} className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-7 shadow-sm border border-slate-100 dark:border-slate-800 flex gap-4 transition-colors">
+            <div key={idx} className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-7 shadow-sm border border-pink-100 dark:border-[#3d122f] flex gap-4 transition-colors">
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${p.color} dark:bg-slate-800/60`}>
                 <Icon className="w-7 h-7" />
               </div>

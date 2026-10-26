@@ -90,7 +90,7 @@ export const ColorShapeSorterGame: React.FC<{ onGoHome: () => void }> = ({ onGoH
         badgeText={language === 'ar' ? `قطعة ${currentIdx + 1} من ${SHAPES_LIST.length}` : `Piece ${currentIdx + 1} of ${SHAPES_LIST.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Sorter Mode Toggle */}
         <div className="flex items-center justify-between w-full mb-6 gap-2">
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400">

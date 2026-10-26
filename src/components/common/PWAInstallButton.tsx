@@ -54,20 +54,20 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
       {/* iOS Safari Guide Modal */}
       {showIOSGuide && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-100 animate-pop-in relative">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-pink-200 dark:border-[#3d122f] text-slate-800 dark:text-pink-100 animate-pop-in relative">
             <button
               onClick={() => setShowIOSGuide(false)}
-              className="absolute top-4 end-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-full bg-slate-100 dark:bg-slate-800 cursor-pointer"
+              className="absolute top-4 end-4 text-slate-400 hover:text-slate-600 dark:hover:text-pink-200 p-1 rounded-full bg-pink-50 dark:bg-[#2a0c24] cursor-pointer"
               aria-label="Close"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <div className="w-12 h-12 rounded-2xl bg-sky-100 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 flex items-center justify-center text-2xl mb-3 shadow-inner">
+            <div className="w-12 h-12 rounded-2xl bg-pink-100 dark:bg-pink-950/80 text-pink-600 dark:text-pink-400 flex items-center justify-center text-2xl mb-3 shadow-inner">
               <Smartphone className="w-6 h-6" />
             </div>
 
-            <h3 className="text-lg font-extrabold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-lg font-extrabold text-slate-900 dark:text-pink-100 mb-2">
               {language === 'ar' ? 'تثبيت تطبيق تالين على iPhone / iPad' : 'Install Taleen on iPhone / iPad'}
             </h3>
 

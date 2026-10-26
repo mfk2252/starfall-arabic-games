@@ -102,51 +102,51 @@ export const ProgressPage: React.FC = () => {
       {/* Main Stats Counters */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-10">
         {/* Total Stars */}
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-amber-200 dark:border-amber-800 shadow-sm flex items-center gap-4 transition-colors">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-pink-100 dark:border-[#3d122f] shadow-sm flex items-center gap-4 transition-colors">
           <div className="w-16 h-16 rounded-2xl bg-amber-100 dark:bg-amber-950/40 text-amber-500 flex items-center justify-center shrink-0">
             <Star className="w-9 h-9 fill-amber-400 text-amber-400" />
           </div>
           <div>
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-0.5">{t('starsEarned')}</span>
-            <div className="text-3xl font-black text-slate-800 dark:text-white tabular-nums">
-              {totalStarsEarned} <span className="text-sm font-semibold text-slate-400 dark:text-slate-500">/ {totalPossibleStars}</span>
+            <span className="text-xs font-bold text-slate-500 dark:text-pink-300/70 block mb-0.5">{t('starsEarned')}</span>
+            <div className="text-3xl font-black text-slate-800 dark:text-pink-100 tabular-nums">
+              {totalStarsEarned} <span className="text-sm font-semibold text-slate-400 dark:text-pink-400/60">/ {totalPossibleStars}</span>
             </div>
           </div>
         </div>
 
         {/* Completed Games */}
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-emerald-200 dark:border-emerald-800 shadow-sm flex items-center gap-4 transition-colors">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-pink-100 dark:border-[#3d122f] shadow-sm flex items-center gap-4 transition-colors">
           <div className="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-9 h-9" />
           </div>
           <div>
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-0.5">
+            <span className="text-xs font-bold text-slate-500 dark:text-pink-300/70 block mb-0.5">
               {language === 'ar' ? 'الألعاب المكتملة' : 'Completed Games'}
             </span>
-            <div className="text-3xl font-black text-slate-800 dark:text-white tabular-nums">
-              {totalCompletedGames} <span className="text-sm font-semibold text-slate-400 dark:text-slate-500">/ {GAMES_LIST.length}</span>
+            <div className="text-3xl font-black text-slate-800 dark:text-pink-100 tabular-nums">
+              {totalCompletedGames} <span className="text-sm font-semibold text-slate-400 dark:text-pink-400/60">/ {GAMES_LIST.length}</span>
             </div>
           </div>
         </div>
 
         {/* Badges Earned */}
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-sky-200 dark:border-sky-800 shadow-sm flex items-center gap-4 transition-colors">
-          <div className="w-16 h-16 rounded-2xl bg-sky-100 dark:bg-sky-950/40 text-sky-600 flex items-center justify-center shrink-0">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-pink-100 dark:border-[#3d122f] shadow-sm flex items-center gap-4 transition-colors">
+          <div className="w-16 h-16 rounded-2xl bg-pink-100 dark:bg-pink-950/60 text-pink-600 dark:text-pink-400 flex items-center justify-center shrink-0">
             <Award className="w-9 h-9" />
           </div>
           <div>
-            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 block mb-0.5">
+            <span className="text-xs font-bold text-slate-500 dark:text-pink-300/70 block mb-0.5">
               {language === 'ar' ? 'الأوسمة المحققة' : 'Badges Earned'}
             </span>
-            <div className="text-3xl font-black text-slate-800 dark:text-white tabular-nums">
-              {badges.filter((b) => b.achieved).length} <span className="text-sm font-semibold text-slate-400 dark:text-slate-500">/ {badges.length}</span>
+            <div className="text-3xl font-black text-slate-800 dark:text-pink-100 tabular-nums">
+              {badges.filter((b) => b.achieved).length} <span className="text-sm font-semibold text-slate-400 dark:text-pink-400/60">/ {badges.length}</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Milestone Badges Showcase */}
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 dark:border-slate-800 mb-10 transition-colors">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-8 shadow-sm border border-pink-100 dark:border-[#3d122f] mb-10 transition-colors">
         <h2 className="text-xl font-black text-slate-800 dark:text-white mb-4 flex items-center gap-2">
           <Award className="w-5 h-5 text-amber-500" />
           <span>{language === 'ar' ? 'أوسمة الإنجاز والتميز' : 'Milestone Badges'}</span>
@@ -172,9 +172,9 @@ export const ProgressPage: React.FC = () => {
       </div>
 
       {/* Game Scores Breakdown Table */}
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 dark:border-slate-800 mb-10 transition-colors">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-8 shadow-sm border border-pink-100 dark:border-[#3d122f] mb-10 transition-colors">
         <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
-          <h2 className="text-xl font-black text-slate-800 dark:text-white">
+          <h2 className="text-xl font-black text-slate-800 dark:text-pink-100">
             {language === 'ar' ? 'تفاصيل أداء الألعاب' : 'Game Breakdown & High Scores'}
           </h2>
           <button
@@ -234,7 +234,7 @@ export const ProgressPage: React.FC = () => {
       {/* Confirmation Modal for Reset */}
       {showConfirmModal && (
         <div className="fixed inset-0 z-50 bg-black/50 dark:bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl border border-slate-200 dark:border-slate-800 animate-pop-in">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl border border-pink-200 dark:border-[#3d122f] animate-pop-in">
             <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
               <AlertTriangle className="w-8 h-8" />
             </div>

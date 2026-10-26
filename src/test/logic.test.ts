@@ -19,12 +19,29 @@ describe('Educational Game Content Logic', () => {
     });
   });
 
-  it('each animal habitat question must have exactly one correct habitat and favorite food', () => {
+  it('each animal habitat & food question must have exactly one correct answer and complete metadata', () => {
+    expect(ANIMAL_HABITATS.length).toBeGreaterThanOrEqual(50);
+
+    const habitatQuestions = ANIMAL_HABITATS.filter((q) => q.type === 'habitat');
+    const foodQuestions = ANIMAL_HABITATS.filter((q) => q.type === 'food');
+    expect(habitatQuestions.length).toBeGreaterThanOrEqual(20);
+    expect(foodQuestions.length).toBeGreaterThanOrEqual(20);
+
+    // Verify correct answers are not all at position 0 across the dataset
+    const correctIndices = ANIMAL_HABITATS.map((q) => q.habitats.findIndex((h) => h.isCorrect));
+    expect(correctIndices.includes(0)).toBe(true);
+    expect(correctIndices.includes(1)).toBe(true);
+    expect(correctIndices.includes(2)).toBe(true);
+
     ANIMAL_HABITATS.forEach((q) => {
+      expect(q.habitats.length).toBe(3);
       const correctHabitats = q.habitats.filter((h) => h.isCorrect);
       expect(correctHabitats.length).toBe(1);
       expect(q.favoriteFood.name.length).toBeGreaterThan(0);
+      expect(q.favoriteFood.icon.length).toBeGreaterThan(0);
       expect(q.funFact.length).toBeGreaterThan(0);
+      expect(q.animal.name.length).toBeGreaterThan(0);
+      expect(q.animal.icon.length).toBeGreaterThan(0);
     });
   });
 

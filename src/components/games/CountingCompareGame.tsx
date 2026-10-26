@@ -106,7 +106,7 @@ export const CountingCompareGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
         badgeText={language === 'ar' ? `تحدي ${currentLevelIdx + 1} من ${COMPARE_LEVELS.length}` : `Challenge ${currentLevelIdx + 1} of ${COMPARE_LEVELS.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-indigo-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-4 sm:p-6 shadow-xl border border-indigo-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         <div className="text-center mb-4">
           <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider block mb-1">
             {language === 'ar' ? 'عد العناصر في الجانبين وقارن بينهما' : 'Count the items on each side and compare'}

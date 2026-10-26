@@ -161,25 +161,25 @@ export const ConsultationPage: React.FC = () => {
       </div>
 
       {/* Specialist Bio Card */}
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center gap-6 transition-colors">
-        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center text-5xl shadow-md shrink-0">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-8 shadow-sm border border-pink-100 dark:border-[#3d122f] flex flex-col md:flex-row items-center gap-6 transition-colors">
+        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-pink-500 to-rose-600 text-white flex items-center justify-center text-5xl shadow-md shrink-0">
           👨‍⚕️
         </div>
 
         <div className="flex-1 text-center md:text-start space-y-2">
-          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800 dark:text-sky-300 bg-sky-100 dark:bg-sky-950/60 px-3 py-1 rounded-full">
-            <Award className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-bold text-pink-800 dark:text-pink-200 bg-pink-100 dark:bg-pink-950/60 px-3 py-1 rounded-full">
+            <Award className="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
             <span>{language === 'ar' ? 'مؤسس منصة تالين التعليمية' : 'Founder of Taleen Platform'}</span>
           </div>
-          <h2 className="text-2xl font-black text-slate-800 dark:text-white">
+          <h2 className="text-2xl font-black text-slate-800 dark:text-pink-100">
             {language === 'ar' ? 'محمد فكري الكفافي' : 'Mohamed Fekry El-Kafafi'}
           </h2>
-          <p className="text-sm font-bold text-sky-700 dark:text-sky-400">
+          <p className="text-sm font-bold text-pink-700 dark:text-pink-300">
             {language === 'ar'
               ? 'أخصائي التربية الخاصة والتخاطب وتطوير الحلول التعليمية للأطفال'
               : 'Special Education & Speech Therapist | EdTech Solutions Developer'}
           </p>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 font-medium leading-relaxed max-w-2xl">
             {language === 'ar'
               ? 'خبرة تزيد عن 9 سنوات في تقييم وتشخيص اضطرابات النطق والكلام، تأهيل حالات اضطراب طيف التوحد وتأخر النمو اللغوي، وبناء الأدوات الرقمية والأنشطة التفاعلية الهادفة للطفل العربي.'
               : 'Over 9 years of clinical and educational experience in diagnosing speech impairments, early language delay, autism support, and authoring interactive digital therapy tools for children.'}
@@ -203,10 +203,10 @@ export const ConsultationPage: React.FC = () => {
       {/* Services Grid */}
       <div>
         <div className="text-center max-w-2xl mx-auto mb-8">
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white mb-2">
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-pink-100 mb-2">
             {language === 'ar' ? 'المجالات والخدمات الاستشارية' : 'Consultation & Therapy Domains'}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 font-medium">
             {language === 'ar'
               ? 'برامج علمية مدروسة قائمة على الدليل تهدف لتنمية قدرات الطفل اللغوية والإدراكية'
               : 'Evidence-based developmental programs designed to nurture communication and cognitive growth'}
@@ -219,7 +219,7 @@ export const ConsultationPage: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 shadow-sm hover:shadow-md border border-slate-100 dark:border-slate-800 flex flex-col justify-between transition-all"
+                className="bg-white dark:bg-[#20091b] rounded-3xl p-6 shadow-sm hover:shadow-md border border-pink-100 dark:border-[#3d122f] flex flex-col justify-between transition-all"
               >
                 <div>
                   <div
@@ -227,8 +227,8 @@ export const ConsultationPage: React.FC = () => {
                   >
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-lg font-black text-slate-800 dark:text-white mb-2">{srv.title}</h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                  <h3 className="text-lg font-black text-slate-800 dark:text-pink-100 mb-2">{srv.title}</h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 leading-relaxed font-medium">
                     {srv.desc}
                   </p>
                 </div>
@@ -239,12 +239,12 @@ export const ConsultationPage: React.FC = () => {
       </div>
 
       {/* Booking Procedure Steps */}
-      <div className="bg-gradient-to-br from-slate-50 to-sky-50/60 dark:from-slate-900/40 dark:to-sky-950/20 rounded-3xl p-6 sm:p-8 border border-sky-100 dark:border-slate-800 transition-colors">
+      <div className="bg-gradient-to-br from-pink-50/70 to-pink-100/50 dark:from-[#20091b] dark:to-[#170613] rounded-3xl p-6 sm:p-8 border border-pink-200/80 dark:border-[#3d122f] transition-colors">
         <div className="text-center max-w-xl mx-auto mb-8">
-          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white mb-2">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-pink-100 mb-2">
             {language === 'ar' ? 'كيفية حجز الجلسة أو الاستشارة' : 'How Booking Works'}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 font-medium">
             {language === 'ar'
               ? 'خطوات بسيطة وواضحة لتنسيق الموعد والمتابعة الرسمية'
               : 'Simple steps to schedule your appointment and personalized follow-up'}
@@ -255,13 +255,13 @@ export const ConsultationPage: React.FC = () => {
           {steps.map((st, idx) => (
             <div
               key={idx}
-              className="bg-white dark:bg-[#0b1329] rounded-2xl p-5 shadow-xs border border-sky-100 dark:border-slate-800 flex flex-col items-center text-center relative transition-colors"
+              className="bg-white dark:bg-[#20091b] rounded-2xl p-5 shadow-xs border border-pink-100 dark:border-[#3d122f] flex flex-col items-center text-center relative transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-sky-600 text-white font-black flex items-center justify-center text-sm shadow-xs mb-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black flex items-center justify-center text-sm shadow-xs mb-3">
                 {st.number}
               </div>
-              <h4 className="font-black text-base text-slate-800 dark:text-white mb-1.5">{st.title}</h4>
-              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{st.desc}</p>
+              <h4 className="font-black text-base text-slate-800 dark:text-pink-100 mb-1.5">{st.title}</h4>
+              <p className="text-xs text-slate-600 dark:text-pink-200/80 leading-relaxed font-medium">{st.desc}</p>
             </div>
           ))}
         </div>

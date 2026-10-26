@@ -184,7 +184,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
         <div className="w-full flex items-center justify-between">
           <button
             onClick={() => { sound.playClick(); onGoHome(); }}
-            className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
+            className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
           >
             <BackIcon className="w-5 h-5 text-emerald-500" />
             <span>{isAr ? 'الرجوع للقائمة' : 'Back to Games'}</span>
@@ -241,7 +241,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
           onRestart={() => startLevel(selectedLetterCount)}
           onGoHome={() => setGameState('menu')}
         />
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
           <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-emerald-400 to-teal-600 flex items-center justify-center text-6xl shadow-md animate-bounce">
             🌟
           </div>
@@ -284,7 +284,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
       <div className="w-full flex items-center justify-between gap-3 flex-wrap" dir={isAr ? 'rtl' : 'ltr'}>
         <button
           onClick={() => { sound.playClick(); setGameState('menu'); }}
-          className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
+          className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
         >
           <BackIcon className="w-5 h-5 text-emerald-500" />
           <span>{isAr ? 'المستويات' : 'Levels'}</span>
@@ -302,7 +302,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
       </div>
 
       {/* Word Progress Area */}
-      <div className="w-full bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-lg flex flex-col items-center space-y-8">
+      <div className="w-full bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-10 border border-slate-200 dark:border-slate-800 shadow-lg flex flex-col items-center space-y-8">
         
         {/* The Image */}
         <div className="relative group flex flex-col items-center">

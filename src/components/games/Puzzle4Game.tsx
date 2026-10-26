@@ -206,7 +206,7 @@ export const Puzzle4Game: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText={`مستوى ${currentLevel + 1} من ${PUZZLES_DATA.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-7 shadow-xl border border-orange-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-4 sm:p-7 shadow-xl border border-orange-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Guidance Prompt */}
         <div className="text-center mb-4 w-full">
           <div className="inline-block bg-orange-50 dark:bg-orange-950/80 border border-orange-200 dark:border-orange-800 text-orange-950 dark:text-orange-200 font-bold px-4 py-2 rounded-2xl text-xs sm:text-sm mb-2 shadow-xs">

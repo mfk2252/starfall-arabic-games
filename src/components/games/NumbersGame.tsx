@@ -142,7 +142,7 @@ export const NumbersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         badgeText="لعبة الذاكرة والحساب"
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Sub-controls: Numeral style toggle */}
         <div className="flex items-center justify-between w-full mb-4 px-2 text-sm text-slate-600 dark:text-slate-300">
           <span className="font-semibold">{message}</span>

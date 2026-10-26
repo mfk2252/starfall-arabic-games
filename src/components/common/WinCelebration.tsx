@@ -54,7 +54,7 @@ export const WinCelebration: React.FC<WinCelebrationProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl border-4 border-amber-300 dark:border-amber-500 animate-pop-in relative overflow-hidden">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-8 max-w-md w-full text-center shadow-2xl border-4 border-amber-300 dark:border-amber-500 animate-pop-in relative overflow-hidden">
         {/* Decorative corner stars */}
         <div className="absolute top-2 left-2 text-2xl">⭐</div>
         <div className="absolute top-2 right-2 text-2xl">⭐</div>

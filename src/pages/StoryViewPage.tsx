@@ -83,7 +83,7 @@ export const StoryViewPage: React.FC = () => {
         <Link
           to="/stories"
           onClick={() => sound.playClick()}
-          className="inline-flex items-center gap-2 bg-white dark:bg-[#0b1329] px-4 py-2 rounded-full font-bold text-sm text-slate-700 dark:text-slate-200 shadow-xs border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors"
+          className="inline-flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-2 rounded-full font-bold text-sm text-slate-700 dark:text-pink-100 shadow-xs border border-pink-200/80 dark:border-[#3d122f] hover:bg-pink-50 dark:hover:bg-[#2d0e26] transition-colors"
         >
           {language === 'ar' ? <ArrowRight className="w-4 h-4 text-amber-500" /> : <ArrowLeft className="w-4 h-4 text-amber-500" />}
           <span>{language === 'ar' ? 'الرجوع إلى القصص' : 'Back to Stories'}</span>
@@ -97,13 +97,13 @@ export const StoryViewPage: React.FC = () => {
       </div>
 
       {/* Story Reader Card */}
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-10 shadow-xl border border-amber-100 dark:border-slate-800 w-full flex flex-col items-center relative overflow-hidden">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-10 shadow-xl border border-pink-100 dark:border-[#3d122f] w-full flex flex-col items-center relative overflow-hidden">
         {/* Story Title & Cover Banner */}
         <div className="text-center mb-6">
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-slate-100 mb-1">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-pink-100 mb-1">
             {language === 'ar' ? story.title : story.titleEn}
           </h1>
-          <span className="text-xs font-bold text-slate-400 dark:text-slate-400">
+          <span className="text-xs font-bold text-slate-400 dark:text-pink-300/70">
             {language === 'ar' ? story.summary : story.summaryEn}
           </span>
         </div>

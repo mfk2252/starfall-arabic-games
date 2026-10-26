@@ -153,7 +153,7 @@ export const DayNightGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =
         badgeText={`عنصر ${currentIndex + 1} من ${ITEMS.length}`}
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-4 sm:p-6 shadow-xl border border-purple-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-4 sm:p-6 shadow-xl border border-purple-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         {/* Item Display Card */}
         <div className="w-full bg-gradient-to-r from-sky-50 via-purple-50 to-amber-50 dark:from-slate-900 dark:via-purple-950/40 dark:to-slate-900 rounded-3xl p-5 sm:p-6 text-center border-2 border-purple-200 dark:border-slate-700 mb-4 shadow-sm">
           <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">

@@ -16,6 +16,12 @@
   }
   body {
     font-family: 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #fff1f5;
+    color: #1e293b;
+  }
+  html.dark body {
+    background-color: #160612;
+    color: #fce7f3;
   }
   h1, h2, h3, h4, h5, h6, .font-heading, .font-almarai, .main-heading {
     font-family: 'Almarai', 'Cairo', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;

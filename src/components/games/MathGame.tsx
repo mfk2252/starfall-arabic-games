@@ -214,7 +214,7 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
               sound.playClick();
               onGoHome();
             }}
-            className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
+            className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
           >
             <BackIcon className="w-5 h-5 text-amber-500" />
             <span>{language === 'ar' ? 'الرجوع للقائمة' : 'Back to Games'}</span>
@@ -278,7 +278,7 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
           onGoHome={() => setGameState('menu')}
         />
         
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
           <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-blue-400 to-indigo-600 flex items-center justify-center text-6xl shadow-md animate-bounce">
             🏆
           </div>
@@ -331,7 +331,7 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
             sound.playClick();
             setGameState('menu');
           }}
-          className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
+          className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
         >
           <BackIcon className="w-5 h-5 text-blue-500" />
           <span>{language === 'ar' ? 'المستويات' : 'Levels'}</span>
@@ -351,7 +351,7 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-white dark:bg-[#0b1329] rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 text-center">
+      <div className="w-full bg-white dark:bg-[#20091b] rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3 text-center">
         <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
           <div
             className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full transition-all duration-300 rounded-full"
@@ -361,7 +361,7 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
       </div>
 
       {/* Question Card */}
-      <div className="w-full bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-lg text-center space-y-6">
+      <div className="w-full bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-lg text-center space-y-6">
         <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white leading-relaxed">
           {language === 'ar' ? currentQ.questionAr : currentQ.questionEn}
         </h2>

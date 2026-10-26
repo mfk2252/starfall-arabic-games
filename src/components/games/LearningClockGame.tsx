@@ -313,7 +313,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
         <div className="w-full flex items-center justify-between">
           <button
             onClick={() => { sound.playClick(); onGoHome(); }}
-            className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
+            className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
           >
             <BackIcon className="w-5 h-5 text-rose-500" />
             <span>{isAr ? 'الرجوع للقائمة' : 'Back to Games'}</span>
@@ -340,7 +340,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
           {/* Explore Mode */}
-          <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center space-y-4 hover:shadow-md transition-shadow">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center space-y-4 hover:shadow-md transition-shadow">
             <div className="text-4xl">🔍</div>
             <h2 className="text-xl font-black text-slate-800 dark:text-white">{isAr ? 'استكشف الساعة' : 'Explore Clock'}</h2>
             <p className="text-xs text-slate-500 text-center">{isAr ? 'حرك العقارب وشاهد الوقت يتغير' : 'Move hands and watch time change'}</p>
@@ -353,7 +353,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
           </div>
 
           {/* Quiz Mode: Analog to Digital */}
-          <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center space-y-4 hover:shadow-md transition-shadow">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center space-y-4 hover:shadow-md transition-shadow">
             <div className="text-4xl">🧩</div>
             <h2 className="text-xl font-black text-slate-800 dark:text-white">{isAr ? 'تحدي العقارب' : 'Analog Challenge'}</h2>
             <p className="text-xs text-slate-500 text-center">{isAr ? 'اضبط الساعة لتطابق الوقت المطلوب' : 'Set the clock to match the time'}</p>
@@ -374,7 +374,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
           </div>
 
           {/* Quiz Mode: Digital to Analog */}
-          <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center space-y-4 hover:shadow-md transition-shadow">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center space-y-4 hover:shadow-md transition-shadow">
             <div className="text-4xl">🤔</div>
             <h2 className="text-xl font-black text-slate-800 dark:text-white">{isAr ? 'تحدي القراءة' : 'Reading Challenge'}</h2>
             <p className="text-xs text-slate-500 text-center">{isAr ? 'ما هو الوقت الظاهر على الساعة؟' : 'What time is shown on the clock?'}</p>
@@ -426,7 +426,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
       <div className="w-full flex items-center justify-between gap-4">
         <button
           onClick={() => setGameState(prev => ({ ...prev, status: 'menu' }))}
-          className="flex items-center gap-2 bg-white dark:bg-[#0b1329] text-slate-700 dark:text-slate-100 px-4 py-2 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
+          className="flex items-center gap-2 bg-white dark:bg-[#20091b] text-slate-700 dark:text-slate-100 px-4 py-2 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer"
         >
           <BackIcon className="w-4 h-4 text-rose-500" />
           <span>{isAr ? 'خروج' : 'Exit'}</span>
@@ -434,7 +434,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
 
         {gameState.currentMode !== 'explore' && (
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-white dark:bg-[#0b1329] px-4 py-1.5 rounded-full font-black text-sm shadow-sm border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-1.5 rounded-full font-black text-sm shadow-sm border border-slate-200 dark:border-slate-800">
               <span>{isAr ? 'جولة' : 'Round'}</span>
               <span className="text-rose-600">{gameState.round}</span>
               <span className="opacity-30">/</span>
@@ -448,7 +448,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
         )}
       </div>
 
-      <div className="w-full bg-white dark:bg-[#0b1329] rounded-[40px] p-8 sm:p-12 border border-slate-100 dark:border-slate-800 shadow-xl flex flex-col items-center space-y-10 relative overflow-hidden">
+      <div className="w-full bg-white dark:bg-[#20091b] rounded-[40px] p-8 sm:p-12 border border-slate-100 dark:border-slate-800 shadow-xl flex flex-col items-center space-y-10 relative overflow-hidden">
         {/* Progress Background */}
         <div className="absolute top-0 left-0 h-1.5 bg-rose-500 transition-all duration-500" style={{ width: `${(gameState.round / 5) * 100}%` }} />
 

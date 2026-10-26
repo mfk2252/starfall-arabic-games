@@ -251,7 +251,7 @@ export const PuzzleGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
     return (
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center space-y-8 py-4 px-2">
         <div className="w-full flex items-center justify-between">
-          <button onClick={() => { sound.playClick(); onGoHome(); }} className="flex items-center gap-2 bg-white dark:bg-[#0b1329] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer">
+          <button onClick={() => { sound.playClick(); onGoHome(); }} className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all cursor-pointer">
             <BackIcon className="w-5 h-5 text-amber-500" />
             <span>{isAr ? 'الرجوع للقائمة' : 'Back to Games'}</span>
           </button>
@@ -299,7 +299,7 @@ export const PuzzleGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
     return (
       <div className="w-full max-w-2xl mx-auto flex flex-col items-center justify-center py-10 px-4 text-center space-y-6">
         <WinCelebration score={score} onRestart={() => startPuzzleRound(currentImageIndex, gridSize)} onGoHome={() => setGameState('select-level')} />
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6">
           <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center text-6xl shadow-md animate-bounce">{activePuzzleItem.emoji}</div>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white">{isAr ? 'رائع! لقد أتممت المهمة بنجاح' : 'Amazing! You solved it!'}</h2>
           <div className="w-48 h-48 mx-auto rounded-3xl shadow-lg border-4 border-white dark:border-slate-800 flex flex-col items-center justify-center p-4 overflow-hidden relative" style={{ background: `linear-gradient(135deg, ${activePuzzleItem.colors[0]}, ${activePuzzleItem.colors[1]})` }}>
@@ -328,7 +328,7 @@ export const PuzzleGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
   return (
     <div className="w-full max-w-5xl mx-auto flex flex-col items-center py-4 space-y-6 px-2">
       <div className="w-full flex items-center justify-between flex-wrap gap-3">
-        <button onClick={() => setGameState('select-level')} className="flex items-center gap-2 bg-white dark:bg-[#0b1329] px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800">
+        <button onClick={() => setGameState('select-level')} className="flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800">
           <BackIcon className="w-5 h-5 text-amber-500" />
           <span>{isAr ? 'تغيير المستوى' : 'Levels'}</span>
         </button>
@@ -412,7 +412,7 @@ export const PuzzleGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
         </div>
 
         {/* Pieces Tray */}
-        <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center">
           <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-6">{isAr ? 'القطع المبعثرة' : 'Unassembled Pieces'}</h3>
           
           {trayPieceIds.length === 0 ? (

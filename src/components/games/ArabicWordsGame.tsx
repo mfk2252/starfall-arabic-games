@@ -148,7 +148,7 @@ export const ArabicWordsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
         badgeText="ربط الحروف بالكلمات والصور"
       />
 
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-5 sm:p-8 shadow-xl border border-orange-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-5 sm:p-8 shadow-xl border border-orange-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
         <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
           <span className="font-bold text-orange-900 dark:text-orange-300">{message}</span>
           <span className="text-xs font-semibold bg-orange-50 dark:bg-orange-950/80 text-orange-700 dark:text-orange-300 px-3 py-1 rounded-full border border-orange-200 dark:border-orange-800">

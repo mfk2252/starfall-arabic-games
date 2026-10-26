@@ -107,16 +107,16 @@ export const SelfLearningPage: React.FC = () => {
           return (
             <div
               key={idx}
-              className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row gap-4 items-start"
+              className="bg-white dark:bg-[#20091b] rounded-3xl p-6 border border-pink-100 dark:border-[#3d122f] shadow-xs flex flex-col sm:flex-row gap-4 items-start"
             >
               <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 shadow-xs ${item.color}`}>
                 <Icon className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-black text-base sm:text-lg text-slate-800 dark:text-slate-100 mb-1">
+                <h3 className="font-black text-base sm:text-lg text-slate-800 dark:text-pink-100 mb-1">
                   {item.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 leading-relaxed">
                   {item.desc}
                 </p>
               </div>
@@ -126,11 +126,11 @@ export const SelfLearningPage: React.FC = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-8 border border-slate-200/90 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-8 border border-pink-100 dark:border-[#3d122f] shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-3">
-          <Gamepad2 className="w-10 h-10 text-sky-500 shrink-0" />
+          <Gamepad2 className="w-10 h-10 text-pink-500 shrink-0" />
           <div>
-            <h3 className="font-black text-base sm:text-lg text-slate-900 dark:text-white">
+            <h3 className="font-black text-base sm:text-lg text-slate-900 dark:text-pink-100">
               {language === 'ar' ? 'جاهز لبدء رحلة التعلم الذاتي؟' : 'Ready to begin self-learning?'}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">

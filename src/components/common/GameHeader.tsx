@@ -43,7 +43,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             sound.playClick();
             onGoHome();
           }}
-          className="flex items-center gap-2 bg-white/95 dark:bg-[#0b1329] hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 border border-slate-200 dark:border-slate-800/90 cursor-pointer"
+          className="flex items-center gap-2 bg-white/95 dark:bg-[#20091b] hover:bg-pink-50 dark:hover:bg-[#2d0e26] text-slate-700 dark:text-pink-100 px-4 py-2.5 rounded-full font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 border border-pink-200/80 dark:border-[#3d122f] cursor-pointer"
           title={t('backToGames')}
         >
           <BackIcon className="w-5 h-5 text-amber-500 dark:text-amber-400" />

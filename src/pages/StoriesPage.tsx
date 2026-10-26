@@ -39,15 +39,15 @@ export const StoriesPage: React.FC = () => {
           return (
             <div
               key={story.id}
-              className="bg-white dark:bg-[#0b1329] rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl transition-all duration-300 border border-slate-100 dark:border-slate-800/90 flex flex-col justify-between group transform hover:-translate-y-1.5"
+              className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl transition-all duration-300 border border-pink-100 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 flex flex-col justify-between group transform hover:-translate-y-1.5"
             >
               <div>
                 {/* Meta pills */}
                 <div className="flex items-center justify-between gap-2 mb-4">
-                  <span className="text-[11px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
+                  <span className="text-[11px] font-bold bg-pink-50 dark:bg-[#2a0c24] text-slate-700 dark:text-pink-200 px-2.5 py-1 rounded-full border border-pink-200/80 dark:border-[#421334]">
                     {ageRange}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                  <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 dark:text-pink-300/70">
                     <Clock className="w-3.5 h-3.5" />
                     <span>{duration}</span>
                   </div>
