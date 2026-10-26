@@ -29,6 +29,21 @@ const LETTER_WORDS: Record<string, string> = {
   'س': 'سمكة 🐟',
 };
 
+const LETTER_NAMES: Record<string, string> = {
+  'أ': 'ألف',
+  'ب': 'باء',
+  'ت': 'تاء',
+  'ث': 'ثاء',
+  'ج': 'جيم',
+  'ح': 'حاء',
+  'خ': 'خاء',
+  'د': 'دال',
+  'ذ': 'ذال',
+  'ر': 'راء',
+  'ز': 'زاي',
+  'س': 'سين',
+};
+
 export const ArabicLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
@@ -88,6 +103,7 @@ export const ArabicLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
         // Matched!
         setTimeout(() => {
           sound.playMatch();
+          sound.speakText(LETTER_NAMES[firstCard.letter] || firstCard.letter, 'ar');
           setCards((prev) =>
             prev.map((c, i) =>
               i === firstIdx || i === secondIdx ? { ...c, isMatched: true } : c

@@ -22,6 +22,17 @@ const ARABIC_DIGITS: Record<number, string> = {
   8: '٨',
 };
 
+const NUMBER_WORDS: Record<number, string> = {
+  1: 'واحد',
+  2: 'اثنان',
+  3: 'ثلاثة',
+  4: 'أربعة',
+  5: 'خمسة',
+  6: 'ستة',
+  7: 'سبعة',
+  8: 'ثمانية',
+};
+
 // Dots pattern for toddler visual counting aid
 const DOTS: Record<number, string> = {
   1: '●',
@@ -96,6 +107,7 @@ export const NumbersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         // Matched!
         setTimeout(() => {
           sound.playMatch();
+          sound.speakText(NUMBER_WORDS[firstCard.value], 'ar');
           setCards((prev) =>
             prev.map((c, i) =>
               i === firstIdx || i === secondIdx ? { ...c, isMatched: true } : c

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { WinCelebration } from '../common/WinCelebration';
+import { BackButton } from '../common/BackButton';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -29,7 +30,7 @@ interface GameState {
   wrongChoices: string[];
 }
 
-// Resilient image component with CDN fallback and emoji fallback
+// Resilient image component with CDN fallback, emoji fallback, and crisp silhouette filters
 const ImageWithFallback: React.FC<{
   src: string;
   fallbackSrc?: string;
@@ -37,7 +38,7 @@ const ImageWithFallback: React.FC<{
   alt: string;
   className?: string;
   isShadow?: boolean;
-}> = ({ src, fallbackSrc, emoji, alt, className, isShadow }) => {
+}> = ({ src, fallbackSrc, emoji, alt, className = '', isShadow }) => {
   const [currentSrc, setCurrentSrc] = useState(src);
   const [hasFailed, setHasFailed] = useState(false);
 
@@ -57,9 +58,9 @@ const ImageWithFallback: React.FC<{
   if (hasFailed && emoji) {
     return (
       <span 
-        className={`text-5xl sm:text-7xl select-none transition-transform ${
+        className={`text-4xl sm:text-6xl select-none transition-transform flex items-center justify-center leading-none ${
           isShadow 
-            ? 'filter grayscale-[1] brightness-0 opacity-80 contrast-[2]' 
+            ? 'filter grayscale brightness-0 contrast-200 dark:drop-shadow-[0_0_2px_rgba(255,255,255,0.95)] opacity-90' 
             : 'drop-shadow-md'
         }`}
         role="img" 
@@ -75,7 +76,11 @@ const ImageWithFallback: React.FC<{
       src={currentSrc}
       alt={alt}
       onError={handleError}
-      className={`${className} ${isShadow ? 'filter brightness-0 contrast-125' : ''}`}
+      className={`${className} ${
+        isShadow 
+          ? 'filter brightness-0 contrast-125 drop-shadow-[0_2px_4px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_0_2px_rgba(255,255,255,0.95)]' 
+          : 'drop-shadow-md'
+      }`}
       loading="eager"
       decoding="async"
     />
@@ -100,12 +105,12 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
 
   const [showHint, setShowHint] = useState(false);
 
-  // Difficulty configurations
-  const DIFFICULTY_CONFIG = {
-    easy: { optionsCount: 2, labelAr: 'سهل', labelEn: 'Easy', icon: '👶', color: 'from-emerald-400 to-teal-600' },
-    medium: { optionsCount: 3, labelAr: 'متوسط', labelEn: 'Medium', icon: '👦', color: 'from-sky-400 to-blue-600' },
-    advanced: { optionsCount: 4, labelAr: 'متقدم', labelEn: 'Advanced', icon: '🧑', color: 'from-amber-400 to-orange-600' },
-    challenge: { optionsCount: 5, labelAr: 'تحدي الأبطال', labelEn: 'Hero Challenge', icon: '🏆', color: 'from-purple-500 to-indigo-700' },
+  // Difficulty configurations with exactly 6 options for Advanced and Challenge modes
+  const DIFFICULTY_CONFIG: Record<Difficulty, { optionsCount: number; labelAr: string; labelEn: string; icon: string; color: string }> = {
+    easy: { optionsCount: 2, labelAr: 'سهل (خياران)', labelEn: 'Easy (2 Options)', icon: '👶', color: 'from-emerald-400 to-teal-600' },
+    medium: { optionsCount: 4, labelAr: 'متوسط (٤ خيارات)', labelEn: 'Medium (4 Options)', icon: '👦', color: 'from-sky-400 to-blue-600' },
+    advanced: { optionsCount: 6, labelAr: 'متقدم (٦ خيارات)', labelEn: 'Advanced (6 Options)', icon: '🧑', color: 'from-pink-500 to-rose-600' },
+    challenge: { optionsCount: 6, labelAr: 'تحدي الأبطال (٦ خيارات)', labelEn: 'Hero Challenge (6 Options)', icon: '🏆', color: 'from-purple-500 to-indigo-700' },
   };
 
   const shuffle = <T,>(array: T[]): T[] => {
@@ -120,8 +125,6 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
   const startNewGame = (difficulty: Difficulty) => {
     sound.playClick();
     
-    // Filter questions by difficulty or just take random ones
-    // For children games, it's better to mix but vary options count
     const pool = shuffle(SHADOW_GAME_DATA);
     const roundQuestions = pool.slice(0, 10);
 
@@ -146,19 +149,20 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
 
   const currentQuestion = game.questions[game.currentQuestionIndex];
 
+  // Guaranteed distinct options according to difficulty optionsCount (e.g. 6 in advanced)
   const currentOptions = useMemo(() => {
     if (!currentQuestion || !game.selectedDifficulty) return [];
 
     const optionsCount = DIFFICULTY_CONFIG[game.selectedDifficulty].optionsCount;
     const correctOption = currentQuestion;
     
-    // Find distractors from the same category first, then from pool
-    let pool = SHADOW_GAME_DATA.filter(q => q.id !== correctOption.id);
-    let sameCategoryDistractors = pool.filter(q => q.category === correctOption.category);
+    // Find distractors from the same category first to make the matching engaging
+    const pool = SHADOW_GAME_DATA.filter(q => q.id !== correctOption.id);
+    const sameCategoryDistractors = pool.filter(q => q.category === correctOption.category);
     
     let distractors = shuffle(sameCategoryDistractors).slice(0, optionsCount - 1);
     
-    // If not enough in same category, fill from pool
+    // If not enough in same category, fill remaining from global pool
     if (distractors.length < optionsCount - 1) {
       const remainingPool = pool.filter(q => !distractors.some(d => d.id === q.id));
       distractors = [...distractors, ...shuffle(remainingPool).slice(0, optionsCount - 1 - distractors.length)];
@@ -184,7 +188,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
         nextQuestion();
       }, 800);
     } else {
-      sound.playClick();
+      sound.playWrong();
       setGame(prev => ({
         ...prev,
         userChoice: choiceId,
@@ -230,29 +234,23 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
     return (
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center space-y-8 py-4 px-2 animate-in fade-in duration-500">
         <div className="w-full flex items-center justify-between">
-          <button
-            onClick={() => { sound.playClick(); onGoHome(); }}
-            className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2.5 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all"
-          >
-            <BackIcon className="w-5 h-5 text-indigo-500" />
-            <span>{isAr ? 'الرجوع للقائمة' : 'Back to Games'}</span>
-          </button>
-          <div className="flex items-center gap-2 bg-gradient-to-r from-slate-700 to-slate-900 text-white px-4 py-2 rounded-full font-black text-sm shadow-sm">
+          <BackButton onClick={onGoHome} />
+          <div className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white px-4 py-2 rounded-full font-black text-sm shadow-sm">
             <span>👤</span>
             <span>{isAr ? 'اكتشف الظل' : 'Discover Shadow'}</span>
           </div>
         </div>
 
         <div className="text-center space-y-3">
-          <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto shadow-inner border-4 border-white dark:border-slate-700">
-            <span className="text-6xl filter grayscale">🐼</span>
+          <div className="w-24 h-24 bg-pink-50 dark:bg-[#20091b] rounded-full flex items-center justify-center mx-auto shadow-inner border-4 border-white dark:border-pink-900/40">
+            <span className="text-6xl filter grayscale brightness-0 drop-shadow-md">🐼</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-white">
-            {isAr ? 'لعبة اكتشف الظل' : 'Discover the Shadow'}
+          <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-pink-100">
+            {isAr ? 'لعبة الشكل والظل' : 'Shape & Shadow Game'}
           </h1>
-          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 font-medium max-w-lg mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-pink-200/80 font-medium max-w-lg mx-auto leading-relaxed">
             {isAr 
-              ? 'هل يمكنك معرفة صاحب الظل؟ انظر إلى الصورة الملونة واختر الظل الذي يطابق شكلها تماماً.'
+              ? 'هل يمكنك معرفة صاحب الظل؟ انظر إلى الصورة الملونة بالأعلى واختر الظل الذي يطابق شكلها تماماً.'
               : 'Can you recognize the owner of the shadow? Look at the colored image and pick the shadow that matches its shape perfectly.'}
           </p>
         </div>
@@ -273,8 +271,8 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
                   <h3 className="text-lg font-black">{isAr ? conf.labelAr : conf.labelEn}</h3>
                   <p className="text-xs text-white/90 font-medium mt-0.5">
                     {isAr 
-                      ? `مطابقة بين ${conf.optionsCount} خيارات`
-                      : `Match between ${conf.optionsCount} options`}
+                      ? `مطابقة بين ${conf.optionsCount} خيارات متطابقة الظلال`
+                      : `Match between ${conf.optionsCount} shadow options`}
                   </p>
                 </div>
               </button>
@@ -297,16 +295,16 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
           onGoHome={() => setGame(prev => ({ ...prev, status: 'menu' }))}
         />
         
-        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 w-full space-y-6 animate-in zoom-in duration-500">
+        <div className="bg-white dark:bg-[#20091b] rounded-3xl p-8 shadow-xl border border-pink-100 dark:border-pink-900/40 w-full space-y-6 animate-in zoom-in duration-500">
           <div className="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-amber-400 to-orange-600 flex items-center justify-center text-6xl shadow-md animate-bounce">
             🏆
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-pink-100">
               {isAr ? 'أحسنت يا بطل!' : 'Great job, Hero!'}
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+            <p className="text-sm text-slate-600 dark:text-pink-200/80 font-medium leading-relaxed">
               {isAr 
                 ? `لقد اكتشفت جميع الظلال بنجاح وحصلت على ${game.score} نقطة!`
                 : `You successfully discovered all shadows and earned ${game.score} points!`}
@@ -324,7 +322,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
 
             <button
               onClick={() => setGame(prev => ({ ...prev, status: 'menu' }))}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-8 py-3 rounded-2xl font-black text-sm transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-pink-50 hover:bg-pink-100 dark:bg-pink-950/40 text-pink-700 dark:text-pink-200 px-8 py-3 rounded-2xl font-black text-sm transition-all border border-pink-200 dark:border-pink-900/50"
             >
               <BackIcon className="w-4 h-4" />
               <span>{isAr ? 'تغيير المستوى' : 'Change Level'}</span>
@@ -346,23 +344,24 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       <div className="w-full flex items-center justify-between gap-3 flex-wrap">
         <button
           onClick={() => setGame(prev => ({ ...prev, status: 'menu' }))}
-          className="flex items-center gap-2 bg-white dark:bg-[#20091b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-100 px-4 py-2 rounded-full font-bold shadow-sm border border-slate-200 dark:border-slate-800 transition-all"
+          className="flex items-center gap-2 bg-white/95 dark:bg-[#20091b] hover:bg-pink-50 dark:hover:bg-[#2d0e26] text-slate-700 dark:text-pink-100 px-4 py-2 rounded-full font-bold shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 border border-pink-200/80 dark:border-[#3d122f] cursor-pointer"
+          title={isAr ? 'تغيير المستوى' : 'Change Level'}
         >
-          <BackIcon className="w-4 h-4 text-indigo-500" />
-          <span>{isAr ? 'خروج' : 'Exit'}</span>
+          <BackIcon className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+          <span>{isAr ? 'تغيير المستوى' : 'Change Level'}</span>
         </button>
 
         <div className="flex items-center gap-2">
           {/* Progress badge */}
-          <div className="flex items-center gap-2 bg-white dark:bg-[#20091b] text-slate-700 dark:text-slate-100 px-4 py-1.5 rounded-full font-black text-xs sm:text-sm shadow-sm border border-slate-200 dark:border-slate-800">
+          <div className="flex items-center gap-2 bg-white dark:bg-[#20091b] text-slate-700 dark:text-pink-100 px-4 py-1.5 rounded-full font-black text-xs sm:text-sm shadow-sm border border-pink-200/80 dark:border-pink-900/40">
             <span>{isAr ? 'السؤال' : 'Question'}</span>
-            <span className="text-indigo-600 dark:text-indigo-400">{game.currentQuestionIndex + 1}</span>
+            <span className="text-pink-600 dark:text-pink-400 font-extrabold">{game.currentQuestionIndex + 1}</span>
             <span className="opacity-30">/</span>
             <span>{game.questions.length}</span>
           </div>
           
           {/* Score badge */}
-          <div className="flex items-center gap-2 bg-amber-400 text-amber-950 px-4 py-1.5 rounded-full font-black text-xs sm:text-sm shadow-sm">
+          <div className="flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 text-amber-950 px-4 py-1.5 rounded-full font-black text-xs sm:text-sm shadow-sm border border-amber-300">
             <Sparkles className="w-4 h-4" />
             <span>{game.score}</span>
           </div>
@@ -370,20 +369,20 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       </div>
 
       {/* Progress Bar */}
-      <div className="w-full bg-slate-200 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden shadow-inner">
+      <div className="w-full bg-pink-100 dark:bg-pink-950/40 h-2.5 rounded-full overflow-hidden shadow-inner">
         <div 
-          className="bg-gradient-to-r from-indigo-500 to-sky-500 h-full transition-all duration-500 ease-out"
+          className="bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 h-full transition-all duration-500 ease-out"
           style={{ width: `${progressPercent}%` }}
         />
       </div>
 
       {/* Main Game Area */}
-      <div className="w-full bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-10 border border-slate-100 dark:border-slate-800 shadow-lg flex flex-col items-center space-y-8">
+      <div className="w-full bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-10 border border-pink-100 dark:border-pink-900/40 shadow-lg flex flex-col items-center space-y-8">
         
-        {/* Current Item Image */}
+        {/* Current Item Colored Image */}
         <div className="flex flex-col items-center space-y-4">
           <div className="relative group">
-            <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-[2rem] bg-slate-50 dark:bg-slate-900/50 border-4 border-white dark:border-slate-800 shadow-xl flex items-center justify-center p-8 transition-transform group-hover:scale-105">
+            <div className="w-48 h-48 sm:w-60 sm:h-60 rounded-[2rem] bg-gradient-to-br from-pink-50 to-rose-50/50 dark:from-slate-900/60 dark:to-pink-950/30 border-4 border-pink-100 dark:border-pink-900/50 shadow-xl flex items-center justify-center p-8 transition-transform group-hover:scale-105">
               <ImageWithFallback 
                 src={currentQuestion.image} 
                 fallbackSrc={currentQuestion.fallbackImage}
@@ -393,39 +392,41 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
               />
             </div>
             
-            {/* Success/Error overlays */}
+            {/* Success overlay */}
             {game.isCorrect === true && (
-              <div className="absolute inset-0 bg-emerald-500/10 rounded-[2rem] flex items-center justify-center animate-in fade-in duration-300">
+              <div className="absolute inset-0 bg-emerald-500/15 rounded-[2rem] flex items-center justify-center animate-in fade-in duration-300">
                 <CheckCircle2 className="w-20 h-20 text-emerald-500 drop-shadow-lg" />
               </div>
             )}
 
             <button 
               onClick={() => setShowHint(!showHint)}
-              className="absolute top-2 end-2 w-10 h-10 rounded-full bg-indigo-500 text-white flex items-center justify-center shadow-lg hover:bg-indigo-600 transition-colors"
+              className="absolute top-2 end-2 w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-lg hover:bg-pink-600 transition-colors"
               title={isAr ? 'تلميح' : 'Hint'}
             >
-              <Lightbulb className="w-5 h-5" />
+              <Lightbulb className="w-5 h-5 text-amber-300" />
             </button>
           </div>
 
           <div className="text-center">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-white">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 dark:text-pink-100">
               {isAr ? 'أي ظل يطابقني؟' : 'Which shadow matches me?'}
             </h2>
             {showHint && (
-              <p className="mt-1 text-sm font-bold text-indigo-600 dark:text-indigo-400 animate-in fade-in slide-in-from-top-2">
+              <p className="mt-1 text-sm font-bold text-pink-600 dark:text-pink-300 animate-in fade-in slide-in-from-top-2">
                 {isAr ? currentQuestion.nameAr : currentQuestion.nameEn}
               </p>
             )}
           </div>
         </div>
 
-        {/* Options (Shadows) */}
-        <div className={`grid gap-4 w-full justify-center ${
-          game.selectedDifficulty === 'easy' ? 'grid-cols-2 max-w-sm' : 
-          game.selectedDifficulty === 'medium' ? 'grid-cols-3 max-w-xl' :
-          'grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 max-w-4xl'
+        {/* Shadow Options Grid: Exactly 6 options in Advanced mode */}
+        <div className={`grid gap-3 sm:gap-4 w-full justify-center ${
+          game.selectedDifficulty === 'easy' 
+            ? 'grid-cols-2 max-w-sm' 
+            : game.selectedDifficulty === 'medium' 
+            ? 'grid-cols-2 sm:grid-cols-4 max-w-2xl' 
+            : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 max-w-5xl'
         }`}>
           {currentOptions.map((option) => {
             const isSelected = game.userChoice === option.id;
@@ -438,31 +439,38 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
                 onClick={() => handleChoice(option.id)}
                 disabled={game.isCorrect === true || isWrong}
                 className={`
-                  aspect-square rounded-2xl sm:rounded-3xl p-4 sm:p-6 border-4 transition-all transform duration-300 relative
-                  flex items-center justify-center overflow-hidden
-                  ${isRight ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/30 scale-105 shadow-lg' : 
-                    isWrong ? 'border-rose-300 bg-rose-50 dark:bg-rose-950/20 opacity-50 scale-95' :
-                    isSelected && !game.isCorrect ? 'border-slate-400 bg-slate-100 dark:bg-slate-800' :
-                    'border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 hover:border-indigo-400 dark:hover:border-indigo-600 hover:scale-105 cursor-pointer shadow-sm'}
+                  aspect-square rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 border-3 sm:border-4 transition-all transform duration-200 relative
+                  flex items-center justify-center overflow-hidden group
+                  ${isRight 
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 scale-105 shadow-lg shadow-emerald-500/20' 
+                    : isWrong 
+                    ? 'border-rose-400 bg-rose-50 dark:bg-rose-950/30 opacity-40 scale-95' 
+                    : isSelected && !game.isCorrect 
+                    ? 'border-slate-400 bg-slate-100 dark:bg-slate-800' 
+                    : 'border-pink-100/90 dark:border-pink-900/40 bg-white dark:bg-[#1a0716] hover:border-pink-400 dark:hover:border-pink-500 hover:scale-105 active:scale-95 cursor-pointer shadow-xs hover:shadow-md'}
                 `}
+                aria-label={isAr ? `خيار ظل ${option.nameAr}` : `Shadow option ${option.nameEn}`}
               >
-                <ImageWithFallback 
-                  src={option.image} 
-                  fallbackSrc={option.fallbackImage}
-                  emoji={option.emoji}
-                  alt="Shadow candidate"
-                  isShadow={true}
-                  className={`w-full h-full object-contain filter brightness-0 transition-opacity ${isWrong ? 'opacity-30' : 'opacity-100'}`}
-                />
+                {/* Dedicated Inner Spotlight Pedestal for 100% Crisp Contrast */}
+                <div className="w-full h-full rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-100/80 to-slate-200/60 dark:from-white/10 dark:to-white/5 flex items-center justify-center p-2.5 sm:p-3.5 transition-colors">
+                  <ImageWithFallback 
+                    src={option.image} 
+                    fallbackSrc={option.fallbackImage}
+                    emoji={option.emoji}
+                    alt={isAr ? `ظل ${option.nameAr}` : `Shadow of ${option.nameEn}`}
+                    isShadow={true}
+                    className={`w-full h-full object-contain transition-transform duration-200 group-hover:scale-110 ${isWrong ? 'opacity-30' : 'opacity-100'}`}
+                  />
+                </div>
                 
                 {isRight && (
-                  <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+                  <div className="absolute top-2 end-2 bg-white dark:bg-emerald-900 rounded-full shadow-md p-0.5">
                     <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" />
                   </div>
                 )}
                 
                 {isWrong && (
-                  <div className="absolute top-2 right-2 sm:top-3 sm:right-3">
+                  <div className="absolute top-2 end-2 bg-white dark:bg-rose-900 rounded-full shadow-md p-0.5">
                     <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-rose-500" />
                   </div>
                 )}
@@ -472,28 +480,18 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
         </div>
 
         {/* Footer actions */}
-        <div className="w-full flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
+        <div className="w-full flex items-center justify-between pt-4 border-t border-pink-50 dark:border-pink-900/40">
           <button 
             onClick={resetQuestion}
-            className="flex items-center gap-2 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-bold text-sm transition-colors"
+            className="flex items-center gap-2 text-slate-500 hover:text-slate-800 dark:text-pink-200/70 dark:hover:text-pink-100 font-bold text-sm transition-colors cursor-pointer"
           >
-            <RotateCcw className="w-4 h-4" />
-            <span>{isAr ? 'إعادة المحاولة' : 'Try Again'}</span>
+            <RotateCcw className="w-4 h-4 text-amber-500" />
+            <span>{isAr ? 'إعادة المحاولة' : 'Retry'}</span>
           </button>
 
-          {game.isCorrect && (
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-black text-sm animate-bounce">
-              <Sparkles className="w-5 h-5 fill-emerald-500" />
-              <span>{isAr ? 'إجابة رائعة! جاري الانتقال...' : 'Great! Moving next...'}</span>
-            </div>
-          )}
-
-          {!game.isCorrect && (
-            <div className="flex items-center gap-2 text-slate-400 font-bold text-xs">
-              <HelpCircle className="w-4 h-4" />
-              <span>{isAr ? 'اختر الظل المطابق للصورة' : 'Select the matching shadow'}</span>
-            </div>
-          )}
+          <span className="text-xs font-bold text-slate-400 dark:text-pink-300/60">
+            {isAr ? 'المستوى: ' + DIFFICULTY_CONFIG[game.selectedDifficulty!].labelAr : 'Difficulty: ' + DIFFICULTY_CONFIG[game.selectedDifficulty!].labelEn}
+          </span>
         </div>
 
       </div>

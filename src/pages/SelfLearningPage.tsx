@@ -15,6 +15,7 @@ import {
   Ban
 } from 'lucide-react';
 import { ButterflyIcon } from '../components/common/ButterflyIcon';
+import { BackButton } from '../components/common/BackButton';
 
 export const SelfLearningPage: React.FC = () => {
   const { language } = useLanguage();
@@ -58,16 +59,9 @@ export const SelfLearningPage: React.FC = () => {
 
   return (
     <div className="flex-1 w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex flex-col gap-8">
-      {/* Navigation Breadcrumb */}
+      {/* Navigation Return Button */}
       <div>
-        <Link
-          to="/"
-          onClick={() => sound.playClick()}
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-sky-600 dark:text-sky-400 hover:underline"
-        >
-          <BackIcon className="w-4 h-4" />
-          <span>{language === 'ar' ? 'العودة إلى الصفحة الرئيسية' : 'Back to Home'}</span>
-        </Link>
+        <BackButton />
       </div>
 
       {/* Hero Banner */}

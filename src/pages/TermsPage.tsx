@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
+import { BackButton } from '../components/common/BackButton';
 import {
   FileText,
   CheckCircle2,
@@ -46,16 +47,9 @@ export const TermsPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* Breadcrumb / Back button */}
+        {/* Unified Back button */}
         <div className="mb-6">
-          <Link
-            to="/"
-            onClick={() => sound.playClick()}
-            className="inline-flex items-center gap-2 text-sm font-bold text-sky-600 hover:text-sky-700 transition-colors"
-          >
-            <ArrowIcon className="w-4 h-4" />
-            <span>{language === 'ar' ? 'العودة للرئيسية' : 'Back to Home'}</span>
-          </Link>
+          <BackButton />
         </div>
 
         {/* Main Card */}

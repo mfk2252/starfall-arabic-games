@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
+import { BackButton } from '../components/common/BackButton';
 import {
   Sparkles,
   ExternalLink,
@@ -106,7 +107,12 @@ export const ConsultationPage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full space-y-8">
+      {/* Navigation Return Button */}
+      <div className="flex items-center justify-start">
+        <BackButton />
+      </div>
+
       {/* Hero / Header */}
       <div className="bg-gradient-to-r from-sky-600 via-sky-700 to-indigo-800 dark:from-slate-900 dark:via-sky-950 dark:to-slate-900 rounded-3xl p-8 sm:p-12 text-white shadow-xl relative overflow-hidden text-center sm:text-start transition-colors">
         <div className="absolute top-4 right-8 text-4xl opacity-20 pointer-events-none">⭐</div>

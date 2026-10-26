@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
+import { BackButton } from '../components/common/BackButton';
 import {
   ShieldCheck,
   Sparkles,
@@ -73,7 +74,12 @@ export const AboutPage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full space-y-12">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full space-y-10">
+      {/* Top Action Row with Unified Return Button */}
+      <div className="flex items-center justify-start">
+        <BackButton />
+      </div>
+
       {/* Title */}
       <div className="text-center max-w-2xl mx-auto">
         <div className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 dark:text-sky-300 bg-sky-100 dark:bg-sky-950/80 px-3.5 py-1 rounded-full mb-3 border border-sky-200 dark:border-sky-800">
@@ -173,6 +179,11 @@ export const AboutPage: React.FC = () => {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Bottom Action Row with Unified Return Button */}
+      <div className="flex justify-center pt-2">
+        <BackButton />
       </div>
 
     </div>
