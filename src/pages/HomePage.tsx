@@ -355,8 +355,8 @@ export const HomePage: React.FC = () => {
         <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
           {/* Brand Logo + Welcome Text */}
           <div className="flex items-center gap-3.5 text-center sm:text-start">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-md p-2 flex items-center justify-center shadow-inner shrink-0">
-              <ButterflyIcon className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-md p-1.5 flex items-center justify-center shadow-inner shrink-0">
+              <ButterflyIcon className="w-9 h-9 sm:w-11 sm:h-11" />
             </div>
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2">

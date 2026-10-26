@@ -72,15 +72,16 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#20091b]/95 backdrop-blur-md border-b border-pink-100/90 dark:border-[#3d122f] transition-colors duration-200 w-full">
       <div className="max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 xl:px-10">
         <div className="flex items-center justify-between h-20">
-          {/* Brand Logo: Butterfly Icon + Single Name Only */}
+          {/* Brand Logo: Animated Flying Butterfly on Transparent Background */}
           <Link
             to="/"
             onClick={() => sound.playClick()}
-            className="flex items-center gap-2.5 group select-none shrink-0"
+            className="flex items-center gap-2 group select-none shrink-0"
             aria-label={brandName}
           >
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-pink-500 via-rose-500 to-pink-600 p-1 flex items-center justify-center shadow-md shadow-pink-500/25 group-hover:scale-105 transition-transform duration-200">
-              <ButterflyIcon className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl object-contain" />
+            <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center group-hover:scale-115 transition-transform duration-300">
+              <div className="absolute inset-1 rounded-full bg-pink-400/15 dark:bg-pink-500/20 blur-md pointer-events-none group-hover:bg-pink-400/25 transition-colors" />
+              <ButterflyIcon className="w-10 h-10 sm:w-11 sm:h-11" />
             </div>
             <span className="font-heading text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors">
               {brandName}

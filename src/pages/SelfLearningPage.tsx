@@ -75,7 +75,7 @@ export const SelfLearningPage: React.FC = () => {
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4 text-center sm:text-start">
             <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md p-2 flex items-center justify-center shrink-0 shadow-inner">
-              <ButterflyIcon className="w-11 h-11 object-contain" />
+              <ButterflyIcon className="w-12 h-12" />
             </div>
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2">
