@@ -11,6 +11,7 @@ import { CategoriesOverviewPage } from './pages/CategoriesOverviewPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { GamePlayPage } from './pages/GamePlayPage';
 import { StoriesPage } from './pages/StoriesPage';
+import { MatchingGamesPage } from './pages/MatchingGamesPage';
 import { StoryViewPage } from './pages/StoryViewPage';
 import { ConsultationPage } from './pages/ConsultationPage';
 import { ProgressPage } from './pages/ProgressPage';
@@ -40,6 +41,8 @@ export function App() {
             <Route path="/" element={<AppLayout />}>
               <Route index element={<HomePage />} />
               <Route path="games" element={<AllGamesPage />} />
+              <Route path="matching-games" element={<MatchingGamesPage />} />
+              <Route path="matching" element={<MatchingGamesPage />} />
               <Route path="categories" element={<CategoriesOverviewPage />} />
               <Route path="categories/:categoryId" element={<CategoryPage />} />
               <Route path="stories" element={<StoriesPage />} />

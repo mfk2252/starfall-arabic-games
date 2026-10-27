@@ -22,12 +22,13 @@ describe('HomePage App Launcher Requirements', () => {
   it('renders direct 1-click app launcher cards for games and stories', () => {
     const { container } = renderHome();
 
-    // Check for direct links to games
-    const numberMatchLink = container.querySelector('a[href="/games/numbers"]');
-    expect(numberMatchLink).not.toBeNull();
+    // Check for matching games group container link
+    const matchingGroupLink = container.querySelector('a[href="/matching-games"]');
+    expect(matchingGroupLink).not.toBeNull();
 
-    const arabicLettersLink = container.querySelector('a[href="/games/arabic-letters"]');
-    expect(arabicLettersLink).not.toBeNull();
+    // Check for direct game links
+    const wordBuilderLink = container.querySelector('a[href="/games/word-builder"]');
+    expect(wordBuilderLink).not.toBeNull();
 
     // Check for story group link (since stories are grouped in 'all' view)
     const storiesGroupLink = container.querySelector('a[href="/stories"]');
@@ -47,9 +48,9 @@ describe('HomePage App Launcher Requirements', () => {
     const seasonsLink = container.querySelector('a[href="/games/seasons"]');
     expect(seasonsLink).not.toBeNull();
 
-    // Should NOT match numbers game
-    const numbersLink = container.querySelector('a[href="/games/numbers"]');
-    expect(numbersLink).toBeNull();
+    // Should NOT match word-builder when searching 'فصول'
+    const wordBuilderLink = container.querySelector('a[href="/games/word-builder"]');
+    expect(wordBuilderLink).toBeNull();
   });
 
   it('renders quick action buttons including random surprise game', () => {

@@ -99,27 +99,49 @@ export const HomePage: React.FC = () => {
       isNew: false,
     };
 
-    return [...gameItems, groupedStoriesItem, ...storyItems];
+    const groupedMatchingItem = {
+      id: 'matching-group',
+      type: 'game' as const,
+      title: language === 'ar' ? 'ألعاب التطابق' : 'Matching Games',
+      description: language === 'ar' ? 'مجموعة العاب تطابق الذاكرة الممتعة للأرقام، الحروف، والصور' : 'Collection of fun memory matching games for numbers, letters, and pictures',
+      icon: '🧩',
+      gradient: 'from-[#4fc3f7] via-[#81c784] to-[#ffd54f]',
+      category: 'visual' as const,
+      minAge: 3,
+      maxAge: 7,
+      ageRange: language === 'ar' ? '٣-٧ سنوات' : '3-7 years',
+      link: '/matching-games',
+      stars: 0,
+      played: false,
+      featured: true,
+      isNew: false,
+    };
+
+    return [...gameItems, groupedMatchingItem, groupedStoriesItem, ...storyItems];
   }, [language, progress]);
 
   // Filtered items based on search and selected categories
   const filteredActivities = useMemo(() => {
     return allActivities.filter((item) => {
       const isSearching = !!searchQuery.trim();
+      const matchingGameIds = ['numbers', 'arabic-letters', 'english-letters', 'images'];
 
-      // 1. Logic for grouping stories in 'All' view
+      // 1. Logic for grouping stories & matching games in 'All' view
       if (categoryFilter === 'all') {
-        // If not searching, hide individual stories and show group icon
+        // Hide individual stories and matching games when not searching
         if (!isSearching && item.type === 'story') return false;
-        // If not searching and is the group icon, show it
+        if (!isSearching && matchingGameIds.includes(item.id)) return false;
+
+        // Show grouped icons when not searching
         if (!isSearching && item.id === 'stories-group') return true;
-        // If searching, hide the group icon to show results directly
-        if (isSearching && item.id === 'stories-group') return false;
+        if (!isSearching && item.id === 'matching-group') return true;
+
+        // Hide grouped icons when searching to show direct matching games/stories
+        if (isSearching && (item.id === 'stories-group' || item.id === 'matching-group')) return false;
       } 
       
       // 2. Logic for 'Stories' tab
       if (categoryFilter === 'stories') {
-        // Show individual stories, hide everything else (including group icon)
         if (item.category !== 'stories' || item.id === 'stories-group') return false;
       }
 
