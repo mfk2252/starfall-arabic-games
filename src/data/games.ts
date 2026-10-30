@@ -487,4 +487,26 @@ export const GAMES_LIST: GameInfo[] = [
     skills: ['علم الحيوان والطبيعة', 'أسماء الأصوات والصغار', 'المعرفة العامة والبيئة'],
     skillsEn: ['Zoology & Nature', 'Animal Sounds & Babies', 'General Knowledge & Science'],
   },
+
+  // 24. My Little World (عالمي الصغير)
+  {
+    id: 'my-little-world',
+    title: 'عالمي الصغير',
+    titleEn: 'My Little World',
+    description: 'ابنِ، ركّب، واكتشف عالمك الخاص عبر مكعبات البناء، النماذج، الحروف، والأرقام',
+    descriptionEn: 'Build, construct, and discover your own world through creative blocks, models, letters, and numbers',
+    icon: '🧱',
+    gradient: 'from-[#f59e0b] via-[#ec4899] to-[#8b5cf6]',
+    accentColor: '#f59e0b',
+    category: 'logic',
+    ageRange: '٣-١٠ سنوات',
+    ageRangeEn: '3-10 years',
+    minAge: 3,
+    maxAge: 10,
+    difficulty: 'easy',
+    isNew: true,
+    featured: true,
+    skills: ['الإبداع والبناء الهندسي', 'الذكاء المكاني والبصري', 'تركيب الحروف والأرقام'],
+    skillsEn: ['Creative Construction', 'Spatial & Visual Intelligence', 'Letters & Numbers Assembly'],
+  },
 ];

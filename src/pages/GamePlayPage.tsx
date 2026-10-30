@@ -31,6 +31,7 @@ import { ShadowGame } from '../components/games/ShadowGame';
 import { LearningClockGame } from '../components/games/LearningClockGame';
 import { FlamingoGame } from '../components/games/FlamingoGame';
 import { AnimalsEncyclopediaGame } from '../components/games/AnimalsEncyclopediaGame';
+import { MyLittleWorldGame } from '../components/games/MyLittleWorldGame';
 
 export const GamePlayPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -94,6 +95,8 @@ export const GamePlayPage: React.FC = () => {
         return <FlamingoGame onGoHome={handleGoHome} />;
       case 'animals-encyclopedia':
         return <AnimalsEncyclopediaGame onGoHome={handleGoHome} />;
+      case 'my-little-world':
+        return <MyLittleWorldGame onGoHome={handleGoHome} />;
       default:
         return (
           <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#20091b] rounded-3xl p-8 text-center shadow-lg border border-pink-100 dark:border-[#3d122f]">
