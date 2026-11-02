@@ -52,11 +52,18 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
   const clockRef = useRef<SVGSVGElement>(null);
   const [isDragging, setIsDragging] = useState<'hour' | 'minute' | null>(null);
 
-  // Helper to format Arabic numbers
+  const [numberSystem, setNumberSystem] = useState<'ar' | 'en'>(isAr ? 'ar' : 'en');
+
+  // Helper to format numbers according to the selected numeral system
   const toArNum = (n: number | string) => {
-    if (!isAr) return n.toString();
+    if (numberSystem === 'en') return n.toString();
     const arNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
     return n.toString().replace(/\d/g, d => arNums[parseInt(d)]);
+  };
+
+  const toggleNumberSystem = () => {
+    sound.playClick();
+    setNumberSystem(prev => (prev === 'ar' ? 'en' : 'ar'));
   };
 
   const formatTime = (h: number, m: number) => {
@@ -432,20 +439,38 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
           <span>{isAr ? 'خروج' : 'Exit'}</span>
         </button>
 
-        {gameState.currentMode !== 'explore' && (
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-1.5 rounded-full font-black text-sm shadow-sm border border-slate-200 dark:border-slate-800">
-              <span>{isAr ? 'جولة' : 'Round'}</span>
-              <span className="text-rose-600">{gameState.round}</span>
-              <span className="opacity-30">/</span>
-              <span>٥</span>
+        <div className="flex items-center gap-3">
+          {/* Numeral System Toggle Button */}
+          <button
+            onClick={toggleNumberSystem}
+            className="flex items-center gap-1.5 bg-white dark:bg-[#20091b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-pink-100 px-3.5 py-2 rounded-full font-black text-xs sm:text-sm shadow-sm border border-pink-200 dark:border-slate-800 hover:border-pink-400 transition-all cursor-pointer"
+            title={
+              numberSystem === 'ar'
+                ? (isAr ? 'التبديل إلى الأرقام الإنجليزية (1, 2, 3)' : 'Switch to English numerals (1, 2, 3)')
+                : (isAr ? 'التبديل إلى الأرقام العربية (١، ٢، ٣)' : 'Switch to Arabic numerals (١، ٢، ٣)')
+            }
+          >
+            <span className="text-base select-none">🔢</span>
+            <span className="font-mono bg-pink-100 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300 px-1.5 py-0.5 rounded-md text-xs">
+              {numberSystem === 'ar' ? '١٢٣' : '123'}
+            </span>
+          </button>
+
+          {gameState.currentMode !== 'explore' && (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-1.5 rounded-full font-black text-sm shadow-sm border border-slate-200 dark:border-slate-800">
+                <span>{isAr ? 'جولة' : 'Round'}</span>
+                <span className="text-rose-600">{toArNum(gameState.round)}</span>
+                <span className="opacity-30">/</span>
+                <span>{toArNum(5)}</span>
+              </div>
+              <div className="flex items-center gap-2 bg-amber-400 text-amber-950 px-4 py-1.5 rounded-full font-black text-sm shadow-sm">
+                <Sparkles className="w-4 h-4" />
+                <span>{toArNum(gameState.score)}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 bg-amber-400 text-amber-950 px-4 py-1.5 rounded-full font-black text-sm shadow-sm">
-              <Sparkles className="w-4 h-4" />
-              <span>{gameState.score}</span>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className="w-full bg-white dark:bg-[#20091b] rounded-[40px] p-8 sm:p-12 border border-slate-100 dark:border-slate-800 shadow-xl flex flex-col items-center space-y-10 relative overflow-hidden">

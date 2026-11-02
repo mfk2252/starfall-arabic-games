@@ -509,4 +509,26 @@ export const GAMES_LIST: GameInfo[] = [
     skills: ['الإبداع والبناء الهندسي', 'الذكاء المكاني والبصري', 'تركيب الحروف والأرقام'],
     skillsEn: ['Creative Construction', 'Spatial & Visual Intelligence', 'Letters & Numbers Assembly'],
   },
+
+  // 25. My Little Kitchen (مطبخي الصغير)
+  {
+    id: 'my-little-kitchen',
+    title: 'مطبخي الصغير',
+    titleEn: 'My Little Kitchen',
+    description: 'اختر مكوناتك، حضّر وجباتك، واصنع أطباقك المفضلة!',
+    descriptionEn: 'Pick your ingredients, cook meals, and create your favorite dishes!',
+    icon: '🍳',
+    gradient: 'from-[#f97316] via-[#ec4899] to-[#10b981]',
+    accentColor: '#f97316',
+    category: 'science',
+    ageRange: '٣-٦ سنوات',
+    ageRangeEn: '3-6 years',
+    minAge: 3,
+    maxAge: 6,
+    difficulty: 'easy',
+    isNew: true,
+    featured: true,
+    skills: ['التعرف على الأطعمة الصحية', 'مهارات الإعداد والتركيب', 'الإبداع والتجربة الحرة'],
+    skillsEn: ['Healthy Foods Recognition', 'Preparation & Assembling Skills', 'Creativity & Free Exploration'],
+  },
 ];
