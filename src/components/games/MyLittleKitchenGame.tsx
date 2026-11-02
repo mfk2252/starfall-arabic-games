@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { GameHeader } from '../common/GameHeader';
+import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -62,7 +63,6 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
   // Dish Completion & Presentation Modal
   const [isDishFinished, setIsDishFinished] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
-  const [savedSuccessAlert, setSavedSuccessAlert] = useState<string | null>(null);
 
   // Dragging reference
   const workSurfaceRef = useRef<HTMLDivElement>(null);
@@ -104,12 +104,12 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
     handleSpeak(isAr ? ingredient.nameAr : ingredient.nameEn);
 
     const surface = workSurfaceRef.current;
-    const surfaceWidth = surface ? surface.clientWidth : 500;
-    const surfaceHeight = surface ? surface.clientHeight : 380;
+    const surfaceWidth = surface ? surface.clientWidth : 360;
+    const surfaceHeight = surface ? surface.clientHeight : 300;
 
     // Place near center with subtle offset
-    const randomX = Math.max(30, surfaceWidth / 2 - 35 + (Math.random() - 0.5) * 100);
-    const randomY = Math.max(30, surfaceHeight / 2 - 35 + (Math.random() - 0.5) * 80);
+    const randomX = Math.max(20, surfaceWidth / 2 - 30 + (Math.random() - 0.5) * 80);
+    const randomY = Math.max(20, surfaceHeight / 2 - 30 + (Math.random() - 0.5) * 60);
 
     const newItem: PreparedItem = {
       uid: `item-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -180,55 +180,32 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
     setTimeout(() => {
       setPlacedItems((prev) =>
         prev.map((item) => {
-          const matchMeta = INGREDIENTS_DATABASE.find((i) => i.id === item.ingredientId);
-          if (!matchMeta) return item;
+          const dbItem = INGREDIENTS_DATABASE.find((i) => i.id === item.ingredientId);
+          const isMatch =
+            (tool.id === 'knife' && dbItem?.prepAction === 'cut') ||
+            (tool.id === 'sink' && dbItem?.prepAction === 'wash') ||
+            (tool.id === 'blender' && dbItem?.prepAction === 'blend') ||
+            (tool.id === 'juicer' && dbItem?.prepAction === 'squeeze') ||
+            ((tool.id === 'pan' || tool.id === 'pot') && dbItem?.prepAction === 'cook') ||
+            (tool.id === 'oven' && dbItem?.prepAction === 'bake');
 
-          // If tool is knife and item can be cut
-          if (tool.id === 'knife' && (matchMeta.prepAction === 'cut' || !item.isCut)) {
+          if (dbItem && isMatch && dbItem.preppedIcon) {
             return {
               ...item,
-              isCut: true,
-              icon: matchMeta.preppedIcon || item.icon,
-              nameAr: matchMeta.preppedNameAr || item.nameAr,
+              icon: dbItem.preppedIcon,
+              nameAr: dbItem.preppedNameAr || item.nameAr,
             };
           }
-
-          // If tool is sink and item washed
-          if (tool.id === 'sink') {
-            return {
-              ...item,
-              isWashed: true,
-            };
-          }
-
-          // If tool is blender/juicer
-          if ((tool.id === 'blender' || tool.id === 'juicer') && matchMeta.prepAction === 'blend') {
-            return {
-              ...item,
-              isBlended: true,
-              icon: matchMeta.preppedIcon || '🧃',
-            };
-          }
-
-          // If tool is oven/pan/pot
-          if (tool.id === 'oven' || tool.id === 'pan' || tool.id === 'pot') {
-            return {
-              ...item,
-              isCooked: true,
-              icon: matchMeta.preppedIcon || item.icon,
-            };
-          }
-
           return item;
         })
       );
       setIsToolActive(false);
-      setToolAnimationType(null);
+      setActiveToolId(null);
     }, 1200);
   };
 
   // -------------------------------------------------------------
-  // TOUCH & MOUSE DRAGGING ON WORK SURFACE
+  // TOUCH & MOUSE DRAGGING FOR PLACED INGREDIENTS
   // -------------------------------------------------------------
   const handlePointerDown = (e: React.PointerEvent, uid: string) => {
     e.stopPropagation();
@@ -249,7 +226,11 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
       y: e.clientY - surfaceRect.top - item.y,
     });
 
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    try {
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // Safe capture
+    }
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -259,11 +240,11 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
     const nextX = e.clientX - surfaceRect.left - dragOffset.x;
     const nextY = e.clientY - surfaceRect.top - dragOffset.y;
 
-    const maxX = surfaceRect.width - 65;
-    const maxY = surfaceRect.height - 65;
+    const maxX = surfaceRect.width - 60;
+    const maxY = surfaceRect.height - 60;
 
-    const clampedX = Math.max(10, Math.min(nextX, maxX));
-    const clampedY = Math.max(10, Math.min(nextY, maxY));
+    const clampedX = Math.max(5, Math.min(nextX, maxX));
+    const clampedY = Math.max(5, Math.min(nextY, maxY));
 
     setPlacedItems((prev) =>
       prev.map((item) => (item.uid === draggedUid ? { ...item, x: clampedX, y: clampedY } : item))
@@ -287,20 +268,14 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
   // -------------------------------------------------------------
   const handleFinishDish = () => {
     if (placedItems.length === 0) {
-      handleSpeak(isAr ? 'أضف بعض المكونات الشهية أولاً!' : 'Add delicious ingredients first!');
+      sound.playWrong();
       return;
     }
 
-    sound.playWin();
     const finalScore = score + 50;
     setScore(finalScore);
     saveGameProgress('my-little-kitchen', finalScore, true);
     setIsDishFinished(true);
-    handleSpeak(
-      isAr
-        ? 'ما شاء الله! طبق رائع وشهي جداً يا شيف المستقبل الصغير!'
-        : 'Amazing dish, little chef! It looks delicious!'
-    );
   };
 
   // Recipe progress calculation when a recipe is active
@@ -322,7 +297,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
   if (gamePhase === 'welcome') {
     return (
       <div
-        className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 animate-in fade-in duration-300"
+        className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center min-h-[80vh] px-3 py-6 animate-in fade-in duration-300 overflow-x-hidden"
         dir={isAr ? 'rtl' : 'ltr'}
       >
         <div className="w-full flex items-center justify-between mb-6">
@@ -371,43 +346,46 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
   }
 
   // =========================================================================
-  // SCREEN 2: ACTUAL FULL-SCREEN KITCHEN WORKTOP (Direct Play, No Scroll)
+  // SCREEN 2: FULL-SCREEN KITCHEN WORKTOP (Direct Play, 100% Mobile Responsive)
   // =========================================================================
   return (
     <div
-      className="w-full max-w-6xl mx-auto flex flex-col h-[calc(100vh-32px)] max-h-[880px] p-2 sm:p-4 animate-in fade-in duration-300"
+      className="w-full max-w-6xl mx-auto flex flex-col h-[calc(100vh-20px)] sm:h-[calc(100vh-32px)] max-h-[880px] p-1.5 sm:p-4 overflow-x-hidden text-slate-800 dark:text-pink-100 animate-in fade-in duration-300"
       dir={isAr ? 'rtl' : 'ltr'}
     >
       {/* -------------------------------------------------------------
-          A. COMPACT TOP CONTROL BAR (No big titles, minimal height)
+          A. COMPACT TOP CONTROL BAR (100% Mobile Responsive, No Horizontal Scroll)
          ------------------------------------------------------------- */}
-      <div className="w-full flex items-center justify-between gap-2 pb-2 shrink-0">
-        <div className="flex items-center gap-2">
-          {/* Back button */}
-          <BackButton onClick={() => setGamePhase('welcome')} label={isAr ? 'الرجوع' : 'Back'} />
+      <div className="w-full flex flex-wrap items-center justify-between gap-1 sm:gap-2 pb-1.5 shrink-0 overflow-x-hidden">
+        {/* Left: Compact Back & Recipes */}
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+          <BackButton
+            onClick={() => setGamePhase('welcome')}
+            label={isAr ? 'الرجوع' : 'Back'}
+            className="px-2.5 py-1.5 text-xs font-bold"
+          />
 
-          {/* Optional Guided Recipes Button */}
           <button
             onClick={() => {
               sound.playClick();
               setShowRecipeModal(true);
             }}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-black bg-white dark:bg-[#20091b] border border-amber-200 dark:border-[#3d122f] text-slate-700 dark:text-pink-100 hover:bg-amber-50 dark:hover:bg-[#2d0e26] transition-colors cursor-pointer shadow-xs"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-xs font-black bg-white dark:bg-[#20091b] border border-amber-200 dark:border-[#3d122f] text-slate-700 dark:text-pink-100 hover:bg-amber-50 dark:hover:bg-[#2d0e26] transition-colors cursor-pointer shadow-2xs shrink-0"
             title={isAr ? 'كتاب الوصفات الإرشادية' : 'Recipe Book'}
           >
-            <BookOpen className="w-3.5 h-3.5 text-amber-500" />
+            <BookOpen className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             <span className="hidden sm:inline">{isAr ? 'الوصفات' : 'Recipes'}</span>
             {activeRecipe && (
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
             )}
           </button>
         </div>
 
-        {/* Center Platter Switcher */}
-        <div className="flex items-center gap-1 bg-white dark:bg-[#20091b] p-1 rounded-full border border-amber-100 dark:border-[#3d122f] shadow-xs text-xs font-black">
+        {/* Center: Container Switcher */}
+        <div className="flex items-center gap-0.5 sm:gap-1 bg-white dark:bg-[#20091b] p-0.5 sm:p-1 rounded-full border border-amber-100 dark:border-[#3d122f] shadow-2xs text-xs font-black shrink-0">
           <button
             onClick={() => { sound.playClick(); setActiveContainer('plate'); }}
-            className={`px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
+            className={`px-2 sm:px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
               activeContainer === 'plate' ? 'bg-orange-500 text-white' : 'text-slate-600 dark:text-pink-200 hover:bg-amber-50'
             }`}
           >
@@ -415,7 +393,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
           </button>
           <button
             onClick={() => { sound.playClick(); setActiveContainer('bowl'); }}
-            className={`px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
+            className={`px-2 sm:px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
               activeContainer === 'bowl' ? 'bg-orange-500 text-white' : 'text-slate-600 dark:text-pink-200 hover:bg-amber-50'
             }`}
           >
@@ -423,7 +401,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
           </button>
           <button
             onClick={() => { sound.playClick(); setActiveContainer('cup'); }}
-            className={`px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
+            className={`px-2 sm:px-2.5 py-1 rounded-full transition-colors cursor-pointer ${
               activeContainer === 'cup' ? 'bg-orange-500 text-white' : 'text-slate-600 dark:text-pink-200 hover:bg-amber-50'
             }`}
           >
@@ -431,34 +409,31 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
           </button>
         </div>
 
-        {/* Right side controls: Sound, Reset, Score */}
-        <div className="flex items-center gap-2">
-          {/* Sound Toggle */}
+        {/* Right Controls: Sound, Reset & Serve Dish Button */}
+        <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
           <button
             onClick={handleToggleSound}
-            className="p-2 rounded-full bg-white dark:bg-[#20091b] border border-amber-200 dark:border-[#3d122f] text-slate-700 dark:text-pink-100 hover:bg-amber-50 cursor-pointer shadow-xs"
+            className="p-1.5 sm:p-2 rounded-full bg-white dark:bg-[#20091b] border border-amber-200 dark:border-[#3d122f] text-slate-700 dark:text-pink-100 hover:bg-amber-50 cursor-pointer shadow-2xs"
             title={isMuted ? t('soundOn') : t('soundOff')}
           >
-            <Volume2 className={`w-4 h-4 ${isMuted ? 'opacity-40' : 'text-orange-500'}`} />
+            <Volume2 className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isMuted ? 'opacity-40' : 'text-orange-500'}`} />
           </button>
 
-          {/* Reset Dish */}
           <button
             onClick={handleResetDish}
             disabled={placedItems.length === 0}
-            className="p-2 rounded-full bg-white dark:bg-[#20091b] border border-rose-200 text-rose-600 hover:bg-rose-50 disabled:opacity-30 cursor-pointer shadow-xs"
+            className="p-1.5 sm:p-2 rounded-full bg-white dark:bg-[#20091b] border border-rose-200 text-rose-600 hover:bg-rose-50 disabled:opacity-30 cursor-pointer shadow-2xs"
             title={isAr ? 'إعادة ضبط الطبق' : 'Reset Plate'}
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
-          {/* Serve / Finish Button */}
           <button
             onClick={handleFinishDish}
             disabled={placedItems.length === 0}
-            className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5 disabled:opacity-40"
+            className="px-2.5 sm:px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-black text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center gap-1 sm:gap-1.5 disabled:opacity-40 shrink-0"
           >
-            <CheckCircle2 className="w-4 h-4" />
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
             <span>{isAr ? 'قدّم الطبق! ✨' : 'Serve! ✨'}</span>
           </button>
         </div>
@@ -466,17 +441,17 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
 
       {/* Active Recipe Banner (if recipe chosen, very slim) */}
       {activeRecipe && (
-        <div className="w-full py-1.5 px-3 mb-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between text-xs shrink-0">
-          <div className="flex items-center gap-2 font-bold text-emerald-900 dark:text-emerald-200 truncate">
+        <div className="w-full py-1 px-2.5 mb-1 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between text-xs shrink-0">
+          <div className="flex items-center gap-1.5 font-bold text-emerald-900 dark:text-emerald-200 truncate">
             <span>{activeRecipe.icon}</span>
-            <span className="font-black">{isAr ? activeRecipe.titleAr : activeRecipe.titleEn}:</span>
-            <span className="opacity-90">{recipeProgress.count} / {recipeProgress.total}</span>
+            <span className="font-black truncate">{isAr ? activeRecipe.titleAr : activeRecipe.titleEn}:</span>
+            <span className="opacity-90 shrink-0">{recipeProgress.count} / {recipeProgress.total}</span>
           </div>
           <button
             onClick={() => setActiveRecipeId(null)}
-            className="text-emerald-700 hover:text-emerald-900 font-black cursor-pointer px-1.5 py-0.5 rounded-md hover:bg-emerald-100"
+            className="text-emerald-700 hover:text-emerald-900 font-black cursor-pointer px-1.5 py-0.5 rounded-md hover:bg-emerald-100 shrink-0"
           >
-            {isAr ? 'إلغاء الوصفة' : 'Clear'}
+            {isAr ? 'إلغاء' : 'Clear'}
           </button>
         </div>
       )}
@@ -484,7 +459,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
       {/* -------------------------------------------------------------
           B. SLIM KITCHEN TOOLS BAR (Horizontal scroll, low vertical space)
          ------------------------------------------------------------- */}
-      <div className="w-full flex items-center gap-2 py-1.5 px-2 mb-2 bg-gradient-to-r from-orange-50/70 via-amber-50/70 to-yellow-50/70 dark:from-[#1a0716] dark:via-[#20091b] dark:to-[#160612] rounded-2xl border border-amber-200/80 dark:border-pink-900/40 overflow-x-auto scrollbar-thin shrink-0">
+      <div className="w-full flex items-center gap-1.5 py-1.5 px-2 mb-1.5 bg-gradient-to-r from-orange-50/70 via-amber-50/70 to-yellow-50/70 dark:from-[#1a0716] dark:via-[#20091b] dark:to-[#160612] rounded-2xl border border-amber-200/80 dark:border-pink-900/40 overflow-x-auto scrollbar-thin shrink-0 max-w-full">
         <span className="text-[11px] font-black text-amber-800 dark:text-amber-300 shrink-0 flex items-center gap-1 ps-1">
           <Utensils className="w-3.5 h-3.5 text-orange-500" />
           <span className="hidden sm:inline">{isAr ? 'الأدوات:' : 'Tools:'}</span>
@@ -495,14 +470,14 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
             <button
               key={tool.id}
               onClick={() => handleUseTool(tool)}
-              className={`px-2.5 py-1.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition-all transform hover:scale-105 active:scale-95 cursor-pointer shadow-2xs shrink-0 ${
+              className={`px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl text-xs font-black flex items-center gap-1 sm:gap-1.5 transition-all transform hover:scale-105 active:scale-95 cursor-pointer shadow-2xs shrink-0 ${
                 activeToolId === tool.id && isToolActive
                   ? 'bg-orange-500 text-white animate-bounce'
                   : 'bg-white dark:bg-black/30 border border-amber-200 dark:border-pink-900/40 text-slate-700 dark:text-pink-100 hover:bg-orange-50'
               }`}
               title={isAr ? `${tool.nameAr} - ${tool.actionTextAr}` : `${tool.nameEn} - ${tool.actionTextEn}`}
             >
-              <span className="text-lg filter drop-shadow select-none">{tool.icon}</span>
+              <span className="text-base sm:text-lg filter drop-shadow select-none">{tool.icon}</span>
               <span className="hidden lg:inline text-[11px]">{isAr ? tool.nameAr : tool.nameEn}</span>
             </button>
           ))}
@@ -510,13 +485,13 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
       </div>
 
       {/* -------------------------------------------------------------
-          C. MAIN EXPANDED WORK SURFACE (Dominates the viewport, max area)
+          C. MAIN EXPANDED WORK SURFACE (Dominates viewport, mobile adaptive)
          ------------------------------------------------------------- */}
       <div
         ref={workSurfaceRef}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        className="w-full flex-1 rounded-3xl relative overflow-hidden select-none border-4 border-amber-200 dark:border-pink-900/50 shadow-inner flex items-center justify-center min-h-[260px]"
+        className="w-full flex-1 rounded-3xl relative overflow-hidden select-none border-2 sm:border-4 border-amber-200 dark:border-pink-900/50 shadow-inner flex items-center justify-center min-h-[220px] sm:min-h-[260px]"
         style={{
           backgroundColor: '#fffbeb',
           backgroundImage: 'radial-gradient(#fde68a 1.5px, transparent 1.5px)',
@@ -525,26 +500,26 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
         }}
       >
         {/* Wooden Kitchen Table Top Layer */}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-amber-200/50 dark:from-amber-950/30 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-16 sm:h-24 bg-gradient-to-t from-amber-200/50 dark:from-amber-950/30 to-transparent pointer-events-none" />
 
         {/* Central Platter Container Visual */}
         <div
           className={`transition-all duration-300 flex items-center justify-center relative shadow-xl ${
             activeContainer === 'cup'
-              ? 'w-48 h-60 rounded-3xl bg-gradient-to-br from-cyan-100 to-blue-200 dark:from-cyan-950 dark:to-blue-900 border-8 border-cyan-300 dark:border-cyan-700'
+              ? 'w-36 h-48 sm:w-48 sm:h-60 rounded-3xl bg-gradient-to-br from-cyan-100 to-blue-200 dark:from-cyan-950 dark:to-blue-900 border-4 sm:border-8 border-cyan-300 dark:border-cyan-700'
               : activeContainer === 'bowl'
-              ? 'w-72 h-72 sm:w-96 sm:h-96 rounded-full bg-gradient-to-br from-rose-100 to-pink-200 dark:from-rose-950 dark:to-pink-900 border-8 border-pink-300 dark:border-pink-800'
-              : 'w-80 h-80 sm:w-[420px] sm:h-[420px] rounded-full bg-gradient-to-br from-white via-slate-50 to-amber-50 dark:from-[#2a0d24] dark:to-[#1a0716] border-8 border-amber-200 dark:border-pink-900'
+              ? 'w-56 h-56 sm:w-72 sm:h-72 rounded-full bg-gradient-to-br from-rose-100 to-pink-200 dark:from-rose-950 dark:to-pink-900 border-4 sm:border-8 border-pink-300 dark:border-pink-800'
+              : 'w-60 h-60 sm:w-80 sm:h-80 md:w-[400px] md:h-[400px] rounded-full bg-gradient-to-br from-white via-slate-50 to-amber-50 dark:from-[#2a0d24] dark:to-[#1a0716] border-4 sm:border-8 border-amber-200 dark:border-pink-900'
           }`}
         >
           <div className="w-full h-full rounded-full border-2 border-dashed border-black/10 dark:border-white/10 flex items-center justify-center pointer-events-none">
             {placedItems.length === 0 && (
-              <div className="flex flex-col items-center justify-center text-amber-900/40 dark:text-pink-300/40 text-center p-4">
-                <ChefHat className="w-12 h-12 stroke-1 mb-2 animate-bounce" />
-                <span className="text-sm font-black">
+              <div className="flex flex-col items-center justify-center text-amber-900/40 dark:text-pink-300/40 text-center p-3">
+                <ChefHat className="w-10 h-10 sm:w-12 sm:h-12 stroke-1 mb-1.5 animate-bounce" />
+                <span className="text-xs sm:text-sm font-black">
                   {isAr ? 'ساحة إعداد الطعام جاهزة!' : 'Your plate is ready!'}
                 </span>
-                <span className="text-xs">
+                <span className="text-[11px] sm:text-xs">
                   {isAr ? 'اختر الأطعمة من الأسفل وضعها هنا للبدء' : 'Tap foods below to add them here'}
                 </span>
               </div>
@@ -555,8 +530,8 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
         {/* Tool Active Sizzle / Water Splashes Overlay Animation */}
         {isToolActive && (
           <div className="absolute inset-0 bg-white/40 dark:bg-black/40 backdrop-blur-xs flex items-center justify-center z-40 pointer-events-none">
-            <div className="p-4 rounded-3xl bg-white dark:bg-black/90 shadow-2xl border-2 border-orange-400 flex items-center gap-3 animate-bounce">
-              <span className="text-4xl">
+            <div className="p-3 sm:p-4 rounded-3xl bg-white dark:bg-black/90 shadow-2xl border-2 border-orange-400 flex items-center gap-2 sm:gap-3 animate-bounce">
+              <span className="text-3xl sm:text-4xl">
                 {toolAnimationType === 'sink'
                   ? '💧'
                   : toolAnimationType === 'blender'
@@ -565,7 +540,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
                   ? '♨️'
                   : '🔪'}
               </span>
-              <span className="text-sm font-black text-orange-600 dark:text-orange-400">
+              <span className="text-xs sm:text-sm font-black text-orange-600 dark:text-orange-400">
                 {toolAnimationType === 'sink'
                   ? (isAr ? 'جاري الغسل بالماء النقي...' : 'Washing...')
                   : toolAnimationType === 'blender'
@@ -601,7 +576,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
               }}
             >
               <div className="flex flex-col items-center">
-                <span className="text-5xl sm:text-6xl filter drop-shadow-md">{item.icon}</span>
+                <span className="text-4xl sm:text-6xl filter drop-shadow-md">{item.icon}</span>
                 <span className="text-[10px] font-black bg-white/90 dark:bg-black/80 text-slate-800 dark:text-pink-100 px-2 py-0.5 rounded-full shadow-xs border border-black/10 mt-0.5">
                   {isAr ? item.nameAr : item.nameEn}
                 </span>
@@ -628,9 +603,9 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
       {/* -------------------------------------------------------------
           D. BOTTOM INGREDIENTS DOCK (7 Categories + Scrollable items)
          ------------------------------------------------------------- */}
-      <div className="w-full flex flex-col pt-2 shrink-0 space-y-1.5">
+      <div className="w-full flex flex-col pt-1.5 shrink-0 space-y-1 overflow-x-hidden">
         {/* 7 Category Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto pb-0.5 scrollbar-thin max-w-full">
           {categoryTabs.map((cat) => (
             <button
               key={cat.id}
@@ -638,9 +613,9 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
                 sound.playClick();
                 setSelectedCategory(cat.id);
               }}
-              className={`px-3 py-1.5 rounded-xl font-black text-xs shrink-0 transition-all cursor-pointer ${
+              className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl font-black text-xs shrink-0 transition-all cursor-pointer ${
                 selectedCategory === cat.id
-                  ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xs scale-105'
+                  ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xs scale-102'
                   : 'bg-white dark:bg-[#20091b] border border-amber-200/80 dark:border-[#3d122f] text-slate-700 dark:text-pink-200 hover:bg-amber-50'
               }`}
             >
@@ -650,18 +625,18 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
         </div>
 
         {/* Ingredients Ribbon */}
-        <div className="flex items-center gap-2.5 overflow-x-auto p-2 bg-white dark:bg-[#20091b] rounded-2xl border border-amber-200/80 dark:border-pink-900/40 scrollbar-thin">
+        <div className="flex items-center gap-2 overflow-x-auto p-1.5 bg-white dark:bg-[#20091b] rounded-2xl border border-amber-200/80 dark:border-pink-900/40 scrollbar-thin max-w-full">
           {INGREDIENTS_DATABASE.filter((i) => i.category === selectedCategory).map((ingredient) => (
             <button
               key={ingredient.id}
               onClick={() => handleAddIngredient(ingredient)}
-              className="flex flex-col items-center gap-1 p-2 rounded-2xl bg-amber-50/50 dark:bg-black/30 border border-amber-100 dark:border-pink-900/40 hover:border-orange-400 hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0 shadow-2xs group"
+              className="flex flex-col items-center gap-1 p-1.5 sm:p-2 rounded-2xl bg-amber-50/50 dark:bg-black/30 border border-amber-100 dark:border-pink-900/40 hover:border-orange-400 hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0 shadow-2xs group"
               title={isAr ? ingredient.nameAr : ingredient.nameEn}
             >
-              <span className="text-3xl sm:text-4xl group-hover:scale-110 transition-transform filter drop-shadow select-none">
+              <span className="text-2xl sm:text-4xl group-hover:scale-110 transition-transform filter drop-shadow select-none">
                 {ingredient.icon}
               </span>
-              <span className="text-[11px] font-black text-slate-800 dark:text-pink-100 max-w-[70px] truncate text-center">
+              <span className="text-[10px] sm:text-[11px] font-black text-slate-800 dark:text-pink-100 max-w-[64px] sm:max-w-[70px] truncate text-center">
                 {isAr ? ingredient.nameAr : ingredient.nameEn}
               </span>
             </button>
@@ -674,9 +649,9 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
          ------------------------------------------------------------- */}
       {showRecipeModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#20091b] rounded-3xl border-2 border-amber-300 dark:border-pink-900 shadow-2xl max-w-2xl w-full p-5 sm:p-6 flex flex-col space-y-4 text-slate-800 dark:text-pink-100 max-h-[85vh] overflow-hidden">
+          <div className="bg-white dark:bg-[#20091b] rounded-3xl border-2 border-amber-300 dark:border-pink-900 shadow-2xl max-w-2xl w-full p-4 sm:p-6 flex flex-col space-y-4 text-slate-800 dark:text-pink-100 max-h-[85vh] overflow-hidden">
             <div className="flex items-center justify-between border-b border-amber-100 dark:border-pink-900/40 pb-3">
-              <div className="flex items-center gap-2 font-black text-lg">
+              <div className="flex items-center gap-2 font-black text-base sm:text-lg">
                 <BookOpen className="w-5 h-5 text-amber-500" />
                 <span>{isAr ? 'كتاب الوصفات الإرشادية (١٥ وصفة)' : 'Guided Recipes (15 Recipes)'}</span>
               </div>
@@ -698,20 +673,20 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
                     setShowRecipeModal(false);
                     handleSpeak(isAr ? recipe.titleAr : recipe.titleEn);
                   }}
-                  className={`p-3.5 rounded-2xl border-2 flex items-center justify-between gap-3 transition-all cursor-pointer hover:border-amber-400 hover:scale-[1.01] ${
+                  className={`p-3 sm:p-3.5 rounded-2xl border-2 flex items-center justify-between gap-3 transition-all cursor-pointer hover:border-amber-400 hover:scale-[1.01] ${
                     activeRecipeId === recipe.id
                       ? 'bg-amber-100/70 dark:bg-amber-950/60 border-amber-400'
                       : 'bg-slate-50 dark:bg-black/30 border-slate-200 dark:border-pink-900/40'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-3xl">{recipe.icon}</span>
+                    <span className="text-2xl sm:text-3xl">{recipe.icon}</span>
                     <div className="text-start">
-                      <h4 className="font-black text-sm">{isAr ? recipe.titleAr : recipe.titleEn}</h4>
-                      <p className="text-xs text-slate-500 dark:text-pink-300/80">{isAr ? recipe.descriptionAr : recipe.descriptionEn}</p>
+                      <h4 className="font-black text-xs sm:text-sm">{isAr ? recipe.titleAr : recipe.titleEn}</h4>
+                      <p className="text-[11px] sm:text-xs text-slate-500 dark:text-pink-300/80">{isAr ? recipe.descriptionAr : recipe.descriptionEn}</p>
                     </div>
                   </div>
-                  <span className="px-3 py-1 rounded-full text-xs font-black bg-white dark:bg-black/40 border border-amber-200 text-amber-700 dark:text-amber-300 shrink-0">
+                  <span className="px-2.5 py-1 rounded-full text-xs font-black bg-white dark:bg-black/40 border border-amber-200 text-amber-700 dark:text-amber-300 shrink-0">
                     {isAr ? 'اختر' : 'Select'}
                   </span>
                 </div>
@@ -722,71 +697,28 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
       )}
 
       {/* -------------------------------------------------------------
-          DISH PRESENTATION / COMPLETION MODAL
+          DISH PRESENTATION / WIN CELEBRATION (Standard in Taleen)
          ------------------------------------------------------------- */}
       {isDishFinished && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-[#20091b] rounded-3xl border-3 border-orange-300 dark:border-pink-900 shadow-2xl max-w-lg w-full p-6 text-center space-y-4 text-slate-800 dark:text-pink-100">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-orange-400 to-amber-300 flex items-center justify-center text-5xl shadow-lg mx-auto animate-bounce">
-              👨‍🍳
-            </div>
-
-            <div className="space-y-1">
-              <span className="text-xs font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">
-                {isAr ? 'إبداع الشيف الصغير' : 'Little Chef Masterpiece'}
-              </span>
-              <h2 className="text-2xl font-black">
-                {activeRecipe
-                  ? (isAr ? activeRecipe.targetDishNameAr : activeRecipe.targetDishNameEn)
-                  : (isAr ? 'طبق تالين اللذيذ والمميز 🍽️✨' : 'Taleen Special Delicious Dish 🍽️✨')}
-              </h2>
-            </div>
-
-            <div className="w-full p-3.5 rounded-2xl bg-amber-50 dark:bg-black/40 border border-amber-200 dark:border-pink-900/40 flex flex-wrap items-center justify-center gap-2">
-              {placedItems.map((item, idx) => (
-                <span key={idx} className="text-3xl" title={item.nameAr}>
-                  {item.icon}
-                </span>
-              ))}
-            </div>
-
-            <p className="text-xs sm:text-sm font-bold text-slate-600 dark:text-pink-200/90 leading-relaxed">
-              {isAr
-                ? 'رائع جداً! لقد أبدعت في تحضير هذا الطبق الشهي المليء بالحب والإبداع والمكونات اللذيذة!'
-                : 'Awesome! You created a delightful dish full of love, creativity, and yummy ingredients!'}
-            </p>
-
-            {savedSuccessAlert && (
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                {savedSuccessAlert}
-              </span>
-            )}
-
-            <div className="flex flex-col sm:flex-row items-center gap-2 w-full pt-2">
-              <button
-                onClick={() => {
-                  sound.playPop();
-                  setSavedSuccessAlert(isAr ? 'تم حفظ صورة طبقك في دفتر الذكريات! 📸' : 'Dish saved locally! 📸');
-                }}
-                className="w-full sm:flex-1 py-2.5 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-200 font-black text-xs sm:text-sm flex items-center justify-center gap-2 hover:bg-amber-200 cursor-pointer"
-              >
-                <Camera className="w-4 h-4" />
-                <span>{isAr ? 'حفظ صورة الطبق' : 'Save Photo'}</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  sound.playClick();
-                  handleResetDish();
-                }}
-                className="w-full sm:flex-1 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black text-xs sm:text-sm shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <ChefHat className="w-4 h-4" />
-                <span>{isAr ? 'اصنع طبقاً آخر' : 'Cook Another'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <WinCelebration
+          score={score}
+          message={
+            activeRecipe
+              ? (isAr
+                  ? `أحسنت! أعددت ${activeRecipe.targetDishNameAr} بنجاح!`
+                  : `Great job! You made ${activeRecipe.targetDishNameEn}!`)
+              : (isAr
+                  ? 'ما شاء الله! طبق رائع وشهي جداً يا شيف المستقبل الصغير! 🍽️✨'
+                  : 'Amazing dish, little chef! It looks delicious! 🍽️✨')
+          }
+          stars={placedItems.length >= 3 ? 3 : 2}
+          onRestart={() => {
+            sound.playClick();
+            handleResetDish();
+            setIsDishFinished(false);
+          }}
+          onGoHome={onGoHome}
+        />
       )}
     </div>
   );

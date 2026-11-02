@@ -1,5 +1,4 @@
-import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MyLittleKitchenGame } from '../components/games/MyLittleKitchenGame';
@@ -26,6 +25,9 @@ const renderMyLittleKitchen = () => {
 };
 
 describe('My Little Kitchen (مطبخي الصغير) Game Integration', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
   it('is registered in GAMES_LIST with proper title and description', () => {
     const game = GAMES_LIST.find((g) => g.id === 'my-little-kitchen');
     expect(game).toBeDefined();
@@ -128,6 +130,28 @@ describe('My Little Kitchen (مطبخي الصغير) Game Integration', () => {
     // Finish dish button exists
     const finishBtn = screen.getByText(/قدّم الطبق/);
     expect(finishBtn).toBeDefined();
+  });
+
+  it('triggers responsive celebration modal upon clicking serve dish with play again and back buttons', () => {
+    renderMyLittleKitchen();
+
+    fireEvent.click(screen.getByText(/ابدأ اللعب الآن/));
+
+    // Add an apple
+    fireEvent.click(screen.getByTitle('تفاح'));
+
+    // Click serve dish button
+    const finishBtn = screen.getByText(/قدّم الطبق/);
+    fireEvent.click(finishBtn);
+
+    // WinCelebration should appear like all other games
+    expect(screen.getByText(/رائع يا بطل/)).toBeDefined();
+    expect(screen.getByText(/العب مجدداً/)).toBeDefined();
+    expect(screen.getByText(/العودة للألعاب/)).toBeDefined();
+
+    // Clicking play again resets the dish and closes celebration
+    fireEvent.click(screen.getByText(/العب مجدداً/));
+    expect(screen.queryByText(/العب مجدداً/)).toBeNull();
   });
 
   it('triggers interactive tools like knife or sink', () => {

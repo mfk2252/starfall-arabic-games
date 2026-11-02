@@ -26,27 +26,36 @@ export const WinCelebration: React.FC<WinCelebrationProps> = ({
   useEffect(() => {
     sound.playWin();
     try {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#4fc3f7', '#81c784', '#ffd54f', '#ff8a65', '#f48fb1', '#ce93d8'],
-      });
-      const timer = setTimeout(() => {
-        confetti({
-          particleCount: 50,
-          angle: 60,
-          spread: 55,
-          origin: { x: 0 },
-        });
-        confetti({
-          particleCount: 50,
-          angle: 120,
-          spread: 55,
-          origin: { x: 1 },
-        });
-      }, 350);
-      return () => clearTimeout(timer);
+      if (typeof document !== 'undefined') {
+        const testCanvas = document.createElement('canvas');
+        if (testCanvas.getContext && testCanvas.getContext('2d')) {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#4fc3f7', '#81c784', '#ffd54f', '#ff8a65', '#f48fb1', '#ce93d8'],
+          });
+          const timer = setTimeout(() => {
+            try {
+              confetti({
+                particleCount: 50,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+              });
+              confetti({
+                particleCount: 50,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+              });
+            } catch {
+              // Ignore
+            }
+          }, 350);
+          return () => clearTimeout(timer);
+        }
+      }
     } catch {
       // Ignore if confetti fails in headless/test environments
     }

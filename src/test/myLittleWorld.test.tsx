@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MyLittleWorldGame } from '../components/games/MyLittleWorldGame';
@@ -30,6 +30,9 @@ const renderMyLittleWorld = () => {
 };
 
 describe('My Little World (عالمي الصغير) Game Integration', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
   it('is registered in GAMES_LIST with proper title and short description', () => {
     const game = GAMES_LIST.find((g) => g.id === 'my-little-world');
     expect(game).toBeDefined();
@@ -99,5 +102,61 @@ describe('My Little World (عالمي الصغير) Game Integration', () => {
     const undoBtn = screen.getByTitle('تراجع عن آخر حركة');
     fireEvent.click(undoBtn);
     expect(screen.getByText('عدد القطع: 0')).toBeDefined();
+  });
+
+  it('opens and closes the on-demand instructions and hints modal', () => {
+    renderMyLittleWorld();
+
+    // Click on help lightbulb button
+    const helpBtn = screen.getByTitle(/إرشادات النشاط/);
+    fireEvent.click(helpBtn);
+
+    // Modal should appear
+    expect(screen.getByText(/إرشادات عالمي الصغير/)).toBeDefined();
+    expect(screen.getByText(/طريقة البناء والتشكيل/)).toBeDefined();
+
+    // Close modal
+    const closeBtn = screen.getByText(/فهمت، لنتابع البناء/);
+    fireEvent.click(closeBtn);
+
+    // Modal dismissed
+    expect(screen.queryByText(/طريقة البناء والتشكيل/)).toBeNull();
+  });
+
+  it('supports rotating, duplicating, and deleting selected blocks', () => {
+    renderMyLittleWorld();
+
+    // Place a block
+    const redCube = screen.getByTitle('مكعب أحمر');
+    fireEvent.click(redCube);
+    expect(screen.getByText('عدد القطع: 1')).toBeDefined();
+
+    // Duplicate selected block
+    const dupBtn = screen.getByTitle('نسخ القطعة المحددة');
+    fireEvent.click(dupBtn);
+    expect(screen.getByText('عدد القطع: 2')).toBeDefined();
+
+    // Rotate selected block
+    const rotBtn = screen.getByTitle('تدوير القطعة 90 درجة');
+    fireEvent.click(rotBtn);
+
+    // Delete selected block
+    const delBtn = screen.getByTitle('حذف القطعة المحددة');
+    fireEvent.click(delBtn);
+    expect(screen.getByText('عدد القطع: 1')).toBeDefined();
+  });
+
+  it('allows switching palette tabs to letters, numbers, and nature items', () => {
+    renderMyLittleWorld();
+
+    // Switch to numbers tab
+    const numbersTab = screen.getByText(/مكعبات الأرقام/);
+    fireEvent.click(numbersTab);
+    expect(screen.getByText('5')).toBeDefined();
+
+    // Switch to nature tab
+    const natureTab = screen.getByText(/الطبيعة والزينة/);
+    fireEvent.click(natureTab);
+    expect(screen.getByTitle(/شجرة/)).toBeDefined();
   });
 });
