@@ -17,7 +17,7 @@ import {
   Lightbulb
 } from 'lucide-react';
 
-type Difficulty = 'easy' | 'medium' | 'advanced' | 'challenge';
+type Difficulty = 'easy' | 'medium' | 'advanced';
 
 interface GameState {
   currentQuestionIndex: number;
@@ -105,12 +105,11 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
 
   const [showHint, setShowHint] = useState(false);
 
-  // Difficulty configurations with exactly 6 options for Advanced and Challenge modes
+  // Difficulty configurations (3 distinct balanced levels: Easy, Medium, Advanced)
   const DIFFICULTY_CONFIG: Record<Difficulty, { optionsCount: number; labelAr: string; labelEn: string; icon: string; color: string }> = {
     easy: { optionsCount: 2, labelAr: 'سهل (خياران)', labelEn: 'Easy (2 Options)', icon: '👶', color: 'from-emerald-400 to-teal-600' },
     medium: { optionsCount: 4, labelAr: 'متوسط (٤ خيارات)', labelEn: 'Medium (4 Options)', icon: '👦', color: 'from-sky-400 to-blue-600' },
-    advanced: { optionsCount: 6, labelAr: 'متقدم (٦ خيارات)', labelEn: 'Advanced (6 Options)', icon: '🧑', color: 'from-pink-500 to-rose-600' },
-    challenge: { optionsCount: 6, labelAr: 'تحدي الأبطال (٦ خيارات)', labelEn: 'Hero Challenge (6 Options)', icon: '🏆', color: 'from-purple-500 to-indigo-700' },
+    advanced: { optionsCount: 6, labelAr: 'متقدم (٦ خيارات)', labelEn: 'Advanced (6 Options)', icon: '🏆', color: 'from-purple-500 to-indigo-700' },
   };
 
   const shuffle = <T,>(array: T[]): T[] => {
@@ -122,8 +121,9 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
     return arr;
   };
 
-  const startNewGame = (difficulty: Difficulty) => {
+  const startNewGame = (difficulty: Difficulty | string) => {
     sound.playClick();
+    const activeDiff: Difficulty = (difficulty === 'challenge' ? 'advanced' : difficulty) as Difficulty;
     
     const pool = shuffle(SHADOW_GAME_DATA);
     const roundQuestions = pool.slice(0, 10);
@@ -132,7 +132,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       currentQuestionIndex: 0,
       score: 0,
       questions: roundQuestions,
-      selectedDifficulty: difficulty,
+      selectedDifficulty: activeDiff,
       status: 'playing',
       userChoice: null,
       isCorrect: null,
@@ -153,7 +153,8 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
   const currentOptions = useMemo(() => {
     if (!currentQuestion || !game.selectedDifficulty) return [];
 
-    const optionsCount = DIFFICULTY_CONFIG[game.selectedDifficulty].optionsCount;
+    const effectiveDiff: Difficulty = ((game.selectedDifficulty as string) === 'challenge' ? 'advanced' : game.selectedDifficulty) as Difficulty;
+    const optionsCount = DIFFICULTY_CONFIG[effectiveDiff]?.optionsCount || 6;
     const correctOption = currentQuestion;
     
     // Find distractors from the same category first to make the matching engaging
@@ -236,14 +237,14 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
         <div className="w-full flex items-center justify-between">
           <BackButton onClick={onGoHome} />
           <div className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-600 text-white px-4 py-2 rounded-full font-black text-sm shadow-sm">
-            <span>👤</span>
+            <span>🐼</span>
             <span>{isAr ? 'اكتشف الظل' : 'Discover Shadow'}</span>
           </div>
         </div>
 
         <div className="text-center space-y-3">
           <div className="w-24 h-24 bg-pink-50 dark:bg-[#20091b] rounded-full flex items-center justify-center mx-auto shadow-inner border-4 border-white dark:border-pink-900/40">
-            <span className="text-6xl filter grayscale brightness-0 drop-shadow-md">🐼</span>
+            <span className="text-6xl drop-shadow-md select-none animate-bounce">🐼</span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-pink-100">
             {isAr ? 'لعبة الشكل والظل' : 'Shape & Shadow Game'}
@@ -255,20 +256,20 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl">
           {(Object.keys(DIFFICULTY_CONFIG) as Difficulty[]).map((level) => {
             const conf = DIFFICULTY_CONFIG[level];
             return (
               <button
                 key={level}
                 onClick={() => startNewGame(level)}
-                className={`p-6 rounded-3xl bg-gradient-to-r ${conf.color} text-white shadow-md hover:shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 flex items-center gap-4 text-start cursor-pointer group`}
+                className={`p-5 sm:p-6 rounded-3xl bg-gradient-to-r ${conf.color} text-white shadow-md hover:shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 flex sm:flex-col items-center sm:items-start gap-3.5 text-start cursor-pointer group`}
               >
-                <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform">
                   {conf.icon}
                 </div>
                 <div>
-                  <h3 className="text-lg font-black">{isAr ? conf.labelAr : conf.labelEn}</h3>
+                  <h3 className="text-base sm:text-lg font-black">{isAr ? conf.labelAr : conf.labelEn}</h3>
                   <p className="text-xs text-white/90 font-medium mt-0.5">
                     {isAr 
                       ? `مطابقة بين ${conf.optionsCount} خيارات متطابقة الظلال`
@@ -490,7 +491,11 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
           </button>
 
           <span className="text-xs font-bold text-slate-400 dark:text-pink-300/60">
-            {isAr ? 'المستوى: ' + DIFFICULTY_CONFIG[game.selectedDifficulty!].labelAr : 'Difficulty: ' + DIFFICULTY_CONFIG[game.selectedDifficulty!].labelEn}
+            {game.selectedDifficulty && (
+              isAr
+                ? 'المستوى: ' + (DIFFICULTY_CONFIG[game.selectedDifficulty]?.labelAr || '')
+                : 'Difficulty: ' + (DIFFICULTY_CONFIG[game.selectedDifficulty]?.labelEn || '')
+            )}
           </span>
         </div>
 

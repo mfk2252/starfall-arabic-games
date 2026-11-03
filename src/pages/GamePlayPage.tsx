@@ -33,6 +33,7 @@ import { FlamingoGame } from '../components/games/FlamingoGame';
 import { AnimalsEncyclopediaGame } from '../components/games/AnimalsEncyclopediaGame';
 import { MyLittleWorldGame } from '../components/games/MyLittleWorldGame';
 import { MyLittleKitchenGame } from '../components/games/MyLittleKitchenGame';
+import { NumberSortingGame } from '../components/games/NumberSortingGame';
 
 export const GamePlayPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -100,6 +101,8 @@ export const GamePlayPage: React.FC = () => {
         return <MyLittleWorldGame onGoHome={handleGoHome} />;
       case 'my-little-kitchen':
         return <MyLittleKitchenGame onGoHome={handleGoHome} />;
+      case 'number-sorting':
+        return <NumberSortingGame onGoHome={handleGoHome} />;
       default:
         return (
           <div className="max-w-md mx-auto my-16 bg-white dark:bg-[#20091b] rounded-3xl p-8 text-center shadow-lg border border-pink-100 dark:border-[#3d122f]">

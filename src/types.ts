@@ -25,7 +25,8 @@ export type GameId =
   | 'flamingo-game'
   | 'animals-encyclopedia'
   | 'my-little-world'
-  | 'my-little-kitchen';
+  | 'my-little-kitchen'
+  | 'number-sorting';
 
 export type GameCategory =
   | 'numbers'

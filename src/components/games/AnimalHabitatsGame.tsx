@@ -3,7 +3,7 @@ import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
-import { ANIMAL_HABITATS, type AnimalHabitatOption } from '../../data/gameContent';
+import { ANIMAL_HABITATS, type AnimalHabitatOption, type AnimalHabitatQuestion } from '../../data/gameContent';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { Sparkles, Utensils, Compass } from 'lucide-react';
 
@@ -18,6 +18,7 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export const AnimalHabitatsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   const { language } = useLanguage();
+  const [questions, setQuestions] = useState<AnimalHabitatQuestion[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
@@ -28,10 +29,9 @@ export const AnimalHabitatsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
   const [feedback, setFeedback] = useState<string>('');
   const [shuffledOptions, setShuffledOptions] = useState<AnimalHabitatOption[]>([]);
 
-  const currentQ = ANIMAL_HABITATS[currentIndex] || ANIMAL_HABITATS[0];
-  const isFoodQ = currentQ.type === 'food';
-
   const initGame = useCallback(() => {
+    const randomizedQuestions = shuffleArray(ANIMAL_HABITATS);
+    setQuestions(randomizedQuestions);
     setCurrentIndex(0);
     setScore(0);
     setSelectedOptionId(null);
@@ -40,8 +40,8 @@ export const AnimalHabitatsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
     setIsProcessing(false);
     setFeedback('');
     setIsGameOver(false);
-    if (ANIMAL_HABITATS[0]) {
-      setShuffledOptions(shuffleArray(ANIMAL_HABITATS[0].habitats));
+    if (randomizedQuestions[0]) {
+      setShuffledOptions(shuffleArray(randomizedQuestions[0].habitats));
     }
   }, []);
 
@@ -49,16 +49,21 @@ export const AnimalHabitatsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
     initGame();
   }, [initGame]);
 
+  const currentQ = questions[currentIndex] || ANIMAL_HABITATS[0];
+  const isFoodQ = currentQ?.type === 'food';
+  const totalQuestions = questions.length || ANIMAL_HABITATS.length;
+
   useEffect(() => {
-    if (currentQ) {
-      setShuffledOptions(shuffleArray(currentQ.habitats));
+    const activeQ = questions[currentIndex];
+    if (activeQ) {
+      setShuffledOptions(shuffleArray(activeQ.habitats));
       setSelectedOptionId(null);
       setWrongOptionId(null);
       setIsAnswered(false);
       setIsProcessing(false);
       setFeedback('');
     }
-  }, [currentIndex]);
+  }, [currentIndex, questions]);
 
   const handleSelectOption = (optionId: string, isCorrect: boolean) => {
     if (isProcessing || isAnswered) return;
@@ -78,7 +83,7 @@ export const AnimalHabitatsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
       }
 
       setTimeout(() => {
-        if (currentIndex + 1 < ANIMAL_HABITATS.length) {
+        if (currentIndex + 1 < totalQuestions) {
           setCurrentIndex((prev) => prev + 1);
         } else {
           saveGameProgress('animal-habitats', newScore, true);
@@ -110,7 +115,7 @@ export const AnimalHabitatsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
         onRestart={initGame}
         onGoHome={onGoHome}
         accentGradient="from-[#2a9d8f] to-[#264653]"
-        badgeText={language === 'ar' ? `سؤال ${currentIndex + 1} من ${ANIMAL_HABITATS.length}` : `Question ${currentIndex + 1} of ${ANIMAL_HABITATS.length}`}
+        badgeText={language === 'ar' ? `سؤال ${currentIndex + 1} من ${totalQuestions}` : `Question ${currentIndex + 1} of ${totalQuestions}`}
       />
 
       <div className="bg-white dark:bg-[#20091b] rounded-3xl p-4 sm:p-6 shadow-xl border border-teal-100 dark:border-[#3d122f] text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
