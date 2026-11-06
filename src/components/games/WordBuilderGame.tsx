@@ -88,35 +88,50 @@ export const ENGLISH_WORD_DATABASE: WordItem[] = [
   { id: 'en_he', word: 'HE', image: '👦', translation: 'هو', lang: 'en', category: 'people' },
 
   // 3 letters
-  { id: 'en_cat', word: 'CAT', image: '🐱', translation: 'قطة', lang: 'en', category: 'animals' },
-  { id: 'en_dog', word: 'DOG', image: '🐶', translation: 'كلب', lang: 'en', category: 'animals' },
-  { id: 'en_sun', word: 'SUN', image: '☀️', translation: 'شمس', lang: 'en', category: 'nature' },
-  { id: 'en_pen', word: 'PEN', image: '✏️', translation: 'قلم', lang: 'en', category: 'objects' },
+  { id: 'en_ant', word: 'ANT', image: '🐜', translation: 'نملة', lang: 'en', category: 'animals' },
+  { id: 'en_axe', word: 'AXE', image: '🪓', translation: 'فأس', lang: 'en', category: 'objects' },
+  { id: 'en_bag', word: 'BAG', image: '🎒', translation: 'حقيبة', lang: 'en', category: 'objects' },
   { id: 'en_boy', word: 'BOY', image: '👦', translation: 'ولد', lang: 'en', category: 'people' },
-  { id: 'en_box', word: 'BOX', image: '📦', translation: 'صندوق', lang: 'en', category: 'objects' },
-  { id: 'en_bed', word: 'BED', image: '🛏️', translation: 'سرير', lang: 'en', category: 'objects' },
-  { id: 'en_cup', word: 'CUP', image: '☕', translation: 'كوب', lang: 'en', category: 'objects' },
-  { id: 'en_hat', word: 'HAT', image: '🎩', translation: 'قبعة', lang: 'en', category: 'objects' },
-  { id: 'en_map', word: 'MAP', image: '🗺️', translation: 'خريطة', lang: 'en', category: 'objects' },
   { id: 'en_bus', word: 'BUS', image: '🚌', translation: 'حافلة', lang: 'en', category: 'objects' },
   { id: 'en_car', word: 'CAR', image: '🚗', translation: 'سيارة', lang: 'en', category: 'objects' },
+  { id: 'en_cat', word: 'CAT', image: '🐱', translation: 'قطة', lang: 'en', category: 'animals' },
+  { id: 'en_dog', word: 'DOG', image: '🐶', translation: 'كلب', lang: 'en', category: 'animals' },
+  { id: 'en_egg', word: 'EGG', image: '🥚', translation: 'بيضة', lang: 'en', category: 'objects' },
+  { id: 'en_fan', word: 'FAN', image: '🪭', translation: 'مروحة', lang: 'en', category: 'objects' },
+  { id: 'en_gun', word: 'GUN', image: '🔫', translation: 'مسدس مائي', lang: 'en', category: 'objects' },
+  { id: 'en_hat', word: 'HAT', image: '🎩', translation: 'قبعة', lang: 'en', category: 'objects' },
+  { id: 'en_jam', word: 'JAM', image: '🍯', translation: 'مربى', lang: 'en', category: 'objects' },
+  { id: 'en_man', word: 'MAN', image: '👨', translation: 'رجل', lang: 'en', category: 'people' },
+  { id: 'en_map', word: 'MAP', image: '🗺️', translation: 'خريطة', lang: 'en', category: 'objects' },
+  { id: 'en_nut', word: 'NUT', image: '🥜', translation: 'مكسرات / بندق', lang: 'en', category: 'objects' },
   { id: 'en_owl', word: 'OWL', image: '🦉', translation: 'بومة', lang: 'en', category: 'animals' },
-  { id: 'en_ant', word: 'ANT', image: '🐜', translation: 'نملة', lang: 'en', category: 'animals' },
+  { id: 'en_pen', word: 'PEN', image: '✏️', translation: 'قلم', lang: 'en', category: 'objects' },
+  { id: 'en_rat', word: 'RAT', image: '🐀', translation: 'فأر', lang: 'en', category: 'animals' },
+  { id: 'en_sun', word: 'SUN', image: '☀️', translation: 'شمس', lang: 'en', category: 'nature' },
+  { id: 'en_tap', word: 'TAP', image: '🚰', translation: 'صنبور ماء', lang: 'en', category: 'objects' },
+  { id: 'en_van', word: 'VAN', image: '🚐', translation: 'شاحنة صغيرة', lang: 'en', category: 'objects' },
+  { id: 'en_win', word: 'WIN', image: '🏆', translation: 'انتصار / فوز', lang: 'en', category: 'objects' },
+  { id: 'en_zoo', word: 'ZOO', image: '🦁', translation: 'حديقة حيوان', lang: 'en', category: 'animals' },
 
   // 4 letters
-  { id: 'en_book', word: 'BOOK', image: '📖', translation: 'كتاب', lang: 'en', category: 'objects' },
-  { id: 'en_fish', word: 'FISH', image: '🐟', translation: 'سمكة', lang: 'en', category: 'animals' },
-  { id: 'en_lion', word: 'LION', image: '🦁', translation: 'أسد', lang: 'en', category: 'animals' },
-  { id: 'en_star', word: 'STAR', image: '⭐', translation: 'نجمة', lang: 'en', category: 'nature' },
   { id: 'en_bear', word: 'BEAR', image: '🐻', translation: 'دب', lang: 'en', category: 'animals' },
-  { id: 'en_duck', word: 'DUCK', image: '🦆', translation: 'بطة', lang: 'en', category: 'animals' },
-  { id: 'en_frog', word: 'FROG', image: '🐸', translation: 'ضفدع', lang: 'en', category: 'animals' },
-  { id: 'en_moon', word: 'MOON', image: '🌙', translation: 'قمر', lang: 'en', category: 'nature' },
   { id: 'en_bird', word: 'BIRD', image: '🐦', translation: 'طائر', lang: 'en', category: 'animals' },
+  { id: 'en_book', word: 'BOOK', image: '📖', translation: 'كتاب', lang: 'en', category: 'objects' },
   { id: 'en_door', word: 'DOOR', image: '🚪', translation: 'باب', lang: 'en', category: 'objects' },
-  { id: 'en_tree', word: 'TREE', image: '🌳', translation: 'شجرة', lang: 'en', category: 'nature' },
-  { id: 'en_ship', word: 'SHIP', image: '🚢', translation: 'سفينة', lang: 'en', category: 'objects' },
+  { id: 'en_duck', word: 'DUCK', image: '🦆', translation: 'بطة', lang: 'en', category: 'animals' },
+  { id: 'en_fish', word: 'FISH', image: '🐟', translation: 'سمكة', lang: 'en', category: 'animals' },
+  { id: 'en_food', word: 'FOOD', image: '🍲', translation: 'طعام', lang: 'en', category: 'objects' },
+  { id: 'en_frog', word: 'FROG', image: '🐸', translation: 'ضفدع', lang: 'en', category: 'animals' },
+  { id: 'en_hand', word: 'HAND', image: '✋', translation: 'يد', lang: 'en', category: 'people' },
+  { id: 'en_lamb', word: 'LAMB', image: '🐑', translation: 'خروف', lang: 'en', category: 'animals' },
+  { id: 'en_lion', word: 'LION', image: '🦁', translation: 'أسد', lang: 'en', category: 'animals' },
   { id: 'en_milk', word: 'MILK', image: '🥛', translation: 'حليب', lang: 'en', category: 'objects' },
+  { id: 'en_moon', word: 'MOON', image: '🌙', translation: 'قمر', lang: 'en', category: 'nature' },
+  { id: 'en_room', word: 'ROOM', image: '🛋️', translation: 'غرفة', lang: 'en', category: 'objects' },
+  { id: 'en_ship', word: 'SHIP', image: '🚢', translation: 'سفينة', lang: 'en', category: 'objects' },
+  { id: 'en_soon', word: 'SOON', image: '⏱️', translation: 'قريباً', lang: 'en', category: 'objects' },
+  { id: 'en_star', word: 'STAR', image: '⭐', translation: 'نجمة', lang: 'en', category: 'nature' },
+  { id: 'en_tree', word: 'TREE', image: '🌳', translation: 'شجرة', lang: 'en', category: 'nature' },
 
   // 5 letters
   { id: 'en_apple', word: 'APPLE', image: '🍎', translation: 'تفاحة', lang: 'en', category: 'objects' },
@@ -447,13 +462,13 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
 
           {/* Live Built Word Container */}
           <div className="mt-6 min-h-[50px] flex flex-col items-center justify-center">
-            <div className="px-8 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-100 dark:border-emerald-800/50 shadow-sm flex items-center gap-2">
+            <div className="px-8 py-2 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-100 dark:border-emerald-800/50 shadow-sm flex items-center gap-2" dir={selectedLang === 'en' ? 'ltr' : 'rtl'}>
               <span className="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-wider">
                 {userLetters.filter((l) => l !== null).join('') || '...'}
               </span>
             </div>
             {(isCorrect || showHint) && (
-              <div className="mt-2 text-sm font-bold text-slate-500 dark:text-slate-300 flex items-center gap-1.5 animate-fade-in">
+              <div className="mt-2 text-sm font-bold text-slate-500 dark:text-slate-300 flex items-center gap-1.5 animate-fade-in" dir={isAr ? 'rtl' : 'ltr'}>
                 <span>{selectedLang === 'ar' ? 'الترجمة:' : 'Translation:'}</span>
                 <span className="text-emerald-600 dark:text-emerald-400 font-black">{currentWord.translation}</span>
               </div>
@@ -470,7 +485,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
         </div>
 
         {/* The Letter Slots */}
-        <div className="flex flex-row items-center justify-center gap-2.5 sm:gap-4 flex-wrap">
+        <div className="flex flex-row items-center justify-center gap-2.5 sm:gap-4 flex-wrap" dir={selectedLang === 'en' ? 'ltr' : 'rtl'}>
           {userLetters.map((letter, idx) => (
             <div
               key={idx}
@@ -492,7 +507,7 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
           <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">
             {isAr ? 'رتب الحروف هنا' : 'Arrange Letters Here'}
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4" dir={selectedLang === 'en' ? 'ltr' : 'rtl'}>
             {availableLetters.map((l) => (
               <button
                 key={l.id}
