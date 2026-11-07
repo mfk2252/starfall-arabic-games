@@ -63,7 +63,7 @@ export const MyLittleWorldGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
   const [winMessage, setWinMessage] = useState<string>('');
 
   // Selected Palette Filter
-  const [paletteTab, setPaletteTab] = useState<'shapes' | 'letters' | 'numbers' | 'nature'>('shapes');
+  const [paletteTab, setPaletteTab] = useState<'shapes' | 'letters' | 'numbers' | 'nature' | 'roads'>('shapes');
   const [lettersLang, setLettersLang] = useState<'ar' | 'en'>('ar');
 
   // Sub-Activity States
@@ -1187,6 +1187,20 @@ export const MyLittleWorldGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
             >
               <span>🌳 الطبيعة والزينة</span>
             </button>
+
+            <button
+              onClick={() => {
+                sound.playClick();
+                setPaletteTab('roads');
+              }}
+              className={`px-3 py-1 rounded-xl font-bold text-xs cursor-pointer transition-colors ${
+                paletteTab === 'roads'
+                  ? 'bg-blue-600 text-white shadow-xs'
+                  : 'text-slate-600 dark:text-pink-200 hover:bg-pink-50'
+              }`}
+            >
+              <span>🚦 الطرق والإشارات</span>
+            </button>
           </div>
 
           {paletteTab === 'letters' && (
@@ -1261,6 +1275,23 @@ export const MyLittleWorldGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
                 title={block.nameAr}
               >
                 <div className="w-11 h-11 flex items-center justify-center p-0.5">
+                  {renderBlockShape(block, true)}
+                </div>
+                <span className="text-[10px] font-bold text-slate-700 dark:text-pink-200 text-center max-w-[64px] truncate">
+                  {block.nameAr}
+                </span>
+              </div>
+            ))}
+
+          {paletteTab === 'roads' &&
+            PALETTE_BLOCKS.filter((b) => b.category === 'roads').map((block) => (
+              <div
+                key={block.id}
+                onClick={() => handleAddBlock(block)}
+                className="flex flex-col items-center gap-1 p-1.5 rounded-xl bg-slate-50 dark:bg-[#1a0716] border border-slate-200 dark:border-pink-900/40 hover:border-blue-400 hover:scale-105 active:scale-95 transition-all cursor-pointer shrink-0"
+                title={block.nameAr}
+              >
+                <div className="w-11 h-11 flex items-center justify-center p-0.5 text-2xl">
                   {renderBlockShape(block, true)}
                 </div>
                 <span className="text-[10px] font-bold text-slate-700 dark:text-pink-200 text-center max-w-[64px] truncate">
