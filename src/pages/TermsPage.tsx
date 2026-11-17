@@ -21,8 +21,8 @@ export const TermsPage: React.FC = () => {
     {
       title: language === 'ar' ? 'الاستخدام التعليمي والتربوي' : 'Educational Purpose',
       desc: language === 'ar'
-        ? 'منصة تالين مصممة للاستخدام التعليمي المنزلي والتربوي للأطفال ومساعدتهم في تنمية المهارات اللغوية والإدراكية والحسابية من خلال اللعب.'
-        : 'Taleen is designed for home educational and early developmental play, fostering language, cognitive, and arithmetic capabilities.'
+        ? 'تطبيق عالم تالين المميز مصمم للاستخدام التعليمي المنزلي والتربوي للأطفال ومساعدتهم في تنمية المهارات اللغوية والإدراكية والحسابية من خلال اللعب.'
+        : "Taleen's Special World is designed for home educational and early developmental play, fostering language, cognitive, and arithmetic capabilities."
     },
     {
       title: language === 'ar' ? 'الملكية الفكرية والمحتوى' : 'Intellectual Property',
@@ -63,7 +63,7 @@ export const TermsPage: React.FC = () => {
                 {language === 'ar' ? 'شروط الاستخدام' : 'Terms of Use'}
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                {language === 'ar' ? 'منصة تالين التعليمية • آخر تحديث: 2026' : 'Taleen Platform • Last updated: 2026'}
+                {language === 'ar' ? 'تطبيق عالم تالين المميز • آخر تحديث: 2026' : "Taleen's Special World • Last updated: 2026"}
               </p>
             </div>
           </div>
@@ -71,8 +71,8 @@ export const TermsPage: React.FC = () => {
           <div className="prose prose-slate max-w-none text-sm sm:text-base text-slate-600 leading-relaxed space-y-6">
             <p className="font-medium text-slate-700 bg-indigo-50/70 border border-indigo-100 rounded-2xl p-4">
               {language === 'ar'
-                ? 'مرحباً بكم في منصة تالين. باستخدامكم لهذه المنصة، فإنكم توافقون على الالتزام ببنود الاستخدام التعليمي الآمن والمصمم لمصلحة ونمو الطفل.'
-                : 'Welcome to Taleen. By using this educational platform, you agree to these child-centered terms crafted for safe, enriching learning.'}
+                ? 'مرحباً بكم في عالم تالين المميز. باستخدامكم لهذا التطبيق، فإنكم توافقون على الالتزام ببنود الاستخدام التعليمي الآمن والمصمم لمصلحة ونمو الطفل.'
+                : "Welcome to Taleen's Special World. By using this educational platform, you agree to these child-centered terms crafted for safe, enriching learning."}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">

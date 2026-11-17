@@ -87,7 +87,7 @@ export const AboutPage: React.FC = () => {
           <span>{language === 'ar' ? 'رؤيتنا ورسالتنا التربوية' : 'Our Pedagogical Mission'}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-white mb-2">
-          {language === 'ar' ? 'عن منصة تالين | TALEEN' : 'About TALEEN Platform'}
+          {language === 'ar' ? 'عن عالم تالين المميز' : "About Taleen's Special World"}
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
           {language === 'ar'
@@ -117,8 +117,8 @@ export const AboutPage: React.FC = () => {
           </p>
           <p className="text-xs sm:text-sm text-slate-600 dark:text-pink-200/80 font-medium leading-relaxed max-w-2xl">
             {language === 'ar'
-              ? 'انطلقت منصة «تالين» لتكون مساحة تعليمية آمنة ومدروسة تترجم خبرات التخاطب والتربية الخاصة إلى ألعاب ممتعة وقصص تنمي مدارك الطفل اللغوية والإدراكية دون أي ضغوط نفسية أو إعلانات.'
-              : 'Taleen was created as a safe, pedagogically grounded digital space translating clinical speech and special education insights into playful cognitive activities and stories.'}
+              ? 'انطلق تطبيق «عالم تالين المميز» ليكون مساحة تعليمية آمنة ومدروسة تترجم خبرات التخاطب والتربية الخاصة إلى ألعاب ممتعة وقصص تنمي مدارك الطفل اللغوية والإدراكية دون أي ضغوط نفسية أو إعلانات.'
+              : "Taleen's Special World was created as a safe, pedagogically grounded digital space translating clinical speech and special education insights into playful cognitive activities and stories."}
           </p>
 
           <div className="pt-2 flex flex-wrap items-center gap-3 justify-center md:justify-start">

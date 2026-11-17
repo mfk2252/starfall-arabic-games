@@ -35,7 +35,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
     }
   };
 
-  const buttonText = language === 'ar' ? 'ثبّت تالين' : 'Install Taleen';
+  const buttonText = language === 'ar' ? 'ثبّت عالم تالين المميز' : "Install Taleen's Special World";
 
   return (
     <>
@@ -43,11 +43,12 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
       {(isInstallable || isIOS) && (
         <button
           onClick={handleInstallClick}
-          className={`inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 font-black px-3.5 py-1.5 rounded-full text-xs sm:text-sm shadow-sm hover:shadow-md transition-all transform hover:scale-105 active:scale-95 cursor-pointer border border-amber-300 ${className}`}
+          className={`inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-amber-950 font-black px-3 sm:px-3.5 py-1.5 rounded-full text-xs sm:text-sm shadow-sm hover:shadow-md transition-all transform hover:scale-105 active:scale-95 cursor-pointer border border-amber-300 whitespace-nowrap ${className}`}
           title={buttonText}
         >
-          <Download className="w-4 h-4 animate-bounce" />
-          <span>{buttonText}</span>
+          <Download className="w-4 h-4 animate-bounce shrink-0" />
+          <span className="hidden sm:inline">{buttonText}</span>
+          <span className="sm:hidden">{language === 'ar' ? 'تثبيت التطبيق' : 'Install'}</span>
         </button>
       )}
 
@@ -68,13 +69,13 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
             </div>
 
             <h3 className="text-lg font-extrabold text-slate-900 dark:text-pink-100 mb-2">
-              {language === 'ar' ? 'تثبيت تطبيق تالين على iPhone / iPad' : 'Install Taleen on iPhone / iPad'}
+              {language === 'ar' ? 'تثبيت تطبيق عالم تالين المميز على iPhone / iPad' : "Install Taleen's Special World on iPhone / iPad"}
             </h3>
 
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
               {language === 'ar'
-                ? 'لاتباع الخطوات البسيطة لتنزيل تالين على شاشتك الرئيسية بدون متجر:'
-                : 'Follow these quick steps to add Taleen to your home screen:'}
+                ? 'اتبع الخطوات البسيطة لتنزيل «عالم تالين المميز» على شاشتك الرئيسية بدون متجر:'
+                : "Follow these quick steps to add Taleen's Special World to your home screen:"}
             </p>
 
             <div className="space-y-3 text-xs font-semibold text-slate-700 dark:text-slate-200 mb-6">
@@ -109,7 +110,7 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({
                     {language === 'ar' ? '٣. أكّد التثبيت' : '3. Tap Add'}
                   </span>
                   <span className="text-[11px] text-slate-500 dark:text-slate-400">
-                    {language === 'ar' ? 'سيظهر أيقونة تالين فوراً بجانب تطبيقاتك' : 'Taleen app icon will appear instantly'}
+                    {language === 'ar' ? 'ستظهر أيقونة «عالم تالين المميز» فوراً بجانب تطبيقاتك' : "Taleen's Special World app icon will appear instantly"}
                   </span>
                 </div>
               </div>

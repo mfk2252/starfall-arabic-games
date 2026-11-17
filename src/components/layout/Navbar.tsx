@@ -29,7 +29,7 @@ export const Navbar: React.FC = () => {
   const [isMuted, setIsMuted] = useState(!sound.isEnabled());
 
   // Strictly single brand name per language (no bilingual mixing)
-  const brandName = language === 'ar' ? 'تالين' : 'TALEEN';
+  const brandName = language === 'ar' ? 'عالم تالين المميز' : "Taleen's Special World";
 
   const handleToggleSound = () => {
     const enabled = sound.toggleSound();
@@ -75,6 +75,7 @@ export const Navbar: React.FC = () => {
           {/* Brand Logo: Animated Flying Butterfly on Transparent Background */}
           <Link
             to="/"
+            viewTransition
             onClick={() => sound.playClick()}
             className="flex items-center gap-2 group select-none shrink-0"
             aria-label={brandName}
@@ -83,7 +84,7 @@ export const Navbar: React.FC = () => {
               <div className="absolute inset-1 rounded-full bg-pink-400/15 dark:bg-pink-500/20 blur-md pointer-events-none group-hover:bg-pink-400/25 transition-colors" />
               <ButterflyIcon className="w-10 h-10 sm:w-11 sm:h-11" />
             </div>
-            <span className="font-heading text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors">
+            <span className="font-heading text-lg sm:text-2xl lg:text-3xl font-black tracking-tight text-slate-900 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors whitespace-nowrap">
               {brandName}
             </span>
           </Link>
@@ -100,6 +101,8 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.to}
                   to={link.to}
+                  viewTransition
+                  aria-current={isActive ? 'page' : undefined}
                   onClick={() => sound.playClick()}
                   className={`flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all ${
                     isActive
@@ -188,7 +191,7 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="xl:hidden border-t border-pink-100 dark:border-[#3d122f] bg-white/98 dark:bg-[#20091b]/98 px-4 pt-3 pb-5 space-y-2 shadow-xl animate-pop-in">
           <div className="pb-2 border-b border-pink-100 dark:border-[#3d122f] flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-400 dark:text-pink-300/70">{language === 'ar' ? 'تطبيق تالين PWA' : 'Taleen PWA App'}</span>
+            <span className="text-xs font-bold text-slate-400 dark:text-pink-300/70">{language === 'ar' ? 'تطبيق عالم تالين المميز' : "Taleen's Special World App"}</span>
             <PWAInstallButton />
           </div>
           {navLinks.map((link) => {
@@ -198,6 +201,8 @@ export const Navbar: React.FC = () => {
               <Link
                 key={link.to}
                 to={link.to}
+                viewTransition
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => {
                   sound.playClick();
                   setMobileMenuOpen(false);

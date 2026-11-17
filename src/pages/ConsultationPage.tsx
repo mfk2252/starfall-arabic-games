@@ -175,7 +175,7 @@ export const ConsultationPage: React.FC = () => {
         <div className="flex-1 text-center md:text-start space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-bold text-pink-800 dark:text-pink-200 bg-pink-100 dark:bg-pink-950/60 px-3 py-1 rounded-full">
             <Award className="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
-            <span>{language === 'ar' ? 'مؤسس منصة تالين التعليمية' : 'Founder of Taleen Platform'}</span>
+            <span>{language === 'ar' ? 'مؤسس تطبيق عالم تالين المميز' : "Founder of Taleen's Special World"}</span>
           </div>
           <h2 className="text-2xl font-black text-slate-800 dark:text-pink-100">
             {language === 'ar' ? 'محمد فكري الكفافي' : 'Mohamed Fekry El-Kafafi'}

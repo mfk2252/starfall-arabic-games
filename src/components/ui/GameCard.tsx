@@ -23,8 +23,9 @@ export const GameCard: React.FC<GameCardProps> = ({ game }) => {
   return (
     <Link
       to={`/games/${game.id}`}
+      viewTransition
       onClick={() => sound.playClick()}
-      className="game-card bg-white dark:bg-[#20091b] rounded-3xl p-6 text-center shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden group border border-pink-100 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 flex flex-col justify-between select-none transform hover:-translate-y-1.5"
+      className="game-card bg-white dark:bg-[#20091b] rounded-3xl p-6 text-center shadow-md hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden group border border-pink-100 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 flex flex-col justify-between select-none transform hover:-translate-y-1.5 active:scale-[0.98]"
     >
       {/* Rainbow stripe on top */}
       <div className="absolute top-0 left-0 right-0 h-1.5 card-rainbow-strip" />

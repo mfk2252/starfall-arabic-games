@@ -18,7 +18,7 @@ export const StoriesPage: React.FC = () => {
           <span>{language === 'ar' ? 'القصص المصورة والأنشطة التفاعلية' : 'Interactive Illustrated Stories'}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-800 dark:text-slate-100 mb-2">
-          {language === 'ar' ? 'قصص تالين الهادفة' : 'Taleen Educational Stories'}
+          {language === 'ar' ? 'قصص عالم تالين المميز الهادفة' : "Taleen's Special World Educational Stories"}
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
           {language === 'ar'

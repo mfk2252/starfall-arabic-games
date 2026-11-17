@@ -21,7 +21,7 @@ import { BackButton } from '../components/common/BackButton';
 
 export const MethodologyPage: React.FC = () => {
   const { language } = useLanguage();
-  const brandName = language === 'ar' ? 'تالين' : 'TALEEN';
+  const brandName = language === 'ar' ? 'عالم تالين المميز' : "Taleen's Special World";
   const BackIcon = language === 'ar' ? ArrowRight : ArrowLeft;
 
   const pillars = [
@@ -83,7 +83,7 @@ export const MethodologyPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-center sm:justify-start gap-2">
                 <h1 className="text-2xl sm:text-4xl font-black">
-                  {language === 'ar' ? 'منهجية التعليم في تالين' : 'Taleen Educational Methodology'}
+                  {language === 'ar' ? 'منهجية التعليم في عالم تالين المميز' : "Taleen's Special World Educational Methodology"}
                 </h1>
               </div>
               <p className="text-xs sm:text-sm text-sky-100 dark:text-sky-200 mt-2 max-w-2xl">

@@ -11,13 +11,15 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^0.10.2",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "lucide-react": "^1.16.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.18.4",
-    "tailwind-merge": "^3.0.2"
+    "tailwind-merge": "^3.0.2",
+    "zzfx": "^1.4.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.8",

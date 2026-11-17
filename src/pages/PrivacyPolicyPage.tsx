@@ -24,8 +24,8 @@ export const PrivacyPolicyPage: React.FC = () => {
       icon: EyeOff,
       title: language === 'ar' ? 'خلو تام من الإعلانات والتتبع' : 'Zero Ads & Zero Tracking',
       desc: language === 'ar'
-        ? 'منصة تالين مصممة خصيصاً للأطفال الصغار، ولا تحتوي على أي إعلانات تجارية، ولا تستخدم أي أدوات تتبع سلوكية أو ملفات تعريف ارتباط دعائية.'
-        : 'Taleen is crafted strictly for children without commercial ads, third-party trackers, or behavioral profiling cookies.'
+        ? 'تطبيق عالم تالين المميز مصمم خصيصاً للأطفال الصغار، ولا يحتوي على أي إعلانات تجارية، ولا يستخدم أي أدوات تتبع سلوكية أو ملفات تعريف ارتباط دعائية.'
+        : "Taleen's Special World is crafted strictly for children without commercial ads, third-party trackers, or behavioral profiling cookies."
     },
     {
       icon: Lock,
@@ -69,7 +69,7 @@ export const PrivacyPolicyPage: React.FC = () => {
                 {language === 'ar' ? 'سياسة الخصوصية وأمان الأطفال' : 'Child Privacy & Safety Policy'}
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 mt-1">
-                {language === 'ar' ? 'منصة تالين التعليمية • آخر تحديث: 2026' : 'Taleen Platform • Last updated: 2026'}
+                {language === 'ar' ? 'تطبيق عالم تالين المميز • آخر تحديث: 2026' : "Taleen's Special World • Last updated: 2026"}
               </p>
             </div>
           </div>
@@ -77,8 +77,8 @@ export const PrivacyPolicyPage: React.FC = () => {
           <div className="prose prose-slate max-w-none text-sm sm:text-base text-slate-600 leading-relaxed space-y-6">
             <p className="font-medium text-slate-700 bg-sky-50/70 border border-sky-100 rounded-2xl p-4">
               {language === 'ar'
-                ? 'في تالين، نؤمن بأن الطفل يستحق بيئة رقمية نظيفة، آمنة ومبهجة، خالية تماماً من الاستغلال التجاري أو التتبع. خصوصية طفلك وأمانه هي أولويتنا المطلقة.'
-                : 'At Taleen, we believe every child deserves a clean, joyful, and completely secure digital sanctuary without commercial exploitation or tracking.'}
+                ? 'في عالم تالين المميز، نؤمن بأن الطفل يستحق بيئة رقمية نظيفة، آمنة ومبهجة، خالية تماماً من الاستغلال التجاري أو التتبع. خصوصية طفلك وأمانه هي أولويتنا المطلقة.'
+                : "At Taleen's Special World, we believe every child deserves a clean, joyful, and completely secure digital sanctuary without commercial exploitation or tracking."}
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">

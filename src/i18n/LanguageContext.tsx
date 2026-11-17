@@ -43,6 +43,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (typeof document !== 'undefined') {
       document.documentElement.lang = language;
       document.documentElement.dir = dir;
+      document.title =
+        language === 'ar'
+          ? 'عالم تالين المميز — منصة تعليمية تفاعلية للأطفال'
+          : "Taleen's Special World — Interactive Educational Platform for Kids";
     }
   }, [language, dir]);
 

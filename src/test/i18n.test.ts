@@ -19,9 +19,9 @@ describe('i18n translation completeness', () => {
     });
   });
 
-  it('should have valid non-empty core UI labels with TALEEN brand', () => {
-    expect(arTranslations.appName).toContain('تالين');
-    expect(enTranslations.appName).toContain('TALEEN');
+  it('should have valid non-empty core UI labels with عالم تالين المميز brand', () => {
+    expect(arTranslations.appName).toBe('عالم تالين المميز');
+    expect(enTranslations.appName).toBe("Taleen's Special World");
     expect(arTranslations.allGames.length).toBeGreaterThan(0);
     expect(enTranslations.allGames.length).toBeGreaterThan(0);
     expect(arTranslations.stories.length).toBeGreaterThan(0);

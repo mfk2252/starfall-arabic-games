@@ -1,7 +1,7 @@
 import { Translations } from './types';
 
 export const arTranslations: Translations = {
-  appName: 'تالين | TALEEN',
+  appName: 'عالم تالين المميز',
   appSubtitle: 'منصة تعليمية تفاعلية للأطفال من عمر ١ إلى ٧ سنوات',
   heroTagline: 'عالم يجمع بين متعة اللعب، شغف التعلم، والقصص المصورة لتنمية مهارات طفلك خطوة بخطوة',
   startLearning: 'ابدأ التعلم الآن 🚀',
@@ -12,8 +12,8 @@ export const arTranslations: Translations = {
   bookConsultation: 'احجز استشارة',
   bookSession: 'احجز جلستك',
   myProgress: 'لوحة الإنجازات',
-  about: 'عن تالين',
-  aboutTaleen: 'عن منصة تالين',
+  about: 'عن عالم تالين المميز',
+  aboutTaleen: 'عن تطبيق عالم تالين المميز',
   founderName: 'محمد فكري الكفافي',
   founderRole: 'أخصائي تربية خاصة وتخاطب ومطور حلول تقنية تعليمية',
   personalWebsite: 'الموقع الشخصي للمؤسس',
@@ -42,8 +42,8 @@ export const arTranslations: Translations = {
   clearProgressSuccess: 'تم إعادة ضبط جميع النقاط والنجوم بنجاح.',
   noGamesFound: 'لم يتم العثور على ألعاب مطابقة لمعايير البحث.',
   safeChildEnvironment: 'بيئة تعليمية آمنة وموثوقة بنسبة 100%',
-  safeChildDesc: 'صُممت تالين لتلائم الخصائص النمائية للطفل، وهي خالية تماماً من الإعلانات ومن الروابط المشتتة، وتركز على التعلم الفعّال من خلال اللعب.',
-  footerRights: 'منصة تالين التعليمية — جميع الحقوق محفوظة',
+  safeChildDesc: 'صُمم تطبيق عالم تالين المميز ليلائم الخصائص النمائية للطفل، وهو خالٍ تماماً من الإعلانات ومن الروابط المشتتة، ويركز على التعلم الفعّال من خلال اللعب.',
+  footerRights: 'عالم تالين المميز — جميع الحقوق محفوظة',
   footerSubtitle: 'منصة تفاعلية عربية للأطفال تُعنى بتنمية المهارات اللغوية والإدراكية والحسابية للأطفال',
   privacyPolicy: 'سياسة الخصوصية',
   termsOfUse: 'شروط الاستخدام',

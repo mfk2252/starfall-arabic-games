@@ -19,7 +19,7 @@ import { BackButton } from '../components/common/BackButton';
 
 export const SelfLearningPage: React.FC = () => {
   const { language } = useLanguage();
-  const brandName = language === 'ar' ? 'تالين' : 'TALEEN';
+  const brandName = language === 'ar' ? 'عالم تالين المميز' : "Taleen's Special World";
   const BackIcon = language === 'ar' ? ArrowRight : ArrowLeft;
 
   const features = [

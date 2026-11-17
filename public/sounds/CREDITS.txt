@@ -1,0 +1,26 @@
+Open-Source Audio Assets & Libraries Used in Taleen's Special World (عالم تالين المميز)
+======================================================================================
+
+1. Kenney Interface Sounds (CC0 1.0 Universal - Public Domain)
+   Source: https://kenney.nl/assets/interface-sounds (via Calinou/kenney-interface-sounds)
+   Files:
+   - success-chime-1..4.wav (confirmation_001..004.wav)
+   - sparkle-rise-1..2.wav (maximize_001.wav, maximize_006.wav)
+   - try-again-1..4.wav (question_001..004.wav)
+   - soft-oops-1..2.wav (error_004.wav, error_008.wav)
+   - pop-drop-1..2.wav (drop_001..002.wav)
+   - pluck-1..2.wav (pluck_001..002.wav)
+
+2. Public Domain CC0 Sound Effects (via rse/soundfx CC0 collection)
+   - achievement-chime-1.mp3 (Freesound #161316 - husky70, CC0)
+   - achievement-chime-2.mp3 (SoundBible #1815 - His Self, CC0)
+   - achievement-chime-3.mp3 (Freesound #370182 - mpaol2023, CC0)
+   - magic-sparkle.mp3 (SoundBible #1630 - Computer Magic, CC0)
+   - music-box-win.mp3 (SoundBible #1619 - Music Box, CC0)
+   - victory-jingle.mp3 (Freesound #272044 - Tuben, CC0)
+   - cartoon-boing-1.mp3 (Freesound #323420 - Sethroph, CC0)
+   - cartoon-boing-2.mp3 (Freesound #184325 - _micro, CC0)
+
+3. ZzFX - Zuper Zmall Zound Zynth (MIT License)
+   Source: https://github.com/KilledByAPixel/ZzFX
+   Author: Frank Force

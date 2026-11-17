@@ -17,7 +17,7 @@ export const MatchingGamesPage: React.FC = () => {
   const matchingGames = GAMES_LIST.filter((g) => matchingGameIds.includes(g.id));
 
   return (
-    <div className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 animate-in fade-in duration-300" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 animate-page-enter" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Header Banner */}
       <div className="w-full rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-sky-500 via-purple-600 to-indigo-700 text-white shadow-xl relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="space-y-3 text-center sm:text-start max-w-xl">
@@ -52,8 +52,9 @@ export const MatchingGamesPage: React.FC = () => {
             <Link
               key={game.id}
               to={`/games/${game.id}`}
+              viewTransition
               onClick={() => sound.playClick()}
-              className="group p-6 rounded-3xl bg-white dark:bg-[#20091b] border-2 border-pink-100 dark:border-[#3d122f] hover:border-pink-400 dark:hover:border-pink-500 transition-all transform hover:-translate-y-1 shadow-md hover:shadow-xl flex flex-col justify-between gap-4 relative overflow-hidden"
+              className="group p-6 rounded-3xl bg-white dark:bg-[#20091b] border-2 border-pink-100 dark:border-[#3d122f] hover:border-pink-400 dark:hover:border-pink-500 transition-all transform hover:-translate-y-1 active:scale-[0.98] shadow-md hover:shadow-xl flex flex-col justify-between gap-4 relative overflow-hidden"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-100 to-purple-100 dark:from-[#2d0e26] dark:to-[#1a0716] border border-pink-200 dark:border-pink-900/40 flex items-center justify-center text-4xl shrink-0 shadow-inner group-hover:scale-110 transition-transform select-none">

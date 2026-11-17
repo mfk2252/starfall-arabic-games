@@ -4,6 +4,7 @@ import { GameId } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { NavigationProgressBar } from '../components/common/NavigationProgressBar';
 
 // 12 Original Ported Games
 import { NumbersGame } from '../components/games/NumbersGame';
@@ -45,7 +46,7 @@ export const GamePlayPage: React.FC = () => {
     if (window.history.state && typeof window.history.state.idx === 'number' && window.history.state.idx > 0) {
       navigate(-1);
     } else {
-      navigate('/games', { replace: true });
+      navigate('/games', { replace: true, viewTransition: true });
     }
   };
 
@@ -132,7 +133,10 @@ export const GamePlayPage: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-start bg-gradient-to-br from-[#fff1f5] via-[#fdf2f8] to-[#fce7f3] dark:from-[#160612] dark:via-[#1e0819] dark:to-[#12040f] text-slate-800 dark:text-pink-50 transition-colors duration-200 py-3 sm:py-6 px-3 sm:px-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-      {renderGame()}
+      <NavigationProgressBar />
+      <div key={gameId} className="w-full flex flex-col items-center animate-page-enter">
+        {renderGame()}
+      </div>
     </div>
   );
 };

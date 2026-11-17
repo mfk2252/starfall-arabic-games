@@ -1,7 +1,7 @@
 import { Translations } from './types';
 
 export const enTranslations: Translations = {
-  appName: 'TALEEN | تالين',
+  appName: "Taleen's Special World",
   appSubtitle: 'Interactive educational games & stories for kids aged 1-7 years',
   heroTagline: 'A joyful world combining playful learning, curiosity, and illustrated stories to nurture skills step by step',
   startLearning: 'Start Learning Now 🚀',
@@ -12,8 +12,8 @@ export const enTranslations: Translations = {
   bookConsultation: 'Book Consultation',
   bookSession: 'Book Your Session',
   myProgress: 'My Achievements',
-  about: 'About Taleen',
-  aboutTaleen: 'About Taleen Platform',
+  about: "About Taleen's Special World",
+  aboutTaleen: "About Taleen's Special World",
   founderName: 'Mohamed Fekry El-Kafafi',
   founderRole: 'Special Education & Speech Therapist, Educational Tech Developer',
   personalWebsite: 'Founder Personal Website',
@@ -43,7 +43,7 @@ export const enTranslations: Translations = {
   noGamesFound: 'No games matched your search criteria.',
   safeChildEnvironment: '100% Safe Child-Friendly Learning Environment',
   safeChildDesc: 'Tailored for young children with zero ads or distracting links, focusing on active play-based learning.',
-  footerRights: 'Taleen Educational Platform — All Rights Reserved',
+  footerRights: "Taleen's Special World — All Rights Reserved",
   footerSubtitle: 'Arabic interactive platform designed to nurture language, cognitive, and early math skills in children',
   privacyPolicy: 'Privacy Policy',
   termsOfUse: 'Terms of Use',

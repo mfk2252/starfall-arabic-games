@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { GAMES_LIST } from '../data/games';
 import { STORIES_LIST } from '../data/stories';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -28,8 +29,12 @@ export const HomePage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
   const [ageFilter, setAgeFilter] = useState<AgeFilter>('all');
+  const [gridParent] = useAutoAnimate<HTMLDivElement>({
+    duration: 240,
+    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+  });
 
-  const brandName = language === 'ar' ? 'تالين' : 'TALEEN';
+  const brandName = language === 'ar' ? 'عالم تالين المميز' : "Taleen's Special World";
   const progress = getAllProgress();
 
   // Category filter definitions
@@ -84,7 +89,7 @@ export const HomePage: React.FC = () => {
     const groupedStoriesItem = {
       id: 'stories-group',
       type: 'game' as const,
-      title: language === 'ar' ? 'قصص تالين' : 'Taleen Stories',
+      title: language === 'ar' ? 'قصص عالم تالين المميز' : "Taleen's Special World Stories",
       description: language === 'ar' ? 'مجموعة من القصص التفاعلية الممتعة' : 'Collection of interactive fun stories',
       icon: '📖',
       gradient: 'from-[#f59e0b] to-[#d97706]',
@@ -173,7 +178,7 @@ export const HomePage: React.FC = () => {
     const randomIndex = Math.floor(Math.random() * allActivities.length);
     const chosen = allActivities[randomIndex];
     if (chosen) {
-      navigate(chosen.link);
+      navigate(chosen.link, { viewTransition: true });
     }
   };
 
@@ -325,11 +330,12 @@ export const HomePage: React.FC = () => {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4.5">
+        <div ref={gridParent} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4.5">
           {filteredActivities.map((item) => (
             <Link
               key={item.id}
               to={item.link}
+              viewTransition
               onClick={() => sound.playClick()}
               className="group bg-white dark:bg-[#20091b] rounded-3xl p-3.5 sm:p-4 border border-pink-100/90 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 shadow-xs hover:shadow-md hover:shadow-pink-500/10 transition-all duration-200 transform hover:-translate-y-1 active:scale-95 flex flex-col items-center text-center relative select-none"
             >

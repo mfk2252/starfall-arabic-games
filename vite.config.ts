@@ -13,9 +13,9 @@ export default defineConfig({
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.svg', 'pwa-192x192.png', 'pwa-512x512.png', 'robots.txt'],
       manifest: {
         id: '/',
-        name: 'تالين | TALEEN — منصة ألعاب وقصص للأطفال',
-        short_name: 'تالين',
-        description: 'منصة تعليمية تفاعلية آمنة ومبتكرة لتعلم وتطوير مهارات الأطفال عبر الألعاب الهادفة والقصص المصورة.',
+        name: 'عالم تالين المميز',
+        short_name: 'عالم تالين المميز',
+        description: 'تطبيق عالم تالين المميز — منصة تعليمية تفاعلية آمنة ومبتكرة لتعلم وتطوير مهارات الأطفال عبر الألعاب الهادفة والقصص المصورة.',
         theme_color: '#0288d1',
         background_color: '#f8fafc',
         display: 'standalone',
@@ -46,7 +46,7 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,jpg,jpeg,svg,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,jpg,jpeg,svg,wav,mp3,ogg,woff,woff2}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,

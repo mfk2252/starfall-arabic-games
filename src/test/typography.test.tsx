@@ -21,7 +21,7 @@ describe('Typography & Almarai Font Integration', () => {
 
     const brandSpan = container.querySelector('.font-heading');
     expect(brandSpan).not.toBeNull();
-    expect(brandSpan?.textContent).toBe('تالين');
+    expect(brandSpan?.textContent).toBe('عالم تالين المميز');
   });
 
   it('renders the game header with font-heading class on h1', () => {

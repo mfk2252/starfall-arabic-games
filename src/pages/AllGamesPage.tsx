@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { GAMES_LIST } from '../data/games';
 import { GameCard } from '../components/ui/GameCard';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -10,6 +11,10 @@ export const AllGamesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedAge, setSelectedAge] = useState<string>('all');
+  const [gamesGridRef] = useAutoAnimate<HTMLDivElement>({
+    duration: 240,
+    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+  });
 
   const categories = [
     { id: 'all', label: language === 'ar' ? 'جميع الأقسام' : 'All Categories' },
@@ -177,7 +182,7 @@ export const AllGamesPage: React.FC = () => {
 
       {/* Games Grid or Empty State */}
       {filteredGames.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div ref={gamesGridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {filteredGames.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
