@@ -2,17 +2,14 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
+import { RoundManager } from '../../utils/roundManager';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { 
-  RotateCcw, 
   ArrowRight, 
   ArrowLeft, 
   Clock, 
   Sparkles, 
-  HelpCircle,
-  Trophy,
-  CheckCircle2,
-  Play
+  HelpCircle
 } from 'lucide-react';
 
 type GameMode = 'explore' | 'quiz-analog' | 'quiz-digital';
@@ -51,6 +48,21 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
 
   const clockRef = useRef<SVGSVGElement>(null);
   const [isDragging, setIsDragging] = useState<'hour' | 'minute' | null>(null);
+  const timersRef = useRef<number[]>([]);
+  const shufflerRef = useRef(new RoundManager<{ id: number }>([]));
+
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach((id) => window.clearTimeout(id));
+    timersRef.current = [];
+  }, []);
+
+  const scheduleTimer = useCallback((fn: () => void, ms: number) => {
+    const id = window.setTimeout(() => {
+      timersRef.current = timersRef.current.filter((t) => t !== id);
+      fn();
+    }, ms);
+    timersRef.current.push(id);
+  }, []);
 
   const [numberSystem, setNumberSystem] = useState<'ar' | 'en'>(isAr ? 'ar' : 'en');
 
@@ -89,6 +101,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
   }, []);
 
   const startMode = (mode: GameMode, diff: Difficulty) => {
+    clearTimers();
     sound.playClick();
     const target = generateNewTarget(diff);
     setGameState({
@@ -143,7 +156,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
       sound.playMatch();
       setGameState(prev => ({ ...prev, isCorrect: true, score: prev.score + 10 }));
       
-      setTimeout(() => {
+      scheduleTimer(() => {
         if (gameState.round >= 5) {
           setGameState(prev => ({ ...prev, status: 'win' }));
           saveGameProgress('learning-clock', gameState.score + 10, true);
@@ -163,7 +176,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
     } else {
       sound.playWrong();
       setGameState(prev => ({ ...prev, isCorrect: false }));
-      setTimeout(() => setGameState(prev => ({ ...prev, isCorrect: null })), 1000);
+      scheduleTimer(() => setGameState(prev => ({ ...prev, isCorrect: null })), 1000);
     }
   };
 
@@ -174,7 +187,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
       sound.playMatch();
       setGameState(prev => ({ ...prev, isCorrect: true, score: prev.score + 10 }));
       
-      setTimeout(() => {
+      scheduleTimer(() => {
         if (gameState.round >= 5) {
           setGameState(prev => ({ ...prev, status: 'win' }));
           saveGameProgress('learning-clock', gameState.score + 10, true);
@@ -192,11 +205,11 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
     } else {
       sound.playWrong();
       setGameState(prev => ({ ...prev, isCorrect: false }));
-      setTimeout(() => setGameState(prev => ({ ...prev, isCorrect: null })), 1000);
+      scheduleTimer(() => setGameState(prev => ({ ...prev, isCorrect: null })), 1000);
     }
   };
 
-  // Generate options for digital quiz
+  // Generate options for digital quiz using Fisher-Yates shuffle
   const digitalOptions = useMemo(() => {
     if (gameState.currentMode !== 'quiz-digital') return [];
     const correct = { h: gameState.targetHour, m: gameState.targetMinute };
@@ -212,7 +225,7 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
         options.push({ h, m });
       }
     }
-    return options.sort(() => Math.random() - 0.5);
+    return shufflerRef.current.shuffle(options);
   }, [gameState.targetHour, gameState.targetMinute, gameState.currentMode, gameState.difficulty]);
 
   useEffect(() => {
@@ -224,6 +237,13 @@ export const LearningClockGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
       window.removeEventListener('touchend', handleUp);
     };
   }, []);
+
+  useEffect(() => {
+    return () => {
+      clearTimers();
+      sound.stopSpeech();
+    };
+  }, [clearTimers]);
 
   // --------------------------------------------------------------------------
   // RENDER HELPERS

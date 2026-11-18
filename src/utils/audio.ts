@@ -123,9 +123,18 @@ class SoundEffects {
     'You can do it!',
   ];
 
+  private muteListeners: Set<(enabled: boolean) => void> = new Set();
+
   constructor() {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('starfall_sound_enabled');
+      let saved = localStorage.getItem('taleen_sound_enabled');
+      if (saved === null) {
+        const legacy = localStorage.getItem('starfall_sound_enabled');
+        if (legacy !== null) {
+          localStorage.setItem('taleen_sound_enabled', legacy);
+          saved = legacy;
+        }
+      }
       if (saved !== null) {
         this.soundEnabled = saved === 'true';
       }
@@ -274,14 +283,28 @@ class SoundEffects {
     return this.soundEnabled;
   }
 
+  public onSoundChange(listener: (enabled: boolean) => void): () => void {
+    this.muteListeners.add(listener);
+    return () => {
+      this.muteListeners.delete(listener);
+    };
+  }
+
   public toggleSound(): boolean {
     this.soundEnabled = !this.soundEnabled;
     if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('starfall_sound_enabled', String(this.soundEnabled));
+      localStorage.setItem('taleen_sound_enabled', String(this.soundEnabled));
     }
     if (!this.soundEnabled && this.speechSynth) {
       this.speechSynth.cancel();
     }
+    this.muteListeners.forEach((listener) => {
+      try {
+        listener(this.soundEnabled);
+      } catch {
+        // Ignore listener errors
+      }
+    });
     return this.soundEnabled;
   }
 
@@ -780,17 +803,55 @@ class SoundEffects {
   // -------------------------------------------------------------
   // 7. SPEECH SYNTHESIS FOR VOCABULARY & LETTERS
   // -------------------------------------------------------------
+  private selectPreferredVoice(lang: 'ar' | 'en'): SpeechSynthesisVoice | null {
+    if (!this.speechSynth || typeof this.speechSynth.getVoices !== 'function') return null;
+    try {
+      const voices = this.speechSynth.getVoices();
+      if (!voices || voices.length === 0) return null;
+
+      if (lang === 'ar') {
+        return (
+          voices.find((v) => v.lang.toLowerCase() === 'ar-sa') ||
+          voices.find((v) => v.lang.toLowerCase() === 'ar-eg') ||
+          voices.find((v) => v.lang.toLowerCase().startsWith('ar')) ||
+          null
+        );
+      }
+
+      return (
+        voices.find((v) => v.lang.toLowerCase() === 'en-us') ||
+        voices.find((v) => v.lang.toLowerCase() === 'en-gb') ||
+        voices.find((v) => v.lang.toLowerCase().startsWith('en')) ||
+        null
+      );
+    } catch {
+      return null;
+    }
+  }
+
   private speakInternal(text: string, lang: 'ar' | 'en' = 'ar') {
-    if (!this.soundEnabled || !this.speechSynth) return;
+    if (!this.soundEnabled || !this.speechSynth || typeof SpeechSynthesisUtterance === 'undefined') return;
 
     try {
       this.speechSynth.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang === 'ar' ? 'ar-SA' : 'en-US';
+      const preferredVoice = this.selectPreferredVoice(lang);
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
       utterance.rate = 0.9;
       utterance.pitch = 1.15;
 
       this.speechSynth.speak(utterance);
+    } catch {
+      // Ignore
+    }
+  }
+
+  public stopSpeech() {
+    try {
+      this.speechSynth?.cancel();
     } catch {
       // Ignore
     }

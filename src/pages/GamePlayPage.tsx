@@ -1,40 +1,91 @@
-import React from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import React, { Suspense, lazy } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { GameId } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { NavigationProgressBar } from '../components/common/NavigationProgressBar';
+import { ButterflyIcon } from '../components/common/ButterflyIcon';
 
-// 12 Original Ported Games
-import { NumbersGame } from '../components/games/NumbersGame';
-import { ArabicLettersGame } from '../components/games/ArabicLettersGame';
-import { EnglishLettersGame } from '../components/games/EnglishLettersGame';
-import { ArabicWordsGame } from '../components/games/ArabicWordsGame';
-import { EnglishWordsGame } from '../components/games/EnglishWordsGame';
-import { ImagesGame } from '../components/games/ImagesGame';
-import { RelationsGame } from '../components/games/RelationsGame';
-import { OppositesGame } from '../components/games/OppositesGame';
-import { SeasonsGame } from '../components/games/SeasonsGame';
-import { DayNightGame } from '../components/games/DayNightGame';
-
-// 6 New Educational Games
-import { PatternGame } from '../components/games/PatternGame';
-import { OddOneOutGame } from '../components/games/OddOneOutGame';
-import { AnimalHabitatsGame } from '../components/games/AnimalHabitatsGame';
-import { CountingCompareGame } from '../components/games/CountingCompareGame';
-import { ColorShapeSorterGame } from '../components/games/ColorShapeSorterGame';
-import { EmotionsKidsGame } from '../components/games/EmotionsKidsGame';
-import { MathGame } from '../components/games/MathGame';
-import { WordBuilderGame } from '../components/games/WordBuilderGame';
-import { XOGame } from '../components/games/XOGame';
-import { ShadowGame } from '../components/games/ShadowGame';
-import { LearningClockGame } from '../components/games/LearningClockGame';
-import { FlamingoGame } from '../components/games/FlamingoGame';
-import { AnimalsEncyclopediaGame } from '../components/games/AnimalsEncyclopediaGame';
-import { MyLittleWorldGame } from '../components/games/MyLittleWorldGame';
-import { MyLittleKitchenGame } from '../components/games/MyLittleKitchenGame';
-import { NumberSortingGame } from '../components/games/NumberSortingGame';
+// Lazy-loaded game bundles to keep initial app load fast
+const NumbersGame = lazy(() =>
+  import('../components/games/NumbersGame').then((m) => ({ default: m.NumbersGame }))
+);
+const ArabicLettersGame = lazy(() =>
+  import('../components/games/ArabicLettersGame').then((m) => ({ default: m.ArabicLettersGame }))
+);
+const EnglishLettersGame = lazy(() =>
+  import('../components/games/EnglishLettersGame').then((m) => ({ default: m.EnglishLettersGame }))
+);
+const ArabicWordsGame = lazy(() =>
+  import('../components/games/ArabicWordsGame').then((m) => ({ default: m.ArabicWordsGame }))
+);
+const EnglishWordsGame = lazy(() =>
+  import('../components/games/EnglishWordsGame').then((m) => ({ default: m.EnglishWordsGame }))
+);
+const ImagesGame = lazy(() =>
+  import('../components/games/ImagesGame').then((m) => ({ default: m.ImagesGame }))
+);
+const RelationsGame = lazy(() =>
+  import('../components/games/RelationsGame').then((m) => ({ default: m.RelationsGame }))
+);
+const OppositesGame = lazy(() =>
+  import('../components/games/OppositesGame').then((m) => ({ default: m.OppositesGame }))
+);
+const SeasonsGame = lazy(() =>
+  import('../components/games/SeasonsGame').then((m) => ({ default: m.SeasonsGame }))
+);
+const DayNightGame = lazy(() =>
+  import('../components/games/DayNightGame').then((m) => ({ default: m.DayNightGame }))
+);
+const PatternGame = lazy(() =>
+  import('../components/games/PatternGame').then((m) => ({ default: m.PatternGame }))
+);
+const OddOneOutGame = lazy(() =>
+  import('../components/games/OddOneOutGame').then((m) => ({ default: m.OddOneOutGame }))
+);
+const AnimalHabitatsGame = lazy(() =>
+  import('../components/games/AnimalHabitatsGame').then((m) => ({ default: m.AnimalHabitatsGame }))
+);
+const CountingCompareGame = lazy(() =>
+  import('../components/games/CountingCompareGame').then((m) => ({ default: m.CountingCompareGame }))
+);
+const ColorShapeSorterGame = lazy(() =>
+  import('../components/games/ColorShapeSorterGame').then((m) => ({ default: m.ColorShapeSorterGame }))
+);
+const EmotionsKidsGame = lazy(() =>
+  import('../components/games/EmotionsKidsGame').then((m) => ({ default: m.EmotionsKidsGame }))
+);
+const MathGame = lazy(() =>
+  import('../components/games/MathGame').then((m) => ({ default: m.MathGame }))
+);
+const WordBuilderGame = lazy(() =>
+  import('../components/games/WordBuilderGame').then((m) => ({ default: m.WordBuilderGame }))
+);
+const XOGame = lazy(() =>
+  import('../components/games/XOGame').then((m) => ({ default: m.XOGame }))
+);
+const ShadowGame = lazy(() =>
+  import('../components/games/ShadowGame').then((m) => ({ default: m.ShadowGame }))
+);
+const LearningClockGame = lazy(() =>
+  import('../components/games/LearningClockGame').then((m) => ({ default: m.LearningClockGame }))
+);
+const FlamingoGame = lazy(() =>
+  import('../components/games/FlamingoGame').then((m) => ({ default: m.FlamingoGame }))
+);
+const AnimalsEncyclopediaGame = lazy(() =>
+  import('../components/games/AnimalsEncyclopediaGame').then((m) => ({ default: m.AnimalsEncyclopediaGame }))
+);
+const MyLittleWorldGame = lazy(() =>
+  import('../components/games/MyLittleWorldGame').then((m) => ({ default: m.MyLittleWorldGame }))
+);
+const MyLittleKitchenGame = lazy(() =>
+  import('../components/games/MyLittleKitchenGame').then((m) => ({ default: m.MyLittleKitchenGame }))
+);
+const NumberSortingGame = lazy(() =>
+  import('../components/games/NumberSortingGame').then((m) => ({ default: m.NumberSortingGame }))
+);
 
 export const GamePlayPage: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
@@ -135,7 +186,20 @@ export const GamePlayPage: React.FC = () => {
     <div className="min-h-dvh w-full max-w-full overflow-x-clip flex flex-col items-center justify-start bg-gradient-to-br from-[#fff1f5] via-[#fdf2f8] to-[#fce7f3] dark:from-[#160612] dark:via-[#1e0819] dark:to-[#12040f] text-slate-800 dark:text-pink-50 transition-colors duration-200 py-2.5 sm:py-6 px-2.5 sm:px-6" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       <NavigationProgressBar />
       <div key={gameId} className="w-full min-w-0 flex flex-col items-center animate-page-enter">
-        {renderGame()}
+        <Suspense
+          fallback={
+            <div className="max-w-sm w-full mx-auto my-20 bg-white/95 dark:bg-[#20091b]/95 rounded-3xl p-8 text-center shadow-lg border border-pink-100 dark:border-[#3d122f] flex flex-col items-center gap-4">
+              <div className="w-16 h-16 rounded-2xl bg-pink-50 dark:bg-pink-950/60 flex items-center justify-center animate-bounce">
+                <ButterflyIcon className="w-11 h-11" />
+              </div>
+              <p className="text-base font-black text-slate-800 dark:text-pink-100">
+                {language === 'ar' ? 'جارٍ تحضير اللعبة الممتعة...' : 'Loading your fun game...'}
+              </p>
+            </div>
+          }
+        >
+          {renderGame()}
+        </Suspense>
       </div>
     </div>
   );

@@ -128,11 +128,11 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         }));
 
         if (updatedMatched.length === game.currentPairs.length) {
-          setTimeout(() => {
-            sound.playWin();
+          const timer = window.setTimeout(() => {
             saveGameProgress('relations', game.score + 20, true);
             setGame(prev => ({ ...prev, status: 'round-end' }));
           }, 1500);
+          return () => window.clearTimeout(timer);
         }
       } else {
         sound.playWrong();
@@ -142,7 +142,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
           message: isAr ? '❌ هذان الشيئان غير مترابطين، حاول مرة أخرى!' : '❌ These are not related, try again!'
         }));
         
-        setTimeout(() => {
+        const timer = window.setTimeout(() => {
           setGame(prev => ({
             ...prev,
             selectedLeft: null,
@@ -151,6 +151,7 @@ export const RelationsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
             score: Math.max(0, prev.score - 2)
           }));
         }, 800);
+        return () => window.clearTimeout(timer);
       }
     }
   }, [game.selectedLeft, game.selectedRight, game.isProcessing, game.matchedIds, game.currentPairs, game.score, isAr]);

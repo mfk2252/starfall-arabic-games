@@ -26,6 +26,12 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   const { t } = useLanguage();
   const [isMuted, setIsMuted] = React.useState(!sound.isEnabled());
 
+  React.useEffect(() => {
+    return sound.onSoundChange((enabled) => {
+      setIsMuted(!enabled);
+    });
+  }, []);
+
   const handleToggleSound = () => {
     const enabled = sound.toggleSound();
     setIsMuted(!enabled);

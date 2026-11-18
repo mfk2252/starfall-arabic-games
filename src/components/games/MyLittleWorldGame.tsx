@@ -75,6 +75,14 @@ export const MyLittleWorldGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
   // Sound state
   const [isMuted, setIsMuted] = useState(!sound.isEnabled());
 
+  useEffect(() => {
+    const unsub = sound.onSoundChange((enabled) => setIsMuted(!enabled));
+    return () => {
+      unsub();
+      sound.stopSpeech();
+    };
+  }, []);
+
   // Help & Info Modal
   const [showHelpModal, setShowHelpModal] = useState<boolean>(false);
 
@@ -467,7 +475,6 @@ export const MyLittleWorldGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
     }
 
     if (passed) {
-      sound.playWin();
       setWinMessage(msg);
       setCelebrateWin(true);
       const newScore = score + 50;

@@ -1,15 +1,33 @@
 import { GameId, GameProgress, AllProgress } from '../types';
 
-const STORAGE_KEY = 'starfall_progress';
+const STORAGE_KEY = 'taleen_progress';
+const LEGACY_STORAGE_KEY = 'starfall_progress';
 
 export function getAllProgress(): AllProgress {
   if (typeof window === 'undefined') return {};
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      const legacyRaw = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (legacyRaw) {
+        localStorage.setItem(STORAGE_KEY, legacyRaw);
+        raw = legacyRaw;
+      }
+    }
     if (!raw) return {};
     return JSON.parse(raw);
   } catch {
     return {};
+  }
+}
+
+export function clearAllProgress(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(LEGACY_STORAGE_KEY);
+  } catch {
+    // Ignore storage errors
   }
 }
 

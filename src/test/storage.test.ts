@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { saveGameProgress, getGameProgress, getAllProgress } from '../utils/storage';
+import { saveGameProgress, getGameProgress, getAllProgress, clearAllProgress } from '../utils/storage';
 
 describe('Storage and Progress Tracking', () => {
   beforeEach(() => {
@@ -35,5 +35,26 @@ describe('Storage and Progress Tracking', () => {
     expect(prog?.highScore).toBe(90);
     expect(prog?.stars).toBe(3);
     expect(prog?.timesPlayed).toBe(2);
+  });
+
+  it('migrates legacy starfall_progress data into taleen_progress automatically', () => {
+    const legacy = {
+      numbers: { score: 85, highScore: 85, timesPlayed: 1, completed: true, date: '2026-01-01', stars: 3 },
+    };
+    localStorage.setItem('starfall_progress', JSON.stringify(legacy));
+
+    const all = getAllProgress();
+    expect(all.numbers?.stars).toBe(3);
+    expect(localStorage.getItem('taleen_progress')).not.toBeNull();
+  });
+
+  it('clearAllProgress removes both current and legacy storage keys', () => {
+    localStorage.setItem('starfall_progress', JSON.stringify({ numbers: { stars: 2 } }));
+    saveGameProgress('numbers', 80, true);
+    clearAllProgress();
+
+    expect(localStorage.getItem('taleen_progress')).toBeNull();
+    expect(localStorage.getItem('starfall_progress')).toBeNull();
+    expect(getAllProgress()).toEqual({});
   });
 });

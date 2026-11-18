@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
+import { GAMES_LIST } from '../data/games';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -51,8 +52,8 @@ export const SelfLearningPage: React.FC = () => {
       icon: Zap,
       title: language === 'ar' ? 'استجابة فورية بدون تعقيد' : 'Instant Single-Tap Play',
       desc: language === 'ar'
-        ? 'وصول مباشر إلى جميع الألعاب والأنشطة دون الحاجة لتسجيل حسابات أو خطوات دخول طويلة.'
-        : 'Direct 1-tap access to all 18 educational games and interactive stories without registration walls.',
+        ? `وصول مباشر إلى جميع الألعاب (${GAMES_LIST.length} لعبة) والأنشطة دون الحاجة لتسجيل حسابات أو خطوات دخول طويلة.`
+        : `Direct 1-tap access to all ${GAMES_LIST.length} educational games and interactive stories without registration walls.`,
       color: 'text-sky-500 bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-900',
     },
   ];

@@ -14,12 +14,20 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const STORAGE_LANG_KEY = 'starfall_lang';
+const STORAGE_LANG_KEY = 'taleen_lang';
+const LEGACY_STORAGE_LANG_KEY = 'starfall_lang';
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_LANG_KEY) as Language;
+      let saved = localStorage.getItem(STORAGE_LANG_KEY) as Language | null;
+      if (!saved) {
+        const legacy = localStorage.getItem(LEGACY_STORAGE_LANG_KEY) as Language | null;
+        if (legacy === 'ar' || legacy === 'en') {
+          localStorage.setItem(STORAGE_LANG_KEY, legacy);
+          saved = legacy;
+        }
+      }
       if (saved === 'ar' || saved === 'en') return saved;
     }
     return 'ar'; // Default Arabic

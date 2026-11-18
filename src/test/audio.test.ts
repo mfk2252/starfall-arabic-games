@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { sound, CC0_SOUND_PATHS } from '../utils/audio';
 
 describe('Open-Source Audio Engine & CC0 Assets', () => {
@@ -42,14 +42,19 @@ describe('Open-Source Audio Engine & CC0 Assets', () => {
       sound.playPraise('ar');
       sound.playTryAgain('ar');
       sound.speakText('أحسنت', 'ar');
+      sound.stopSpeech();
     }).not.toThrow();
   });
 
-  it('toggles sound enabled state cleanly and avoids throwing when muted', () => {
+  it('toggles sound enabled state cleanly and notifies subscribers', () => {
+    const listener = vi.fn();
+    const unsubscribe = sound.onSoundChange(listener);
+
     expect(sound.isEnabled()).toBe(true);
     const afterMute = sound.toggleSound();
     expect(afterMute).toBe(false);
     expect(sound.isEnabled()).toBe(false);
+    expect(listener).toHaveBeenCalledWith(false);
 
     expect(() => {
       sound.playMatch();
@@ -59,5 +64,14 @@ describe('Open-Source Audio Engine & CC0 Assets', () => {
 
     const afterUnmute = sound.toggleSound();
     expect(afterUnmute).toBe(true);
+    expect(listener).toHaveBeenCalledWith(true);
+
+    unsubscribe();
+    listener.mockClear();
+    sound.toggleSound();
+    expect(listener).not.toHaveBeenCalled();
+
+    // Restore enabled state
+    sound.toggleSound();
   });
 });

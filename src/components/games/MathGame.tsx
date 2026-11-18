@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { Sparkles, RotateCcw, ArrowRight, ArrowLeft, Award, HelpCircle } from 'lucide-react';
+import { Sparkles, ArrowRight, ArrowLeft, Award, HelpCircle } from 'lucide-react';
 
 type MathLevel = 'counting' | 'addition' | 'subtraction' | 'add-sub' | 'multiplication' | 'all';
 
@@ -37,6 +37,18 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState<boolean>(false);
   const [wrongAttempts, setWrongAttempts] = useState<number>(0);
+  const advanceTimerRef = useRef<number | null>(null);
+
+  const clearAdvanceTimer = useCallback(() => {
+    if (advanceTimerRef.current !== null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => clearAdvanceTimer();
+  }, [clearAdvanceTimer]);
 
   // Helper to shuffle options
   const shuffleArray = (array: number[]): number[] => {
@@ -144,6 +156,7 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
 
   // Start game with level
   const startGame = (level: MathLevel) => {
+    clearAdvanceTimer();
     sound.playClick();
     setSelectedLevel(level);
     const newQuestions = generateQuestions(level);
@@ -174,7 +187,9 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
       setStreak((st) => st + 1);
 
       // Advance after delay
-      setTimeout(() => {
+      clearAdvanceTimer();
+      advanceTimerRef.current = window.setTimeout(() => {
+        advanceTimerRef.current = null;
         if (currentQuestionIndex + 1 < questions.length) {
           setCurrentQuestionIndex((idx) => idx + 1);
           setSelectedAnswer(null);
@@ -182,8 +197,6 @@ export const MathGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
           setShowHint(false);
           setWrongAttempts(0);
         } else {
-          // Finished round!
-          sound.playWin();
           const finalScore = score + earned;
           saveGameProgress('math-game', finalScore, true);
           setGameState('win');

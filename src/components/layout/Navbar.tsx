@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Home,
@@ -27,6 +27,12 @@ export const Navbar: React.FC = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(!sound.isEnabled());
+
+  useEffect(() => {
+    return sound.onSoundChange((enabled) => {
+      setIsMuted(!enabled);
+    });
+  }, []);
 
   // Strictly single brand name per language (no bilingual mixing)
   const brandName = language === 'ar' ? 'عالم تالين المميز' : "Taleen's Special World";

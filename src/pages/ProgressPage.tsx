@@ -1,16 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { GAMES_LIST } from '../data/games';
-import { getAllProgress } from '../utils/storage';
+import { getAllProgress, clearAllProgress } from '../utils/storage';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
 import { Trophy, Star, Award, RotateCcw, Play, CheckCircle2, AlertTriangle } from 'lucide-react';
 
 export const ProgressPage: React.FC = () => {
   const { t, language } = useLanguage();
-  const [progress, setProgress] = useState(getAllProgress());
+  const [progress, setProgress] = useState(() => getAllProgress());
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const toastTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current !== null) {
+        window.clearTimeout(toastTimerRef.current);
+      }
+    };
+  }, []);
 
   const totalPossibleStars = GAMES_LIST.length * 3;
   const totalStarsEarned = Object.values(progress).reduce(
@@ -21,11 +30,14 @@ export const ProgressPage: React.FC = () => {
 
   const handleResetProgress = () => {
     sound.playClick();
-    localStorage.removeItem('starfall_progress');
+    clearAllProgress();
     setProgress({});
     setShowConfirmModal(false);
     setToastMessage(t('clearProgressSuccess'));
-    setTimeout(() => setToastMessage(''), 3000);
+    if (toastTimerRef.current !== null) {
+      window.clearTimeout(toastTimerRef.current);
+    }
+    toastTimerRef.current = window.setTimeout(() => setToastMessage(''), 3000);
   };
 
   // Badges calculations
@@ -59,11 +71,19 @@ export const ProgressPage: React.FC = () => {
       desc: language === 'ar' ? 'إتقان الحروف والكلمات العربية' : 'Mastered Arabic letters & words',
     },
     {
-      id: 'puzzle_master',
-      name: language === 'ar' ? 'خبير الألغاز' : 'Puzzle Master',
-      icon: '🧩',
-      achieved: !!progress['puzzle-2']?.completed || !!progress['puzzle-4']?.completed,
-      desc: language === 'ar' ? 'تركيب البازل بدقة' : 'Assembled picture puzzles',
+      id: 'creative_explorer',
+      name: language === 'ar' ? 'المستكشف المبدع' : 'Creative Explorer',
+      icon: '🧱',
+      achieved:
+        !!progress['word-builder']?.completed ||
+        !!progress['my-little-world']?.completed ||
+        !!progress['my-little-kitchen']?.completed ||
+        !!progress['animals-encyclopedia']?.completed ||
+        !!progress['number-sorting']?.completed,
+      desc:
+        language === 'ar'
+          ? 'إتمام تحديات البناء أو المطبخ أو الكلمات'
+          : 'Completed builder, kitchen, or word challenges',
     },
     {
       id: 'logic_thinker',

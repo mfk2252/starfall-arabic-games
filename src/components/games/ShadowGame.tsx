@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { WinCelebration } from '../common/WinCelebration';
 import { BackButton } from '../common/BackButton';
 import { sound } from '../../utils/audio';
@@ -104,6 +104,18 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
   });
 
   const [showHint, setShowHint] = useState(false);
+  const advanceTimerRef = useRef<number | null>(null);
+
+  const clearAdvanceTimer = useCallback(() => {
+    if (advanceTimerRef.current !== null) {
+      window.clearTimeout(advanceTimerRef.current);
+      advanceTimerRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => clearAdvanceTimer();
+  }, [clearAdvanceTimer]);
 
   // Difficulty configurations (3 distinct balanced levels: Easy, Medium, Advanced)
   const DIFFICULTY_CONFIG: Record<Difficulty, { optionsCount: number; labelAr: string; labelEn: string; icon: string; color: string }> = {
@@ -122,6 +134,7 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
   };
 
   const startNewGame = (difficulty: Difficulty | string) => {
+    clearAdvanceTimer();
     sound.playClick();
     const activeDiff: Difficulty = (difficulty === 'challenge' ? 'advanced' : difficulty) as Difficulty;
     
@@ -185,7 +198,9 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       }));
       
       // Auto-advance after a short delay
-      setTimeout(() => {
+      clearAdvanceTimer();
+      advanceTimerRef.current = window.setTimeout(() => {
+        advanceTimerRef.current = null;
         nextQuestion();
       }, 800);
     } else {
@@ -211,7 +226,6 @@ export const ShadowGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
       }));
       setShowHint(false);
     } else {
-      sound.playWin();
       saveGameProgress('shadow-game', game.score, true);
       setGame(prev => ({ ...prev, status: 'round-end' }));
     }

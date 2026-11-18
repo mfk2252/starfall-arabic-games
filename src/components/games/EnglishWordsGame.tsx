@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
-import { saveGameProgress } from '../../utils/storage';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useMemoryMatch, MemoryCardBase } from '../../hooks/useMemoryMatch';
+import { Volume2 } from 'lucide-react';
 
-interface Card {
-  id: number;
+interface Card extends MemoryCardBase {
   wordKey: string;
   type: 'word' | 'image';
   text: string;
   subText: string;
   icon: string;
-  isFlipped: boolean;
-  isMatched: boolean;
 }
 
 const ENGLISH_PAIRS = [
@@ -27,18 +26,15 @@ const ENGLISH_PAIRS = [
 ];
 
 export const EnglishWordsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
-  const [score, setScore] = useState<number>(0);
-  const [matchedPairs, setMatchedPairs] = useState<number>(0);
-  const [message, setMessage] = useState<string>('صل الكلمة الإنجليزية بالصورة المناسبة!');
-  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
 
-  const initGame = useCallback(() => {
+  const [feedbackKey, setFeedbackKey] = useState<'start' | 'match' | 'wrong'>('start');
+  const [lastKey, setLastKey] = useState<string | null>(null);
+
+  const buildCards = useCallback(() => {
     const list: Omit<Card, 'id' | 'isFlipped' | 'isMatched'>[] = [];
-
     ENGLISH_PAIRS.forEach((item) => {
-      // Word card
       list.push({
         wordKey: item.key,
         type: 'word',
@@ -46,7 +42,6 @@ export const EnglishWordsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         subText: `${item.letter} for ${item.word}`,
         icon: '🔤',
       });
-      // Picture card
       list.push({
         wordKey: item.key,
         type: 'image',
@@ -55,106 +50,85 @@ export const EnglishWordsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
         icon: item.icon,
       });
     });
-
-    for (let i = list.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [list[i], list[j]] = [list[j], list[i]];
-    }
-
-    const initialCards: Card[] = list.map((item, idx) => ({
-      ...item,
-      id: idx,
-      isFlipped: false,
-      isMatched: false,
-    }));
-
-    setCards(initialCards);
-    setFlippedCards([]);
-    setMatchedPairs(0);
-    setScore(0);
-    setIsGameOver(false);
-    setMessage('صل الكلمة الإنجليزية بالصورة المناسبة!');
+    return list;
   }, []);
 
-  useEffect(() => {
+  const isMatch = useCallback(
+    (a: Card, b: Card) => a.wordKey === b.wordKey && a.type !== b.type,
+    []
+  );
+
+  const handleMatch = useCallback((first: Card) => {
+    const found = ENGLISH_PAIRS.find((p) => p.key === first.wordKey);
+    if (found) {
+      sound.speakText(found.word, 'en');
+    }
+    setLastKey(first.wordKey);
+    setFeedbackKey('match');
+  }, []);
+
+  const handleMismatch = useCallback(() => {
+    setFeedbackKey('wrong');
+  }, []);
+
+  const { cards, score, matchedPairs, isGameOver, initGame, handleCardClick } = useMemoryMatch<Card>({
+    gameId: 'english-words',
+    totalPairs: ENGLISH_PAIRS.length,
+    buildCards,
+    isMatch,
+    onMatch: handleMatch,
+    onMismatch: handleMismatch,
+  });
+
+  const handleRestart = useCallback(() => {
+    setFeedbackKey('start');
+    setLastKey(null);
     initGame();
   }, [initGame]);
 
-  const handleCardClick = (index: number) => {
-    if (flippedCards.length >= 2) return;
-    const clicked = cards[index];
-    if (clicked.isFlipped || clicked.isMatched) return;
+  const foundPair = lastKey ? ENGLISH_PAIRS.find((p) => p.key === lastKey) : null;
 
-    sound.playFlip();
-
-    const updated = cards.map((c, i) =>
-      i === index ? { ...c, isFlipped: true } : c
-    );
-    setCards(updated);
-
-    const newFlipped = [...flippedCards, index];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      const [firstIdx, secondIdx] = newFlipped;
-      const firstCard = updated[firstIdx];
-      const secondCard = updated[secondIdx];
-
-      if (firstCard.wordKey === secondCard.wordKey && firstCard.type !== secondCard.type) {
-        setTimeout(() => {
-          sound.playMatch();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isMatched: true } : c
-            )
-          );
-          setFlippedCards([]);
-          const newMatched = matchedPairs + 1;
-          const newScore = score + 10;
-          setMatchedPairs(newMatched);
-          setScore(newScore);
-
-          const found = ENGLISH_PAIRS.find((p) => p.key === firstCard.wordKey);
-          setMessage(`Good Job! ${found?.word} ${found?.icon} (${found?.ar})`);
-
-          if (newMatched === ENGLISH_PAIRS.length) {
-            saveGameProgress('english-words', newScore, true);
-            setIsGameOver(true);
-          }
-        }, 500);
-      } else {
-        setTimeout(() => {
-          sound.playWrong();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isFlipped: false } : c
-            )
-          );
-          setFlippedCards([]);
-          setScore((prev) => Math.max(0, prev - 2));
-          setMessage('حاول مرة أخرى!');
-        }, 1000);
-      }
-    }
-  };
+  const statusMessage =
+    feedbackKey === 'match' && foundPair
+      ? `Good Job! ${foundPair.word} ${foundPair.icon} (${foundPair.ar})`
+      : feedbackKey === 'wrong'
+      ? isAr
+        ? 'حاول مرة أخرى!'
+        : 'Try again!'
+      : isAr
+      ? 'صل الكلمة الإنجليزية بالصورة المناسبة!'
+      : 'Match the English word with its picture!';
 
   return (
     <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh]">
       <GameHeader
-        title="الكلمات الإنجليزية"
+        title={isAr ? 'الكلمات الإنجليزية' : 'English Words & Pictures'}
         icon="📖"
         score={score}
-        onRestart={initGame}
+        onRestart={handleRestart}
         onGoHome={onGoHome}
         accentGradient="from-[#f48fb1] to-[#c2185b]"
         badgeText="English Words & Pictures"
       />
 
       <div className="bg-white dark:bg-[#20091b] rounded-3xl p-5 sm:p-8 shadow-xl border border-pink-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
-          <span className="font-bold text-pink-900 dark:text-pink-300">{message}</span>
+        <div className="w-full flex flex-wrap justify-between items-center gap-2 mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-pink-900 dark:text-pink-300">{statusMessage}</span>
+            {foundPair && (
+              <button
+                onClick={() => sound.speakText(foundPair.word, 'en')}
+                className="p-1.5 rounded-full bg-pink-100 dark:bg-pink-950 text-pink-700 dark:text-pink-300 hover:bg-pink-200 transition-colors cursor-pointer"
+                title={isAr ? 'إعادة النطق' : 'Repeat pronunciation'}
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <span className="text-xs font-semibold bg-pink-50 dark:bg-pink-950/80 text-pink-700 dark:text-pink-300 px-3 py-1 rounded-full border border-pink-200 dark:border-pink-800">
-            {matchedPairs} / {ENGLISH_PAIRS.length} أزواج
+            {isAr
+              ? `${matchedPairs} / ${ENGLISH_PAIRS.length} أزواج`
+              : `${matchedPairs} / ${ENGLISH_PAIRS.length} pairs`}
           </span>
         </div>
 
@@ -197,16 +171,22 @@ export const EnglishWordsGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome 
           })}
         </div>
 
-        <div className="mt-6 text-center text-xs sm:text-sm text-slate-500">
-          اطابق الكلمة الإنجليزية بالبطاقة التي تحتوي صورتها ومعناها!
+        <div className="mt-6 text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          {isAr
+            ? 'طابق الكلمة الإنجليزية بالبطاقة التي تحتوي صورتها ومعناها!'
+            : 'Pair each English word with its matching picture card!'}
         </div>
       </div>
 
       {isGameOver && (
         <WinCelebration
           score={score}
-          message="🎉 أحسنت صنعاً! لقد أتقنت الكلمات الإنجليزية بامتياز!"
-          onRestart={initGame}
+          message={
+            isAr
+              ? '🎉 أحسنت صنعاً! لقد أتقنت الكلمات الإنجليزية بامتياز!'
+              : '🎉 Well done! You mastered all English words!'
+          }
+          onRestart={handleRestart}
           onGoHome={onGoHome}
           stars={score >= 70 ? 3 : score >= 50 ? 2 : 1}
         />

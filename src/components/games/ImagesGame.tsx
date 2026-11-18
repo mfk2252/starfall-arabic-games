@@ -1,141 +1,127 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
-import { saveGameProgress } from '../../utils/storage';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useMemoryMatch, MemoryCardBase } from '../../hooks/useMemoryMatch';
+import { Volume2 } from 'lucide-react';
 
-interface Card {
-  id: number;
+interface Card extends MemoryCardBase {
   itemKey: string;
-  name: string;
+  nameAr: string;
+  nameEn: string;
   icon: string;
   bgGradient: string;
-  isFlipped: boolean;
-  isMatched: boolean;
 }
 
 const IMAGE_ITEMS = [
-  { key: 'cat', name: 'قطة لطيفة', icon: '🐱', bgGradient: 'from-amber-200 to-orange-300' },
-  { key: 'dog', name: 'كلب وفي', icon: '🐶', bgGradient: 'from-yellow-200 to-amber-300' },
-  { key: 'apple', name: 'تفاحة حمراء', icon: '🍎', bgGradient: 'from-red-200 to-rose-300' },
-  { key: 'car', name: 'سيارة سريعة', icon: '🚗', bgGradient: 'from-blue-200 to-cyan-300' },
-  { key: 'rocket', name: 'صاروخ فضاء', icon: '🚀', bgGradient: 'from-indigo-200 to-purple-300' },
-  { key: 'rainbow', name: 'قوس قزح', icon: '🌈', bgGradient: 'from-pink-200 to-purple-300' },
-  { key: 'ball', name: 'كرة قدم', icon: '⚽', bgGradient: 'from-emerald-200 to-teal-300' },
-  { key: 'sun', name: 'شمس مشرقة', icon: '☀️', bgGradient: 'from-amber-200 to-yellow-300' },
+  { key: 'cat', nameAr: 'قطة لطيفة', nameEn: 'Cute Cat', icon: '🐱', bgGradient: 'from-amber-200 to-orange-300' },
+  { key: 'dog', nameAr: 'كلب وفي', nameEn: 'Loyal Dog', icon: '🐶', bgGradient: 'from-yellow-200 to-amber-300' },
+  { key: 'apple', nameAr: 'تفاحة حمراء', nameEn: 'Red Apple', icon: '🍎', bgGradient: 'from-red-200 to-rose-300' },
+  { key: 'car', nameAr: 'سيارة سريعة', nameEn: 'Fast Car', icon: '🚗', bgGradient: 'from-blue-200 to-cyan-300' },
+  { key: 'rocket', nameAr: 'صاروخ فضاء', nameEn: 'Space Rocket', icon: '🚀', bgGradient: 'from-indigo-200 to-purple-300' },
+  { key: 'rainbow', nameAr: 'قوس قزح', nameEn: 'Rainbow', icon: '🌈', bgGradient: 'from-pink-200 to-purple-300' },
+  { key: 'ball', nameAr: 'كرة قدم', nameEn: 'Soccer Ball', icon: '⚽', bgGradient: 'from-emerald-200 to-teal-300' },
+  { key: 'sun', nameAr: 'شمس مشرقة', nameEn: 'Bright Sun', icon: '☀️', bgGradient: 'from-amber-200 to-yellow-300' },
 ];
 
 export const ImagesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
-  const [score, setScore] = useState<number>(0);
-  const [matchedPairs, setMatchedPairs] = useState<number>(0);
-  const [message, setMessage] = useState<string>('ابحث عن الصور المتطابقة!');
-  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
 
-  const initGame = useCallback(() => {
-    const list = [...IMAGE_ITEMS, ...IMAGE_ITEMS];
+  const [feedbackKey, setFeedbackKey] = useState<'start' | 'match' | 'wrong'>('start');
+  const [lastMatchedCard, setLastMatchedCard] = useState<{ nameAr: string; nameEn: string; icon: string } | null>(null);
 
-    for (let i = list.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [list[i], list[j]] = [list[j], list[i]];
-    }
+  const buildCards = useCallback(
+    () =>
+      [...IMAGE_ITEMS, ...IMAGE_ITEMS].map((item) => ({
+        itemKey: item.key,
+        nameAr: item.nameAr,
+        nameEn: item.nameEn,
+        icon: item.icon,
+        bgGradient: item.bgGradient,
+      })),
+    []
+  );
 
-    const initialCards: Card[] = list.map((item, idx) => ({
-      id: idx,
-      itemKey: item.key,
-      name: item.name,
-      icon: item.icon,
-      bgGradient: item.bgGradient,
-      isFlipped: false,
-      isMatched: false,
-    }));
+  const isMatch = useCallback((a: Card, b: Card) => a.itemKey === b.itemKey, []);
 
-    setCards(initialCards);
-    setFlippedCards([]);
-    setMatchedPairs(0);
-    setScore(0);
-    setIsGameOver(false);
-    setMessage('ابحث عن الصور المتطابقة!');
+  const handleMatch = useCallback(
+    (first: Card) => {
+      sound.speakText(isAr ? first.nameAr : first.nameEn, isAr ? 'ar' : 'en');
+      setLastMatchedCard({ nameAr: first.nameAr, nameEn: first.nameEn, icon: first.icon });
+      setFeedbackKey('match');
+    },
+    [isAr]
+  );
+
+  const handleMismatch = useCallback(() => {
+    setFeedbackKey('wrong');
   }, []);
 
-  useEffect(() => {
+  const { cards, score, matchedPairs, isGameOver, initGame, handleCardClick } = useMemoryMatch<Card>({
+    gameId: 'images',
+    totalPairs: IMAGE_ITEMS.length,
+    buildCards,
+    isMatch,
+    onMatch: handleMatch,
+    onMismatch: handleMismatch,
+  });
+
+  const handleRestart = useCallback(() => {
+    setFeedbackKey('start');
+    setLastMatchedCard(null);
     initGame();
   }, [initGame]);
 
-  const handleCardClick = (index: number) => {
-    if (flippedCards.length >= 2) return;
-    const clicked = cards[index];
-    if (clicked.isFlipped || clicked.isMatched) return;
-
-    sound.playFlip();
-
-    const updated = cards.map((c, i) =>
-      i === index ? { ...c, isFlipped: true } : c
-    );
-    setCards(updated);
-
-    const newFlipped = [...flippedCards, index];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      const [firstIdx, secondIdx] = newFlipped;
-      const firstCard = updated[firstIdx];
-      const secondCard = updated[secondIdx];
-
-      if (firstCard.itemKey === secondCard.itemKey) {
-        setTimeout(() => {
-          sound.playMatch();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isMatched: true } : c
-            )
-          );
-          setFlippedCards([]);
-          const newMatched = matchedPairs + 1;
-          const newScore = score + 10;
-          setMatchedPairs(newMatched);
-          setScore(newScore);
-          setMessage(`أحسنت! تطابق صورة (${firstCard.name} ${firstCard.icon}) (+10)`);
-
-          if (newMatched === IMAGE_ITEMS.length) {
-            saveGameProgress('images', newScore, true);
-            setIsGameOver(true);
-          }
-        }, 500);
-      } else {
-        setTimeout(() => {
-          sound.playWrong();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isFlipped: false } : c
-            )
-          );
-          setFlippedCards([]);
-          setScore((prev) => Math.max(0, prev - 2));
-          setMessage('حاول مرة أخرى!');
-        }, 1000);
-      }
-    }
-  };
+  const statusMessage =
+    feedbackKey === 'match' && lastMatchedCard
+      ? isAr
+        ? `أحسنت! تطابق صورة (${lastMatchedCard.nameAr} ${lastMatchedCard.icon}) (+10)`
+        : `Great! Matched (${lastMatchedCard.nameEn} ${lastMatchedCard.icon}) (+10)`
+      : feedbackKey === 'wrong'
+      ? isAr
+        ? 'حاول مرة أخرى!'
+        : 'Try again!'
+      : isAr
+      ? 'ابحث عن الصور المتطابقة!'
+      : 'Find the matching pictures!';
 
   return (
     <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh]">
       <GameHeader
-        title="تطابق الصور"
+        title={isAr ? 'تطابق الصور' : 'Visual Memory Match'}
         icon="🖼️"
         score={score}
-        onRestart={initGame}
+        onRestart={handleRestart}
         onGoHome={onGoHome}
         accentGradient="from-[#ce93d8] to-[#8e24aa]"
-        badgeText="لعبة الذاكرة البصرية الممتعة"
+        badgeText={isAr ? 'لعبة الذاكرة البصرية الممتعة' : 'Fun Visual Memory'}
       />
 
       <div className="bg-white dark:bg-[#20091b] rounded-3xl p-5 sm:p-8 shadow-xl border border-purple-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
-          <span className="font-bold text-purple-900 dark:text-purple-300">{message}</span>
+        <div className="w-full flex flex-wrap justify-between items-center gap-2 mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-purple-900 dark:text-purple-300">{statusMessage}</span>
+            {lastMatchedCard && (
+              <button
+                onClick={() =>
+                  sound.speakText(
+                    isAr ? lastMatchedCard.nameAr : lastMatchedCard.nameEn,
+                    isAr ? 'ar' : 'en'
+                  )
+                }
+                className="p-1.5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 hover:bg-purple-200 transition-colors cursor-pointer"
+                title={isAr ? 'إعادة النطق' : 'Repeat pronunciation'}
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <span className="text-xs font-semibold bg-purple-50 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full border border-purple-200 dark:border-purple-800">
-            {matchedPairs} / {IMAGE_ITEMS.length} أزواج
+            {isAr
+              ? `${matchedPairs} / ${IMAGE_ITEMS.length} أزواج`
+              : `${matchedPairs} / ${IMAGE_ITEMS.length} pairs`}
           </span>
         </div>
 
@@ -159,7 +145,9 @@ export const ImagesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
                 {isRevealed ? (
                   <div className="flex flex-col items-center text-center">
                     <span className="text-3xl sm:text-4xl filter drop-shadow">{card.icon}</span>
-                    <span className="text-[11px] sm:text-xs font-bold mt-1 text-slate-800">{card.name}</span>
+                    <span className="text-[11px] sm:text-xs font-bold mt-1 text-slate-800">
+                      {isAr ? card.nameAr : card.nameEn}
+                    </span>
                   </div>
                 ) : (
                   <span className="text-3xl opacity-80 drop-shadow">🎨</span>
@@ -169,16 +157,22 @@ export const ImagesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => 
           })}
         </div>
 
-        <div className="mt-6 text-center text-xs sm:text-sm text-slate-500">
-          تذكر أماكن الصور وابحث عن الصورتين المتطابقتين!
+        <div className="mt-6 text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          {isAr
+            ? 'تذكر أماكن الصور وابحث عن الصورتين المتطابقتين!'
+            : 'Remember picture positions and match identical pairs!'}
         </div>
       </div>
 
       {isGameOver && (
         <WinCelebration
           score={score}
-          message="🎉 مبروك! ذاكرتك البصرية قوية ورائعة!"
-          onRestart={initGame}
+          message={
+            isAr
+              ? '🎉 مبروك! ذاكرتك البصرية قوية ورائعة!'
+              : '🎉 Congrats! Your visual memory is super strong!'
+          }
+          onRestart={handleRestart}
           onGoHome={onGoHome}
           stars={score >= 70 ? 3 : score >= 50 ? 2 : 1}
         />

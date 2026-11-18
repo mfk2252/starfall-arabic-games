@@ -66,8 +66,20 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
 
   // Dragging reference
   const workSurfaceRef = useRef<HTMLDivElement>(null);
+  const toolTimerRef = useRef<number | null>(null);
   const [draggedUid, setDraggedUid] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const unsub = sound.onSoundChange((enabled) => setIsMuted(!enabled));
+    return () => {
+      unsub();
+      if (toolTimerRef.current !== null) {
+        window.clearTimeout(toolTimerRef.current);
+      }
+      sound.stopSpeech();
+    };
+  }, []);
 
   // 7 explicit categories matching requirements
   const categoryTabs = [
@@ -160,7 +172,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
       sound.playFlip();
       handleSpeak(isAr ? 'تقطيع لطيف وآمن بالسكين البلاستيكي 🔪' : 'Safe gentle slicing 🔪');
     } else if (tool.id === 'blender') {
-      sound.playWin();
+      sound.playMatch();
       handleSpeak(isAr ? 'خلط المكونات ليصبح المشروب ناعماً ولذيذاً 🌪️' : 'Blending smoothly into a delicious drink 🌪️');
     } else if (tool.id === 'oven') {
       sound.playSparkle();
@@ -177,7 +189,11 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
     }
 
     // Transform items according to tool action
-    setTimeout(() => {
+    if (toolTimerRef.current !== null) {
+      window.clearTimeout(toolTimerRef.current);
+    }
+    toolTimerRef.current = window.setTimeout(() => {
+      toolTimerRef.current = null;
       setPlacedItems((prev) =>
         prev.map((item) => {
           const dbItem = INGREDIENTS_DATABASE.find((i) => i.id === item.ingredientId);

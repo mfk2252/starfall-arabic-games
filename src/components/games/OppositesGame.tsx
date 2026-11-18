@@ -120,11 +120,11 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
         }));
 
         if (updatedMatched.length === game.currentPairs.length) {
-          setTimeout(() => {
-            sound.playWin();
+          const timer = window.setTimeout(() => {
             saveGameProgress('opposites', game.score + 20, true);
             setGame((prev) => ({ ...prev, status: 'round-end' }));
           }, 1500);
+          return () => window.clearTimeout(timer);
         }
       } else {
         sound.playWrong();
@@ -136,7 +136,7 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
             : '❌ These are not opposites, try again!',
         }));
 
-        setTimeout(() => {
+        const timer = window.setTimeout(() => {
           setGame((prev) => ({
             ...prev,
             selectedLeft: null,
@@ -145,6 +145,7 @@ export const OppositesGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) 
             score: Math.max(0, prev.score - 2),
           }));
         }, 800);
+        return () => window.clearTimeout(timer);
       }
     }
   }, [

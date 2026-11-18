@@ -1,31 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
-import { saveGameProgress } from '../../utils/storage';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useMemoryMatch, MemoryCardBase } from '../../hooks/useMemoryMatch';
+import { Volume2 } from 'lucide-react';
 
-interface Card {
-  id: number;
-  pairKey: string; // e.g. "A"
-  display: string; // "A" or "a"
-  isFlipped: boolean;
-  isMatched: boolean;
+interface Card extends MemoryCardBase {
+  pairKey: string;
+  display: string;
 }
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 export const EnglishLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
-  const [score, setScore] = useState<number>(0);
-  const [matchedPairs, setMatchedPairs] = useState<number>(0);
-  const [message, setMessage] = useState<string>('ابحث عن الحروف الإنجليزية المتطابقة!');
-  const [isGameOver, setIsGameOver] = useState<boolean>(false);
-  const [matchCase, setMatchCase] = useState<boolean>(true); // Uppercase + Lowercase pair
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
 
-  const initGame = useCallback(() => {
+  const [matchCase, setMatchCase] = useState<boolean>(true);
+  const [feedbackKey, setFeedbackKey] = useState<'start' | 'match' | 'wrong'>('start');
+  const [lastLetter, setLastLetter] = useState<string | null>(null);
+
+  const buildCards = useCallback(() => {
     const cardItems: { pairKey: string; display: string }[] = [];
-
     LETTERS.forEach((l) => {
       if (matchCase) {
         cardItems.push({ pairKey: l, display: l.toUpperCase() });
@@ -35,105 +32,80 @@ export const EnglishLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
         cardItems.push({ pairKey: l, display: l });
       }
     });
-
-    for (let i = cardItems.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cardItems[i], cardItems[j]] = [cardItems[j], cardItems[i]];
-    }
-
-    const initialCards: Card[] = cardItems.map((item, idx) => ({
-      id: idx,
-      pairKey: item.pairKey,
-      display: item.display,
-      isFlipped: false,
-      isMatched: false,
-    }));
-
-    setCards(initialCards);
-    setFlippedCards([]);
-    setMatchedPairs(0);
-    setScore(0);
-    setIsGameOver(false);
-    setMessage('ابحث عن الحروف المتطابقة!');
+    return cardItems;
   }, [matchCase]);
 
+  const isMatch = useCallback((a: Card, b: Card) => a.pairKey === b.pairKey, []);
+
+  const handleMatch = useCallback((first: Card) => {
+    sound.speakText(first.pairKey, 'en');
+    setLastLetter(first.pairKey);
+    setFeedbackKey('match');
+  }, []);
+
+  const handleMismatch = useCallback(() => {
+    setFeedbackKey('wrong');
+  }, []);
+
+  const { cards, score, matchedPairs, isGameOver, initGame, handleCardClick } = useMemoryMatch<Card>({
+    gameId: 'english-letters',
+    totalPairs: LETTERS.length,
+    buildCards,
+    isMatch,
+    onMatch: handleMatch,
+    onMismatch: handleMismatch,
+  });
+
   useEffect(() => {
+    setFeedbackKey('start');
+    setLastLetter(null);
+  }, [matchCase]);
+
+  const handleRestart = useCallback(() => {
+    setFeedbackKey('start');
+    setLastLetter(null);
     initGame();
   }, [initGame]);
 
-  const handleCardClick = (index: number) => {
-    if (flippedCards.length >= 2) return;
-    const clicked = cards[index];
-    if (clicked.isFlipped || clicked.isMatched) return;
-
-    sound.playFlip();
-
-    const updated = cards.map((c, i) =>
-      i === index ? { ...c, isFlipped: true } : c
-    );
-    setCards(updated);
-
-    const newFlipped = [...flippedCards, index];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      const [firstIdx, secondIdx] = newFlipped;
-      const firstCard = updated[firstIdx];
-      const secondCard = updated[secondIdx];
-
-      if (firstCard.pairKey === secondCard.pairKey) {
-        // Match!
-        setTimeout(() => {
-          sound.playMatch();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isMatched: true } : c
-            )
-          );
-          setFlippedCards([]);
-          const newMatched = matchedPairs + 1;
-          const newScore = score + 10;
-          setMatchedPairs(newMatched);
-          setScore(newScore);
-          setMessage(`أحسنت! تطابق الحرف (${firstCard.pairKey}) (+10)`);
-
-          if (newMatched === LETTERS.length) {
-            saveGameProgress('english-letters', newScore, true);
-            setIsGameOver(true);
-          }
-        }, 500);
-      } else {
-        // Mismatch
-        setTimeout(() => {
-          sound.playWrong();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isFlipped: false } : c
-            )
-          );
-          setFlippedCards([]);
-          setScore((prev) => Math.max(0, prev - 2));
-          setMessage('حاول مرة أخرى!');
-        }, 1000);
-      }
-    }
-  };
+  const statusMessage =
+    feedbackKey === 'match' && lastLetter
+      ? isAr
+        ? `أحسنت! تطابق الحرف (${lastLetter}) (+10)`
+        : `Great! Matched letter (${lastLetter}) (+10)`
+      : feedbackKey === 'wrong'
+      ? isAr
+        ? 'حاول مرة أخرى!'
+        : 'Try again!'
+      : isAr
+      ? 'ابحث عن الحروف الإنجليزية المتطابقة!'
+      : 'Find matching English letters!';
 
   return (
     <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh]">
       <GameHeader
-        title="تطابق الحروف الإنجليزية"
+        title={isAr ? 'تطابق الحروف الإنجليزية' : 'English Alphabet Match'}
         icon="🔤"
         score={score}
-        onRestart={initGame}
+        onRestart={handleRestart}
         onGoHome={onGoHome}
         accentGradient="from-[#ffd54f] to-[#f57f17]"
         badgeText="English Alphabet"
       />
 
       <div className="bg-white dark:bg-[#20091b] rounded-3xl p-5 sm:p-8 shadow-xl border border-amber-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
-          <span className="font-bold text-amber-800 dark:text-amber-400">{message}</span>
+        <div className="w-full flex flex-wrap justify-between items-center gap-2 mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-amber-800 dark:text-amber-400">{statusMessage}</span>
+            {lastLetter && (
+              <button
+                onClick={() => sound.speakText(lastLetter, 'en')}
+                className="p-1.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 hover:bg-amber-200 transition-colors cursor-pointer"
+                title={isAr ? 'إعادة النطق' : 'Repeat pronunciation'}
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <button
             onClick={() => {
               sound.playClick();
@@ -141,7 +113,13 @@ export const EnglishLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
             }}
             className="text-xs font-bold bg-amber-50 dark:bg-amber-950/80 hover:bg-amber-100 dark:hover:bg-amber-900/80 text-amber-800 dark:text-amber-200 px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-800 cursor-pointer"
           >
-            {matchCase ? 'مطابقة الكبير مع الصغير (A - a)' : 'مطابقة متطابقة (A - A)'}
+            {matchCase
+              ? isAr
+                ? 'مطابقة الكبير مع الصغير (A - a)'
+                : 'Match Upper & Lower (A - a)'
+              : isAr
+              ? 'مطابقة متطابقة (A - A)'
+              : 'Match Identical (A - A)'}
           </button>
         </div>
 
@@ -172,16 +150,28 @@ export const EnglishLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHom
           })}
         </div>
 
-        <div className="mt-6 text-center text-sm font-semibold text-slate-500">
-          تم إيجاد: <span className="text-amber-600 font-bold">{matchedPairs}</span> من أصل 8 أزواج
+        <div className="mt-6 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
+          {isAr ? (
+            <>
+              تم إيجاد: <span className="text-amber-600 font-bold">{matchedPairs}</span> من أصل {LETTERS.length} أزواج
+            </>
+          ) : (
+            <>
+              Found: <span className="text-amber-600 font-bold">{matchedPairs}</span> of {LETTERS.length} pairs
+            </>
+          )}
         </div>
       </div>
 
       {isGameOver && (
         <WinCelebration
           score={score}
-          message="🎉 مذهل! لقد أتقنت الحروف الإنجليزية بنجاح!"
-          onRestart={initGame}
+          message={
+            isAr
+              ? '🎉 مذهل! لقد أتقنت الحروف الإنجليزية بنجاح!'
+              : '🎉 Amazing! You mastered the English alphabet!'
+          }
+          onRestart={handleRestart}
           onGoHome={onGoHome}
           stars={score >= 70 ? 3 : score >= 50 ? 2 : 1}
         />

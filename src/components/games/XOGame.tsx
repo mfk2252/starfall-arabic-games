@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
@@ -46,6 +46,18 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   const [currentPair, setCurrentPair] = useState<SymbolPair>(SYMBOL_PAIRS.classic[0]);
   const [winner, setWinner] = useState<Player | 'Draw'>(null);
   const [winningLine, setWinningLine] = useState<number[] | null>(null);
+  const winTimerRef = useRef<number | null>(null);
+
+  const clearWinTimer = useCallback(() => {
+    if (winTimerRef.current !== null) {
+      window.clearTimeout(winTimerRef.current);
+      winTimerRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => clearWinTimer();
+  }, [clearWinTimer]);
 
   const checkWinner = (squares: Player[]) => {
     const lines = [
@@ -125,12 +137,16 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
       setWinner(result.winner);
       setWinningLine(result.line);
       if (result.winner === 'P1' || (gameMode === 'PvP' && result.winner === 'P2')) {
-        sound.playWin();
+        sound.playMatch();
         saveGameProgress('xo-game', 50, true);
       } else {
         sound.playClick();
       }
-      setTimeout(() => setGameState('win'), 1000);
+      clearWinTimer();
+      winTimerRef.current = window.setTimeout(() => {
+        winTimerRef.current = null;
+        setGameState('win');
+      }, 1000);
       return;
     }
 
@@ -149,6 +165,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   }, [currentPlayer, board, winner, gameMode]);
 
   const startGame = (mode: GameMode, type: SymbolType) => {
+    clearWinTimer();
     sound.playClick();
     setGameMode(mode);
     setSymbolType(type);
@@ -162,6 +179,7 @@ export const XOGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
   };
 
   const resetGame = () => {
+    clearWinTimer();
     sound.playClick();
     setBoard(Array(9).fill(null));
     setCurrentPlayer('P1');

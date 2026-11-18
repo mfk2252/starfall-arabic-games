@@ -69,7 +69,27 @@
     <priority>0.7</priority>
   </url>
 
-  <!-- Key Games -->
+  <!-- All 26 Educational Games -->
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/word-builder</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/math-game</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/shadow-game</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/animal-habitats</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://starfall-arabic-games.vercel.app/games/numbers</loc>
     <changefreq>monthly</changefreq>
@@ -81,7 +101,32 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/english-letters</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://starfall-arabic-games.vercel.app/games/arabic-words</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/english-words</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/images</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/relations</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/opposites</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -106,11 +151,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://starfall-arabic-games.vercel.app/games/animal-habitats</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://starfall-arabic-games.vercel.app/games/counting-compare</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -122,6 +162,41 @@
   </url>
   <url>
     <loc>https://starfall-arabic-games.vercel.app/games/emotions-kids</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/xo-game</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/learning-clock</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/flamingo-game</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/animals-encyclopedia</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/my-little-world</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/my-little-kitchen</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://starfall-arabic-games.vercel.app/games/number-sorting</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

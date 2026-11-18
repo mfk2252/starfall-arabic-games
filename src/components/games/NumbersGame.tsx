@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
-import { saveGameProgress } from '../../utils/storage';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useMemoryMatch, MemoryCardBase } from '../../hooks/useMemoryMatch';
+import { Volume2 } from 'lucide-react';
 
-interface Card {
-  id: number;
+interface Card extends MemoryCardBase {
   value: number;
-  isFlipped: boolean;
-  isMatched: boolean;
 }
 
 const ARABIC_DIGITS: Record<number, string> = {
@@ -22,7 +21,7 @@ const ARABIC_DIGITS: Record<number, string> = {
   8: '٨',
 };
 
-const NUMBER_WORDS: Record<number, string> = {
+const NUMBER_WORDS_AR: Record<number, string> = {
   1: 'واحد',
   2: 'اثنان',
   3: 'ثلاثة',
@@ -33,7 +32,17 @@ const NUMBER_WORDS: Record<number, string> = {
   8: 'ثمانية',
 };
 
-// Dots pattern for toddler visual counting aid
+const NUMBER_WORDS_EN: Record<number, string> = {
+  1: 'One',
+  2: 'Two',
+  3: 'Three',
+  4: 'Four',
+  5: 'Five',
+  6: 'Six',
+  7: 'Seven',
+  8: 'Eight',
+};
+
 const DOTS: Record<number, string> = {
   1: '●',
   2: '●●',
@@ -45,119 +54,97 @@ const DOTS: Record<number, string> = {
   8: '●●●●\n●●●●',
 };
 
+const NUMBERS_LIST = [1, 2, 3, 4, 5, 6, 7, 8];
+
 export const NumbersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
-  const [score, setScore] = useState<number>(0);
-  const [matchedPairs, setMatchedPairs] = useState<number>(0);
-  const [message, setMessage] = useState<string>('ابحث عن الأرقام المتطابقة!');
-  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
+
   const [useArabicNumerals, setUseArabicNumerals] = useState<boolean>(false);
+  const [feedbackKey, setFeedbackKey] = useState<'start' | 'match' | 'wrong'>('start');
+  const [lastMatchedValue, setLastMatchedValue] = useState<number | null>(null);
 
-  const initGame = useCallback(() => {
-    const numbersList = [1, 2, 3, 4, 5, 6, 7, 8];
-    const pairs = [...numbersList, ...numbersList];
+  const buildCards = useCallback(
+    () => [...NUMBERS_LIST, ...NUMBERS_LIST].map((value) => ({ value })),
+    []
+  );
 
-    // Fisher-Yates shuffle
-    for (let i = pairs.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
-    }
+  const isMatch = useCallback((a: Card, b: Card) => a.value === b.value, []);
 
-    const initialCards: Card[] = pairs.map((val, idx) => ({
-      id: idx,
-      value: val,
-      isFlipped: false,
-      isMatched: false,
-    }));
+  const handleMatch = useCallback(
+    (first: Card) => {
+      const spoken = isAr ? NUMBER_WORDS_AR[first.value] : NUMBER_WORDS_EN[first.value];
+      sound.speakText(spoken, isAr ? 'ar' : 'en');
+      setLastMatchedValue(first.value);
+      setFeedbackKey('match');
+    },
+    [isAr]
+  );
 
-    setCards(initialCards);
-    setFlippedCards([]);
-    setMatchedPairs(0);
-    setScore(0);
-    setIsGameOver(false);
-    setMessage('ابحث عن الأرقام المتطابقة!');
+  const handleMismatch = useCallback(() => {
+    setFeedbackKey('wrong');
   }, []);
 
-  useEffect(() => {
+  const { cards, score, matchedPairs, isGameOver, initGame, handleCardClick } = useMemoryMatch<Card>({
+    gameId: 'numbers',
+    totalPairs: NUMBERS_LIST.length,
+    buildCards,
+    isMatch,
+    onMatch: handleMatch,
+    onMismatch: handleMismatch,
+  });
+
+  const handleRestart = useCallback(() => {
+    setFeedbackKey('start');
+    setLastMatchedValue(null);
     initGame();
   }, [initGame]);
 
-  const handleCardClick = (index: number) => {
-    if (flippedCards.length >= 2) return;
-    const clicked = cards[index];
-    if (clicked.isFlipped || clicked.isMatched) return;
-
-    sound.playFlip();
-
-    const updated = cards.map((c, i) =>
-      i === index ? { ...c, isFlipped: true } : c
-    );
-    setCards(updated);
-
-    const newFlipped = [...flippedCards, index];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      const [firstIdx, secondIdx] = newFlipped;
-      const firstCard = updated[firstIdx];
-      const secondCard = updated[secondIdx];
-
-      if (firstCard.value === secondCard.value) {
-        // Matched!
-        setTimeout(() => {
-          sound.playMatch();
-          sound.speakText(NUMBER_WORDS[firstCard.value], 'ar');
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isMatched: true } : c
-            )
-          );
-          setFlippedCards([]);
-          const newMatched = matchedPairs + 1;
-          const newScore = score + 10;
-          setMatchedPairs(newMatched);
-          setScore(newScore);
-          setMessage(`أحسنت! تطابق الرقم ${useArabicNumerals ? ARABIC_DIGITS[firstCard.value] : firstCard.value} (+10)`);
-
-          if (newMatched === 8) {
-            saveGameProgress('numbers', newScore, true);
-            setIsGameOver(true);
-          }
-        }, 500);
-      } else {
-        // Not matched
-        setTimeout(() => {
-          sound.playWrong();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isFlipped: false } : c
-            )
-          );
-          setFlippedCards([]);
-          setScore((prev) => Math.max(0, prev - 2));
-          setMessage('حاول مرة أخرى!');
-        }, 1000);
-      }
-    }
-  };
+  const statusMessage =
+    feedbackKey === 'match' && lastMatchedValue !== null
+      ? isAr
+        ? `أحسنت! تطابق الرقم ${useArabicNumerals ? ARABIC_DIGITS[lastMatchedValue] : lastMatchedValue} (+10)`
+        : `Great! Matched number ${lastMatchedValue} (+10)`
+      : feedbackKey === 'wrong'
+      ? isAr
+        ? 'حاول مرة أخرى!'
+        : 'Try again!'
+      : isAr
+      ? 'ابحث عن الأرقام المتطابقة!'
+      : 'Find the matching numbers!';
 
   return (
     <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh]">
       <GameHeader
-        title="تطابق الأرقام"
+        title={isAr ? 'تطابق الأرقام' : 'Number Match'}
         icon="🔢"
         score={score}
-        onRestart={initGame}
+        onRestart={handleRestart}
         onGoHome={onGoHome}
         accentGradient="from-[#4fc3f7] to-[#0288d1]"
-        badgeText="لعبة الذاكرة والحساب"
+        badgeText={isAr ? 'لعبة الذاكرة والحساب' : 'Memory & Counting'}
       />
 
       <div className="bg-white dark:bg-[#20091b] rounded-3xl p-5 sm:p-8 shadow-xl border border-sky-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-2xl w-full flex flex-col items-center">
-        {/* Sub-controls: Numeral style toggle */}
-        <div className="flex items-center justify-between w-full mb-4 px-2 text-sm text-slate-600 dark:text-slate-300">
-          <span className="font-semibold">{message}</span>
+        {/* Sub-controls: Status, Repeat Pronunciation & Numeral style toggle */}
+        <div className="flex flex-wrap items-center justify-between gap-2 w-full mb-4 px-2 text-sm text-slate-600 dark:text-slate-300">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">{statusMessage}</span>
+            {lastMatchedValue !== null && (
+              <button
+                onClick={() =>
+                  sound.speakText(
+                    isAr ? NUMBER_WORDS_AR[lastMatchedValue] : NUMBER_WORDS_EN[lastMatchedValue],
+                    isAr ? 'ar' : 'en'
+                  )
+                }
+                className="p-1.5 rounded-full bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 hover:bg-sky-200 transition-colors cursor-pointer"
+                title={isAr ? 'إعادة النطق' : 'Repeat pronunciation'}
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <button
             onClick={() => {
               sound.playClick();
@@ -165,7 +152,13 @@ export const NumbersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
             }}
             className="text-xs font-bold bg-sky-50 dark:bg-sky-950/80 hover:bg-sky-100 dark:hover:bg-sky-900/80 text-sky-700 dark:text-sky-300 px-3 py-1.5 rounded-full border border-sky-200 dark:border-sky-800 transition-colors cursor-pointer"
           >
-            {useArabicNumerals ? 'عرض أرقام إنجليزية (1 2 3)' : 'عرض أرقام عربية (١ ٢ ٣)'}
+            {useArabicNumerals
+              ? isAr
+                ? 'عرض أرقام إنجليزية (1 2 3)'
+                : 'Show English Numerals (1 2 3)'
+              : isAr
+              ? 'عرض أرقام عربية (١ ٢ ٣)'
+              : 'Show Arabic Numerals (١ ٢ ٣)'}
           </button>
         </div>
 
@@ -197,7 +190,7 @@ export const NumbersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
                     </span>
                   </div>
                 ) : (
-                  <span className="text-2xl sm:text-3xl opacity-90 drop-shadow">؟</span>
+                  <span className="text-2xl sm:text-3xl opacity-90 drop-shadow">{isAr ? '؟' : '?'}</span>
                 )}
               </button>
             );
@@ -205,16 +198,28 @@ export const NumbersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) =>
         </div>
 
         {/* Footer info message */}
-        <div className="mt-6 text-center text-sm font-semibold text-slate-500">
-          تم مطابقة: <span className="text-sky-600 font-bold">{matchedPairs}</span> من أصل 8 أزواج
+        <div className="mt-6 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
+          {isAr ? (
+            <>
+              تم مطابقة: <span className="text-sky-600 font-bold">{matchedPairs}</span> من أصل {NUMBERS_LIST.length} أزواج
+            </>
+          ) : (
+            <>
+              Matched: <span className="text-sky-600 font-bold">{matchedPairs}</span> of {NUMBERS_LIST.length} pairs
+            </>
+          )}
         </div>
       </div>
 
       {isGameOver && (
         <WinCelebration
           score={score}
-          message="🎉 أحسنت صنعاً! لقد أتقنت تطابق الأرقام!"
-          onRestart={initGame}
+          message={
+            isAr
+              ? '🎉 أحسنت صنعاً! لقد أتقنت تطابق الأرقام!'
+              : '🎉 Well done! You mastered matching all numbers!'
+          }
+          onRestart={handleRestart}
           onGoHome={onGoHome}
           stars={score >= 70 ? 3 : score >= 50 ? 2 : 1}
         />

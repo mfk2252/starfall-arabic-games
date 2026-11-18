@@ -1,32 +1,30 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { GameHeader } from '../common/GameHeader';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
-import { saveGameProgress } from '../../utils/storage';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useMemoryMatch, MemoryCardBase } from '../../hooks/useMemoryMatch';
+import { Volume2 } from 'lucide-react';
 
-interface Card {
-  id: number;
+interface Card extends MemoryCardBase {
   letter: string;
-  isFlipped: boolean;
-  isMatched: boolean;
 }
 
 const ARABIC_LETTERS = ['أ', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ', 'ر', 'ز', 'س'];
 
-// Word examples for each letter
-const LETTER_WORDS: Record<string, string> = {
-  'أ': 'أسد 🦁',
-  'ب': 'بطة 🦆',
-  'ت': 'تفاح 🍎',
-  'ث': 'ثعلب 🦊',
-  'ج': 'جمل 🐪',
-  'ح': 'حصان 🐴',
-  'خ': 'خروف 🐑',
-  'د': 'ديك 🐓',
-  'ذ': 'ذئب 🐺',
-  'ر': 'رمان 🍇',
-  'ز': 'زرافة 🦒',
-  'س': 'سمكة 🐟',
+const LETTER_WORDS: Record<string, { ar: string; en: string }> = {
+  'أ': { ar: 'أسد 🦁', en: 'Lion 🦁' },
+  'ب': { ar: 'بطة 🦆', en: 'Duck 🦆' },
+  'ت': { ar: 'تفاح 🍎', en: 'Apple 🍎' },
+  'ث': { ar: 'ثعلب 🦊', en: 'Fox 🦊' },
+  'ج': { ar: 'جمل 🐪', en: 'Camel 🐪' },
+  'ح': { ar: 'حصان 🐴', en: 'Horse 🐴' },
+  'خ': { ar: 'خروف 🐑', en: 'Sheep 🐑' },
+  'د': { ar: 'ديك 🐓', en: 'Rooster 🐓' },
+  'ذ': { ar: 'ذئب 🐺', en: 'Wolf 🐺' },
+  'ر': { ar: 'رمان 🍇', en: 'Pomegranate 🍇' },
+  'ز': { ar: 'زرافة 🦒', en: 'Giraffe 🦒' },
+  'س': { ar: 'سمكة 🐟', en: 'Fish 🐟' },
 };
 
 const LETTER_NAMES: Record<string, string> = {
@@ -45,118 +43,87 @@ const LETTER_NAMES: Record<string, string> = {
 };
 
 export const ArabicLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }) => {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
-  const [score, setScore] = useState<number>(0);
-  const [matchedPairs, setMatchedPairs] = useState<number>(0);
-  const [message, setMessage] = useState<string>('ابحث عن الحروف المتطابقة!');
-  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const { language } = useLanguage();
+  const isAr = language === 'ar';
 
-  const initGame = useCallback(() => {
-    const pairs = [...ARABIC_LETTERS, ...ARABIC_LETTERS];
+  const [feedbackKey, setFeedbackKey] = useState<'start' | 'match' | 'wrong'>('start');
+  const [lastLetter, setLastLetter] = useState<string | null>(null);
 
-    for (let i = pairs.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pairs[i], pairs[j]] = [pairs[j], pairs[i]];
-    }
+  const buildCards = useCallback(
+    () => [...ARABIC_LETTERS, ...ARABIC_LETTERS].map((letter) => ({ letter })),
+    []
+  );
 
-    const initialCards: Card[] = pairs.map((letter, idx) => ({
-      id: idx,
-      letter,
-      isFlipped: false,
-      isMatched: false,
-    }));
+  const isMatch = useCallback((a: Card, b: Card) => a.letter === b.letter, []);
 
-    setCards(initialCards);
-    setFlippedCards([]);
-    setMatchedPairs(0);
-    setScore(0);
-    setIsGameOver(false);
-    setMessage('ابحث عن الحروف المتطابقة!');
+  const handleMatch = useCallback((first: Card) => {
+    sound.speakText(LETTER_NAMES[first.letter] || first.letter, 'ar');
+    setLastLetter(first.letter);
+    setFeedbackKey('match');
   }, []);
 
-  useEffect(() => {
+  const handleMismatch = useCallback(() => {
+    setFeedbackKey('wrong');
+  }, []);
+
+  const { cards, score, matchedPairs, isGameOver, initGame, handleCardClick } = useMemoryMatch<Card>({
+    gameId: 'arabic-letters',
+    totalPairs: ARABIC_LETTERS.length,
+    buildCards,
+    isMatch,
+    onMatch: handleMatch,
+    onMismatch: handleMismatch,
+  });
+
+  const handleRestart = useCallback(() => {
+    setFeedbackKey('start');
+    setLastLetter(null);
     initGame();
   }, [initGame]);
 
-  const handleCardClick = (index: number) => {
-    if (flippedCards.length >= 2) return;
-    const clicked = cards[index];
-    if (clicked.isFlipped || clicked.isMatched) return;
-
-    sound.playFlip();
-
-    const updated = cards.map((c, i) =>
-      i === index ? { ...c, isFlipped: true } : c
-    );
-    setCards(updated);
-
-    const newFlipped = [...flippedCards, index];
-    setFlippedCards(newFlipped);
-
-    if (newFlipped.length === 2) {
-      const [firstIdx, secondIdx] = newFlipped;
-      const firstCard = updated[firstIdx];
-      const secondCard = updated[secondIdx];
-
-      if (firstCard.letter === secondCard.letter) {
-        // Matched!
-        setTimeout(() => {
-          sound.playMatch();
-          sound.speakText(LETTER_NAMES[firstCard.letter] || firstCard.letter, 'ar');
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isMatched: true } : c
-            )
-          );
-          setFlippedCards([]);
-          const newMatched = matchedPairs + 1;
-          const newScore = score + 10;
-          setMatchedPairs(newMatched);
-          setScore(newScore);
-
-          const hint = LETTER_WORDS[firstCard.letter] ? `(${LETTER_WORDS[firstCard.letter]})` : '';
-          setMessage(`🎉 رائع! حرف (${firstCard.letter}) ${hint} (+10)`);
-
-          if (newMatched === ARABIC_LETTERS.length) {
-            saveGameProgress('arabic-letters', newScore, true);
-            setIsGameOver(true);
-          }
-        }, 500);
-      } else {
-        // Mismatch
-        setTimeout(() => {
-          sound.playWrong();
-          setCards((prev) =>
-            prev.map((c, i) =>
-              i === firstIdx || i === secondIdx ? { ...c, isFlipped: false } : c
-            )
-          );
-          setFlippedCards([]);
-          setScore((prev) => Math.max(0, prev - 2));
-          setMessage('حاول مرة أخرى!');
-        }, 1000);
-      }
-    }
-  };
+  const statusMessage =
+    feedbackKey === 'match' && lastLetter
+      ? isAr
+        ? `🎉 رائع! حرف (${lastLetter}) (${LETTER_WORDS[lastLetter]?.ar || ''}) (+10)`
+        : `🎉 Great! Letter (${lastLetter}) (${LETTER_WORDS[lastLetter]?.en || ''}) (+10)`
+      : feedbackKey === 'wrong'
+      ? isAr
+        ? 'حاول مرة أخرى!'
+        : 'Try again!'
+      : isAr
+      ? 'ابحث عن الحروف المتطابقة!'
+      : 'Find matching Arabic letters!';
 
   return (
     <div className="flex flex-col items-center w-full px-4 py-4 min-h-[85vh]">
       <GameHeader
-        title="تطابق الحروف العربية"
+        title={isAr ? 'تطابق الحروف العربية' : 'Arabic Alphabet Match'}
         icon="أ"
         score={score}
-        onRestart={initGame}
+        onRestart={handleRestart}
         onGoHome={onGoHome}
         accentGradient="from-[#81c784] to-[#388e3c]"
-        badgeText="لغة الضاد الجميلة"
+        badgeText={isAr ? 'لغة الضاد الجميلة' : 'Beautiful Arabic Letters'}
       />
 
       <div className="bg-white dark:bg-[#20091b] rounded-3xl p-4 sm:p-7 shadow-xl border border-emerald-100 dark:border-slate-800 text-slate-800 dark:text-slate-100 max-w-3xl w-full flex flex-col items-center">
-        <div className="w-full flex justify-between items-center mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
-          <span className="font-bold text-emerald-800 dark:text-emerald-400">{message}</span>
+        <div className="w-full flex flex-wrap justify-between items-center gap-2 mb-4 px-2 text-sm text-slate-700 dark:text-slate-200">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-emerald-800 dark:text-emerald-400">{statusMessage}</span>
+            {lastLetter && (
+              <button
+                onClick={() => sound.speakText(LETTER_NAMES[lastLetter] || lastLetter, 'ar')}
+                className="p-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 transition-colors cursor-pointer"
+                title={isAr ? 'إعادة النطق' : 'Repeat pronunciation'}
+              >
+                <Volume2 className="w-4 h-4" />
+              </button>
+            )}
+          </div>
           <span className="text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
-            {matchedPairs} / {ARABIC_LETTERS.length} أزواج
+            {isAr
+              ? `${matchedPairs} / ${ARABIC_LETTERS.length} أزواج`
+              : `${matchedPairs} / ${ARABIC_LETTERS.length} pairs`}
           </span>
         </div>
 
@@ -181,23 +148,29 @@ export const ArabicLettersGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
                 {isRevealed ? (
                   <span className="text-3xl sm:text-4xl font-extrabold">{card.letter}</span>
                 ) : (
-                  <span className="text-2xl sm:text-3xl opacity-90 drop-shadow">؟</span>
+                  <span className="text-2xl sm:text-3xl opacity-90 drop-shadow">{isAr ? '؟' : '?'}</span>
                 )}
               </button>
             );
           })}
         </div>
 
-        <div className="mt-6 text-center text-xs sm:text-sm text-slate-500">
-          اضغط على بطاقتين للبحث عن الحروف العربية المتشابهة!
+        <div className="mt-6 text-center text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          {isAr
+            ? 'اضغط على بطاقتين للبحث عن الحروف العربية المتشابهة!'
+            : 'Tap two cards to match identical Arabic letters!'}
         </div>
       </div>
 
       {isGameOver && (
         <WinCelebration
           score={score}
-          message="🎉 ممتاز! لقد تعلمت وتعرفت على الحروف العربية ببراعة!"
-          onRestart={initGame}
+          message={
+            isAr
+              ? '🎉 ممتاز! لقد تعلمت وتعرفت على الحروف العربية ببراعة!'
+              : '🎉 Awesome! You matched all Arabic letters!'
+          }
+          onRestart={handleRestart}
           onGoHome={onGoHome}
           stars={score >= 100 ? 3 : score >= 80 ? 2 : 1}
         />

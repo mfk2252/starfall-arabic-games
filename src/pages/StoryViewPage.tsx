@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { STORIES_LIST } from '../data/stories';
 import { useLanguage } from '../i18n/LanguageContext';
 import { sound } from '../utils/audio';
-import { ArrowRight, ArrowLeft, BookOpen, RotateCcw, Check, Sparkles, Heart } from 'lucide-react';
+import { ArrowRight, ArrowLeft, BookOpen, RotateCcw, Sparkles, Heart, Volume2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const StoryViewPage: React.FC = () => {
@@ -16,6 +16,12 @@ export const StoryViewPage: React.FC = () => {
 
   const story = STORIES_LIST.find((s) => s.id === storyId);
 
+  useEffect(() => {
+    return () => {
+      sound.stopSpeech();
+    };
+  }, [currentPageIdx, storyId]);
+
   if (!story) {
     return <Navigate to="/stories" replace />;
   }
@@ -24,7 +30,21 @@ export const StoryViewPage: React.FC = () => {
   const totalPages = story.pages.length;
   const isLastPage = currentPageIdx === totalPages - 1;
 
+  const handleReadNarrative = () => {
+    const narrative = language === 'ar' ? currentPage.text : currentPage.textEn;
+    sound.speakText(narrative, language);
+  };
+
+  const handleReadQuestion = () => {
+    if (!currentPage.interactiveQuestion) return;
+    const q = language === 'ar'
+      ? currentPage.interactiveQuestion.question
+      : currentPage.interactiveQuestion.questionEn;
+    sound.speakText(q, language);
+  };
+
   const handleNextPage = () => {
+    sound.stopSpeech();
     sound.playClick();
     if (!isLastPage) {
       setCurrentPageIdx((prev) => prev + 1);
@@ -115,19 +135,36 @@ export const StoryViewPage: React.FC = () => {
           </span>
         </div>
 
-        {/* Narrative Text */}
-        <div className="w-full max-w-2xl bg-amber-50/50 dark:bg-slate-900/80 border border-amber-100 dark:border-slate-800 rounded-2xl p-6 mb-8 text-center">
+        {/* Narrative Text + Read Aloud Control */}
+        <div className="w-full max-w-2xl bg-amber-50/50 dark:bg-slate-900/80 border border-amber-100 dark:border-slate-800 rounded-2xl p-6 mb-8 text-center space-y-4">
           <p className="text-lg sm:text-2xl font-extrabold text-slate-800 dark:text-slate-100 leading-loose">
             {language === 'ar' ? currentPage.text : currentPage.textEn}
           </p>
+          <div className="flex justify-center">
+            <button
+              onClick={handleReadNarrative}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-black shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+              title={language === 'ar' ? 'استمع لقراءة القصة بصوت واضح' : 'Listen to the story'}
+            >
+              <Volume2 className="w-4 h-4" />
+              <span>{language === 'ar' ? 'استمع للقصة' : 'Listen to Story'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Interactive Question on the page (if present) */}
         {currentPage.interactiveQuestion && !storyCompleted && (
           <div className="w-full max-w-xl bg-slate-50 dark:bg-slate-900/90 border-2 border-dashed border-amber-300 dark:border-amber-700 rounded-3xl p-5 mb-8">
-            <div className="flex items-center justify-center gap-1.5 text-xs font-black text-amber-700 dark:text-amber-400 mb-2">
+            <div className="flex items-center justify-center gap-2 text-xs font-black text-amber-700 dark:text-amber-400 mb-2">
               <Sparkles className="w-4 h-4" />
               <span>{language === 'ar' ? 'سؤال استيعابي ممتع:' : 'Fun Comprehension Question:'}</span>
+              <button
+                onClick={handleReadQuestion}
+                className="p-1.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 hover:bg-amber-200 transition-colors cursor-pointer"
+                title={language === 'ar' ? 'استمع للسؤال' : 'Listen to question'}
+              >
+                <Volume2 className="w-3.5 h-3.5" />
+              </button>
             </div>
             <h3 className="text-base sm:text-lg font-black text-slate-800 dark:text-slate-100 text-center mb-4">
               {language === 'ar' ? currentPage.interactiveQuestion.question : currentPage.interactiveQuestion.questionEn}

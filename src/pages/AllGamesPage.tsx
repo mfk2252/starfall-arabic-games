@@ -84,8 +84,8 @@ export const AllGamesPage: React.FC = () => {
         </h1>
         <p className="text-sm text-slate-600 dark:text-pink-200/80 font-medium leading-relaxed">
           {language === 'ar'
-            ? 'استكشف ١٨ لعبة تعليمية ممتعة تغطي الحساب، اللغة، الذاكرة، المنطق، والعلوم'
-            : 'Explore 18 educational games covering math, language, memory, logic, and natural science'}
+            ? `استكشف ${GAMES_LIST.length} لعبة تعليمية ممتعة تغطي الحساب، اللغة، الذاكرة، المنطق، والعلوم`
+            : `Explore ${GAMES_LIST.length} educational games covering math, language, memory, logic, and natural science`}
         </p>
       </div>
 

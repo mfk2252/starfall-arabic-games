@@ -35,7 +35,7 @@ export const HomePage: React.FC = () => {
   });
 
   const brandName = language === 'ar' ? 'عالم تالين المميز' : "Taleen's Special World";
-  const progress = getAllProgress();
+  const progress = useMemo(() => getAllProgress(), []);
 
   // Category filter definitions
   const categories = [

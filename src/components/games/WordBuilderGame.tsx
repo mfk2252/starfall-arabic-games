@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { WinCelebration } from '../common/WinCelebration';
 import { sound } from '../../utils/audio';
 import { saveGameProgress } from '../../utils/storage';
+import { RoundManager } from '../../utils/roundManager';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { RotateCcw, ArrowRight, ArrowLeft, Lightbulb, HelpCircle, Globe, CheckCircle2 } from 'lucide-react';
+import { RotateCcw, ArrowRight, ArrowLeft, Lightbulb, HelpCircle, Volume2 } from 'lucide-react';
 
 export interface WordItem {
   id: string;
@@ -176,42 +177,35 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
   const [wrongAttempt, setWrongAttempt] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
-  // Shuffle array utility
-  const shuffle = <T,>(array: T[]): T[] => {
-    const arr = [...array];
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  };
+  const timersRef = useRef<number[]>([]);
+  const arRoundManagerRef = useRef(new RoundManager(ARABIC_WORD_DATABASE, ARABIC_WORD_DATABASE.length));
+  const enRoundManagerRef = useRef(new RoundManager(ENGLISH_WORD_DATABASE, ENGLISH_WORD_DATABASE.length));
 
-  const currentDatabase = selectedLang === 'ar' ? ARABIC_WORD_DATABASE : ENGLISH_WORD_DATABASE;
+  const clearTimers = useCallback(() => {
+    timersRef.current.forEach((id) => window.clearTimeout(id));
+    timersRef.current = [];
+  }, []);
 
-  const startLevel = (count: number | 'all') => {
-    sound.playClick();
-    setSelectedLetterCount(count);
+  const scheduleTimer = useCallback((fn: () => void, ms: number) => {
+    const id = window.setTimeout(() => {
+      timersRef.current = timersRef.current.filter((t) => t !== id);
+      fn();
+    }, ms);
+    timersRef.current.push(id);
+  }, []);
 
-    let filtered =
-      count === 'all'
-        ? currentDatabase
-        : currentDatabase.filter((w) => w.word.length === count || (count === 6 && w.word.length >= 6));
+  useEffect(() => {
+    return () => clearTimers();
+  }, [clearTimers]);
 
-    if (filtered.length === 0) filtered = currentDatabase;
+  const currentManager = selectedLang === 'ar' ? arRoundManagerRef.current : enRoundManagerRef.current;
 
-    const shuffledWords = shuffle(filtered).slice(0, 5); // 5 words per round
-    setActiveWords(shuffledWords);
-    setCurrentWordIndex(0);
-    setScore(0);
-    initWord(shuffledWords[0]);
-    setGameState('play');
-  };
-
-  const initWord = (wordItem: WordItem) => {
+  const initWord = useCallback((wordItem: WordItem, lang: 'ar' | 'en') => {
     const letters = wordItem.word.split('');
     setUserLetters(new Array(letters.length).fill(null));
 
-    const scrambled = shuffle(
+    const mgr = lang === 'ar' ? arRoundManagerRef.current : enRoundManagerRef.current;
+    const scrambled = mgr.shuffle(
       letters.map((char, index) => ({
         char,
         id: index,
@@ -223,10 +217,26 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
     setShowHint(false);
     setWrongAttempt(false);
     setIsCorrect(false);
+  }, []);
+
+  const startLevel = (count: number | 'all') => {
+    clearTimers();
+    sound.playClick();
+    setSelectedLetterCount(count);
+
+    const roundWords = currentManager.getNextRoundItems(5, (w) =>
+      count === 'all' ? true : count === 6 ? w.word.length >= 6 : w.word.length === count
+    );
+
+    setActiveWords(roundWords);
+    setCurrentWordIndex(0);
+    setScore(0);
+    initWord(roundWords[0], selectedLang);
+    setGameState('play');
   };
 
   const handleLetterClick = (letterObj: { char: string; id: number; isUsed: boolean }) => {
-    if (letterObj.isUsed || wrongAttempt) return;
+    if (letterObj.isUsed || wrongAttempt || isCorrect) return;
 
     sound.playClick();
 
@@ -242,28 +252,29 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
 
     if (newUserLetters.every((l) => l !== null)) {
       const builtWord = newUserLetters.join('');
-      if (builtWord === activeWords[currentWordIndex].word) {
+      const targetWord = activeWords[currentWordIndex];
+      if (builtWord === targetWord.word) {
         sound.playMatch();
         setIsCorrect(true);
-        setScore((s) => s + 20);
+        const nextScore = score + 20;
+        setScore(nextScore);
 
-        setTimeout(() => {
+        scheduleTimer(() => {
           if (currentWordIndex + 1 < activeWords.length) {
             const nextIdx = currentWordIndex + 1;
             setCurrentWordIndex(nextIdx);
-            initWord(activeWords[nextIdx]);
+            initWord(activeWords[nextIdx], selectedLang);
           } else {
-            sound.playWin();
+            saveGameProgress('word-builder', nextScore, true);
             setGameState('win');
-            saveGameProgress('word-builder', score + 20, true);
           }
         }, 1500);
       } else {
         setWrongAttempt(true);
         sound.playWrong();
-        setTimeout(() => {
-          setUserLetters(new Array(activeWords[currentWordIndex].word.length).fill(null));
-          setAvailableLetters(availableLetters.map((l) => ({ ...l, isUsed: false })));
+        scheduleTimer(() => {
+          setUserLetters(new Array(targetWord.word.length).fill(null));
+          setAvailableLetters((prev) => prev.map((l) => ({ ...l, isUsed: false })));
           setWrongAttempt(false);
         }, 1000);
       }
@@ -477,10 +488,18 @@ export const WordBuilderGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome }
 
           <button
             onClick={() => setShowHint(!showHint)}
-            className="absolute top-0 end-0 w-10 h-10 rounded-full bg-amber-400 text-white flex items-center justify-center shadow-md hover:bg-amber-500 transition-colors"
+            className="absolute top-0 end-0 w-10 h-10 rounded-full bg-amber-400 text-white flex items-center justify-center shadow-md hover:bg-amber-500 transition-colors cursor-pointer"
             title={isAr ? 'تلميح' : 'Hint'}
           >
             <Lightbulb className="w-5 h-5" />
+          </button>
+
+          <button
+            onClick={() => sound.speakText(currentWord.word, selectedLang)}
+            className="absolute top-0 start-0 w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md hover:bg-emerald-600 transition-colors cursor-pointer"
+            title={isAr ? 'استمع للكلمة' : 'Listen to word'}
+          >
+            <Volume2 className="w-5 h-5" />
           </button>
         </div>
 
