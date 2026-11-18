@@ -30,7 +30,6 @@ export const CategoryPage: React.FC = () => {
       <div className="mb-6 flex items-center justify-between">
         <Link
           to="/categories"
-          viewTransition
           onClick={() => sound.playClick()}
           className="inline-flex items-center gap-2 bg-white dark:bg-[#20091b] px-4 py-2 rounded-full font-bold text-sm text-slate-700 dark:text-pink-100 shadow-xs border border-pink-200/80 dark:border-[#3d122f] hover:bg-pink-50 dark:hover:bg-[#2d0e26] transition-colors"
         >

@@ -70,21 +70,20 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#20091b]/95 backdrop-blur-md border-b border-pink-100/90 dark:border-[#3d122f] transition-colors duration-200 w-full">
-      <div className="max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 xl:px-10">
-        <div className="flex items-center justify-between h-20">
-          {/* Brand Logo: Animated Flying Butterfly on Transparent Background */}
+      <div className="max-w-[1920px] mx-auto px-2.5 sm:px-6 lg:px-8 xl:px-10">
+        <div className="flex items-center justify-between gap-2 h-14 sm:h-18">
+          {/* Brand Logo: Animated Flying Butterfly + Compact Responsive Title */}
           <Link
             to="/"
-            viewTransition
             onClick={() => sound.playClick()}
-            className="flex items-center gap-2 group select-none shrink-0"
+            className="flex items-center gap-1.5 sm:gap-2 group select-none min-w-0 shrink"
             aria-label={brandName}
           >
-            <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center group-hover:scale-115 transition-transform duration-300">
-              <div className="absolute inset-1 rounded-full bg-pink-400/15 dark:bg-pink-500/20 blur-md pointer-events-none group-hover:bg-pink-400/25 transition-colors" />
-              <ButterflyIcon className="w-10 h-10 sm:w-11 sm:h-11" />
+            <div className="relative w-8 h-8 sm:w-11 sm:h-11 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+              <div className="absolute inset-0.5 rounded-full bg-pink-400/15 dark:bg-pink-500/20 blur-md pointer-events-none group-hover:bg-pink-400/25 transition-colors" />
+              <ButterflyIcon className="w-7 h-7 sm:w-10 sm:h-10" />
             </div>
-            <span className="font-heading text-lg sm:text-2xl lg:text-3xl font-black tracking-tight text-slate-900 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors whitespace-nowrap">
+            <span className="font-heading text-[12px] min-[360px]:text-[13px] min-[400px]:text-sm sm:text-xl lg:text-2xl font-black tracking-tight leading-tight text-slate-900 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors truncate">
               {brandName}
             </span>
           </Link>
@@ -101,7 +100,6 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  viewTransition
                   aria-current={isActive ? 'page' : undefined}
                   onClick={() => sound.playClick()}
                   className={`flex items-center gap-2 px-3 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all ${
@@ -118,9 +116,11 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Controls: Dark/Light Mode, Language Switcher, PWA Install Button, Sound & Mobile Menu */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5">
-            {/* PWA Install Button */}
-            <PWAInstallButton />
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            {/* PWA Install Button (shown in top bar on tablet/desktop; inside drawer on small phones) */}
+            <div className="hidden md:block">
+              <PWAInstallButton />
+            </div>
 
             {/* Dark / Light Mode Toggle Pill */}
             <button
@@ -152,19 +152,20 @@ export const Navbar: React.FC = () => {
                 sound.playClick();
                 toggleLanguage();
               }}
-              className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-bold border border-pink-200/80 dark:border-[#421334] bg-white dark:bg-[#2a0c24] hover:bg-pink-50 dark:hover:bg-[#381030] text-slate-700 dark:text-pink-200 transition-colors cursor-pointer shadow-xs"
+              className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-bold border border-pink-200/80 dark:border-[#421334] bg-white dark:bg-[#2a0c24] hover:bg-pink-50 dark:hover:bg-[#381030] text-slate-700 dark:text-pink-200 transition-colors cursor-pointer shadow-xs"
               title={language === 'ar' ? 'Switch to English' : 'التحويل إلى العربية'}
               aria-label="Toggle language"
             >
-              <Globe className="w-3.5 h-3.5 text-pink-600 dark:text-pink-400" />
-              <span>{language === 'ar' ? 'العربية' : 'English'}</span>
-              <ChevronDown className="w-3 h-3 text-slate-400 dark:text-pink-300/60" />
+              <Globe className="w-3.5 h-3.5 text-pink-600 dark:text-pink-400 shrink-0" />
+              <span className="sm:hidden">{language === 'ar' ? 'عربي' : 'EN'}</span>
+              <span className="hidden sm:inline">{language === 'ar' ? 'العربية' : 'English'}</span>
+              <ChevronDown className="hidden sm:inline w-3 h-3 text-slate-400 dark:text-pink-300/60" />
             </button>
 
             {/* Sound Toggle */}
             <button
               onClick={handleToggleSound}
-              className={`p-2 rounded-full border shadow-xs transition-all cursor-pointer ${
+              className={`p-1.5 sm:p-2 rounded-full border shadow-xs transition-all cursor-pointer ${
                 isMuted
                   ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-500 dark:text-rose-400 border-rose-200 dark:border-rose-900/60'
                   : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/60 hover:bg-emerald-100'
@@ -178,10 +179,10 @@ export const Navbar: React.FC = () => {
             {/* Mobile / Compact menu trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-xl text-slate-600 dark:text-pink-200 hover:bg-pink-50 dark:hover:bg-[#2d0e26] transition-colors"
+              className="xl:hidden p-1.5 sm:p-2 rounded-xl text-slate-600 dark:text-pink-200 hover:bg-pink-50 dark:hover:bg-[#2d0e26] transition-colors"
               aria-label="Toggle mobile menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
           </div>
         </div>
@@ -201,7 +202,6 @@ export const Navbar: React.FC = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                viewTransition
                 aria-current={isActive ? 'page' : undefined}
                 onClick={() => {
                   sound.playClick();

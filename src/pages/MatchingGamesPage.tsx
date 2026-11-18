@@ -52,7 +52,6 @@ export const MatchingGamesPage: React.FC = () => {
             <Link
               key={game.id}
               to={`/games/${game.id}`}
-              viewTransition
               onClick={() => sound.playClick()}
               className="group p-6 rounded-3xl bg-white dark:bg-[#20091b] border-2 border-pink-100 dark:border-[#3d122f] hover:border-pink-400 dark:hover:border-pink-500 transition-all transform hover:-translate-y-1 active:scale-[0.98] shadow-md hover:shadow-xl flex flex-col justify-between gap-4 relative overflow-hidden"
             >

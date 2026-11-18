@@ -170,7 +170,7 @@ export const MethodologyPage: React.FC = () => {
         <Link
           to="/consultation"
           onClick={() => sound.playClick()}
-          className="bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-3 rounded-full text-xs sm:text-sm font-black whitespace-nowrap shadow-sm transition-transform hover:scale-105 active:scale-95"
+          className="bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-3 rounded-full text-xs sm:text-sm font-black text-center whitespace-normal sm:whitespace-nowrap shadow-sm transition-transform hover:scale-105 active:scale-95"
         >
           {language === 'ar' ? 'احجز استشارة متخصصة' : 'Book Specialized Consultation'}
         </Link>

@@ -82,7 +82,6 @@ export const CategoriesOverviewPage: React.FC = () => {
           <Link
             key={cat.id}
             to={`/categories/${cat.id}`}
-            viewTransition
             onClick={() => sound.playClick()}
             className="bg-white dark:bg-[#20091b] rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl transition-all duration-300 border border-pink-100 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 group flex flex-col justify-between transform hover:-translate-y-1.5 active:scale-[0.98] select-none"
           >

@@ -58,4 +58,33 @@ describe('Navigation, Animation & UX Enhancements', () => {
     const activeGamesLink = container.querySelector('a[href="/games"][aria-current="page"]');
     expect(activeGamesLink).not.toBeNull();
   });
+
+  it('uses mobile-first native app viewport sizing, overflow-x-clip, compact responsive title, and 3-column mobile app grid', () => {
+    const { container } = render(
+      <ThemeProvider>
+        <LanguageProvider>
+          <MemoryRouter initialEntries={['/']}>
+            <Routes>
+              <Route path="/" element={<AppLayout />}>
+                <Route index element={<HomePage />} />
+              </Route>
+            </Routes>
+          </MemoryRouter>
+        </LanguageProvider>
+      </ThemeProvider>
+    );
+
+    const rootShell = container.firstElementChild as HTMLElement;
+    expect(rootShell.className).toContain('min-h-dvh');
+    expect(rootShell.className).toContain('overflow-x-clip');
+
+    const brandTitle = container.querySelector('header .font-heading') as HTMLElement;
+    expect(brandTitle).not.toBeNull();
+    expect(brandTitle.className).toContain('truncate');
+    expect(brandTitle.className).toContain('text-[12px]');
+
+    const appGrid = container.querySelector('.grid.grid-cols-3') as HTMLElement;
+    expect(appGrid).not.toBeNull();
+  });
 });
+

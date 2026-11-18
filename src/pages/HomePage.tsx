@@ -178,7 +178,7 @@ export const HomePage: React.FC = () => {
     const randomIndex = Math.floor(Math.random() * allActivities.length);
     const chosen = allActivities[randomIndex];
     if (chosen) {
-      navigate(chosen.link, { viewTransition: true });
+      navigate(chosen.link);
     }
   };
 
@@ -189,9 +189,9 @@ export const HomePage: React.FC = () => {
   );
 
   return (
-    <div className="flex-1 w-full max-w-[1920px] mx-auto px-3 sm:px-6 lg:px-8 xl:px-10 py-4 sm:py-6 flex flex-col gap-5">
+    <div className="flex-1 w-full max-w-[1920px] mx-auto px-2.5 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-5 flex flex-col gap-3 sm:gap-5">
       {/* Control Bar: Search Input + Age Filter */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
         {/* Search Input */}
         <div className="relative flex-1 max-w-md">
           <Search className="w-4 h-4 text-pink-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
@@ -330,19 +330,18 @@ export const HomePage: React.FC = () => {
           </button>
         </div>
       ) : (
-        <div ref={gridParent} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-3 sm:gap-4.5">
+        <div ref={gridParent} className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 2xl:grid-cols-8 gap-2 sm:gap-4">
           {filteredActivities.map((item) => (
             <Link
               key={item.id}
               to={item.link}
-              viewTransition
               onClick={() => sound.playClick()}
-              className="group bg-white dark:bg-[#20091b] rounded-3xl p-3.5 sm:p-4 border border-pink-100/90 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 shadow-xs hover:shadow-md hover:shadow-pink-500/10 transition-all duration-200 transform hover:-translate-y-1 active:scale-95 flex flex-col items-center text-center relative select-none"
+              className="group bg-white dark:bg-[#20091b] rounded-2xl sm:rounded-3xl p-2.5 sm:p-4 border border-pink-100/90 dark:border-[#3d122f] hover:border-pink-300 dark:hover:border-pink-600/80 shadow-xs hover:shadow-md hover:shadow-pink-500/10 transition-all duration-200 transform hover:-translate-y-1 active:scale-95 flex flex-col items-center text-center relative select-none min-w-0"
             >
               {/* Completed / Star Badge */}
               {item.played && item.stars > 0 && (
                 <div
-                  className="absolute top-2 end-2 bg-amber-400 text-amber-950 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shadow-xs"
+                  className="absolute top-1.5 end-1.5 sm:top-2 sm:end-2 bg-amber-400 text-amber-950 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-[9px] sm:text-[10px] font-black shadow-xs"
                   title={`${item.stars} ${language === 'ar' ? 'نجوم' : 'stars'}`}
                 >
                   ★
@@ -351,18 +350,18 @@ export const HomePage: React.FC = () => {
 
               {/* App Card Tactile Icon */}
               <div
-                className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-2xl sm:text-3xl shadow-md group-hover:scale-105 transition-transform duration-200 mb-2.5`}
+                className={`w-11 h-11 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${item.gradient} text-white flex items-center justify-center text-xl sm:text-3xl shadow-md group-hover:scale-105 transition-transform duration-200 mb-1.5 sm:mb-2.5`}
               >
                 {item.icon}
               </div>
 
               {/* Title Underneath (Short, Clear & Non-overflowing) */}
-              <h3 className="font-black text-xs sm:text-sm text-slate-800 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors line-clamp-1 w-full leading-snug">
+              <h3 className="font-black text-[11px] sm:text-sm text-slate-800 dark:text-pink-100 group-hover:text-pink-600 dark:group-hover:text-pink-300 transition-colors line-clamp-1 w-full leading-snug">
                 {item.title}
               </h3>
 
               {/* Metadata */}
-              <div className="flex items-center justify-center gap-1 text-[11px] text-slate-400 dark:text-pink-300/70 mt-0.5">
+              <div className="flex items-center justify-center gap-1 text-[10px] sm:text-[11px] text-slate-400 dark:text-pink-300/70 mt-0.5">
                 <span>{item.ageRange}</span>
                 {item.type === 'story' && (
                   <>
@@ -379,23 +378,23 @@ export const HomePage: React.FC = () => {
       )}
 
       {/* Bottom Taleen Interactive Banner Container (relocated above bottom footer) */}
-      <div className="mt-4 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 dark:from-[#2a061d] dark:via-[#420a2e] dark:to-[#1e0415] border border-pink-400/30 dark:border-pink-900/50 rounded-3xl p-4 sm:p-6 text-white shadow-md shadow-pink-500/15 relative overflow-hidden transition-all duration-300">
-        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="mt-2 sm:mt-4 bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 dark:from-[#2a061d] dark:via-[#420a2e] dark:to-[#1e0415] border border-pink-400/30 dark:border-pink-900/50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white shadow-md shadow-pink-500/15 relative overflow-hidden transition-all duration-300">
+        <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           {/* Brand Logo + Welcome Text */}
-          <div className="flex items-center gap-3.5 text-center sm:text-start">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-md p-1.5 flex items-center justify-center shadow-inner shrink-0">
-              <ButterflyIcon className="w-9 h-9 sm:w-11 sm:h-11" />
+          <div className="flex items-center gap-3 text-center sm:text-start min-w-0">
+            <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-white/20 backdrop-blur-md p-1.5 flex items-center justify-center shadow-inner shrink-0">
+              <ButterflyIcon className="w-8 h-8 sm:w-11 sm:h-11" />
             </div>
-            <div>
-              <div className="flex items-center justify-center sm:justify-start gap-2">
-                <h2 className="text-xl sm:text-3xl font-black tracking-tight drop-shadow-xs">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <h2 className="text-base sm:text-2xl font-black tracking-tight drop-shadow-xs">
                   {brandName}
                 </h2>
-                <span className="text-[11px] bg-white/20 text-white font-bold px-2.5 py-0.5 rounded-full backdrop-blur-xs">
+                <span className="text-[10px] sm:text-[11px] bg-white/20 text-white font-bold px-2.5 py-0.5 rounded-full backdrop-blur-xs">
                   {language === 'ar' ? 'منصة الألعاب والأنشطة' : 'Interactive Games App'}
                 </span>
               </div>
-              <p className="text-xs text-pink-100 dark:text-pink-200 font-medium mt-0.5">
+              <p className="text-[11px] sm:text-xs text-pink-100 dark:text-pink-200 font-medium mt-0.5">
                 {language === 'ar'
                   ? 'اضغط على أي لعبة وابدأ التعلم والاستكشاف فوراً'
                   : 'Tap any activity card to jump directly into learning and fun'}
@@ -404,10 +403,10 @@ export const HomePage: React.FC = () => {
           </div>
 
           {/* Quick Action Buttons (Random Game, Stars Counter, and Info Button) */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex flex-wrap items-center justify-center gap-2 shrink-0">
             <button
               onClick={handleRandomPlay}
-              className="inline-flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-amber-950 px-4 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-sm shadow-xs transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
+              className="inline-flex items-center gap-1.5 sm:gap-2 bg-amber-400 hover:bg-amber-300 text-amber-950 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full font-black text-xs sm:text-sm shadow-xs transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
               title={language === 'ar' ? 'اختر لي لعبة عشوائية' : 'Pick a random game for me'}
             >
               <Shuffle className="w-4 h-4" />
@@ -430,11 +429,11 @@ export const HomePage: React.FC = () => {
             <Link
               to="/about"
               onClick={() => sound.playClick()}
-              className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-md shadow-xs transition-all border border-white/20 hover:scale-110 active:scale-95"
+              className="inline-flex items-center justify-center w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/20 hover:bg-white/30 text-white backdrop-blur-md shadow-xs transition-all border border-white/20 hover:scale-110 active:scale-95"
               title={language === 'ar' ? 'معلومات المطور والمنصة' : 'Developer & Platform Info'}
               aria-label={language === 'ar' ? 'معلومات المطور والمنصة' : 'Developer & Platform Info'}
             >
-              <Info className="w-5 h-5" />
+              <Info className="w-4 h-4 sm:w-5 sm:h-5" />
             </Link>
           </div>
         </div>

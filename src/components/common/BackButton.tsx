@@ -28,13 +28,13 @@ const NavigationHandler: React.FC<{
       return;
     }
     if (to) {
-      navigate(to, { viewTransition: true });
+      navigate(to);
       return;
     }
     if (window.history.state && typeof window.history.state.idx === 'number' && window.history.state.idx > 0) {
       navigate(-1);
     } else {
-      navigate('/games', { replace: true, viewTransition: true });
+      navigate('/games', { replace: true });
     }
   };
 

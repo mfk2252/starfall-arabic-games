@@ -137,7 +137,7 @@ export const SelfLearningPage: React.FC = () => {
         <Link
           to="/games"
           onClick={() => sound.playClick()}
-          className="bg-sky-500 hover:bg-sky-600 text-white px-6 py-3 rounded-full text-xs sm:text-sm font-black whitespace-nowrap shadow-md transition-transform hover:scale-105 active:scale-95"
+          className="bg-sky-500 hover:bg-sky-600 text-white px-5 sm:px-6 py-3 rounded-full text-xs sm:text-sm font-black text-center whitespace-normal sm:whitespace-nowrap shadow-md transition-transform hover:scale-105 active:scale-95"
         >
           {language === 'ar' ? 'تصفح جميع الألعاب' : 'Browse All Games'}
         </Link>

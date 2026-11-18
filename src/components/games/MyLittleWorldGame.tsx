@@ -648,7 +648,7 @@ export const MyLittleWorldGame: React.FC<{ onGoHome: () => void }> = ({ onGoHome
   // -------------------------------------------------------------
   return (
     <div
-      className="w-full max-w-7xl mx-auto flex flex-col h-[calc(100vh-20px)] sm:h-[calc(100vh-28px)] max-h-[940px] p-1.5 sm:p-2.5 overflow-hidden text-slate-800 dark:text-pink-100 select-none animate-in fade-in duration-200"
+      className="w-full max-w-7xl mx-auto flex flex-col h-[calc(100dvh-20px)] sm:h-[calc(100dvh-28px)] max-h-[940px] p-1.5 sm:p-2.5 overflow-hidden text-slate-800 dark:text-pink-100 select-none animate-in fade-in duration-200"
       dir={isAr ? 'rtl' : 'ltr'}
     >
       {/* 1. TOP COMPACT CONTROL BAR */}

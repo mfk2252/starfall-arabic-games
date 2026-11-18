@@ -350,7 +350,7 @@ export const MyLittleKitchenGame: React.FC<{ onGoHome: () => void }> = ({ onGoHo
   // =========================================================================
   return (
     <div
-      className="w-full max-w-6xl mx-auto flex flex-col h-[calc(100vh-20px)] sm:h-[calc(100vh-32px)] max-h-[880px] p-1.5 sm:p-4 overflow-x-hidden text-slate-800 dark:text-pink-100 animate-in fade-in duration-300"
+      className="w-full max-w-6xl mx-auto flex flex-col h-[calc(100dvh-20px)] sm:h-[calc(100dvh-32px)] max-h-[880px] p-1.5 sm:p-4 overflow-x-hidden text-slate-800 dark:text-pink-100 animate-in fade-in duration-300"
       dir={isAr ? 'rtl' : 'ltr'}
     >
       {/* -------------------------------------------------------------
