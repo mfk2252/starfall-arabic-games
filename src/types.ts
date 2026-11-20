@@ -26,7 +26,8 @@ export type GameId =
   | 'animals-encyclopedia'
   | 'my-little-world'
   | 'my-little-kitchen'
-  | 'number-sorting';
+  | 'number-sorting'
+  | 'harakat-car';
 
 export type GameCategory =
   | 'numbers'

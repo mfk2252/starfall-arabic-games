@@ -553,4 +553,26 @@ export const GAMES_LIST: GameInfo[] = [
     skills: ['التفكير المنطقي', 'ترتيب وتسلسل الأرقام', 'التركيز والحل المكاني'],
     skillsEn: ['Logical reasoning', 'Number sequencing', 'Spatial problem solving'],
   },
+
+  // 27. Harakat Car Race (سباق الحركات العربية)
+  {
+    id: 'harakat-car',
+    title: 'سباق الحركات العربية',
+    titleEn: 'Harakat Car Race',
+    description: 'وجّه السيارة نحو الحرف العربي الصحيح بالفتحة والكسرة والضمة واستمع لنطق كل حركة أثناء التنقل',
+    descriptionEn: 'Steer the car through the matching Arabic letter gate with Fatha, Kasra, and Damma and hear every sound',
+    icon: '🚗',
+    gradient: 'from-[#f97316] via-[#3b82f6] to-[#9333ea]',
+    accentColor: '#3b82f6',
+    category: 'letters',
+    ageRange: '٣-٧ سنوات',
+    ageRangeEn: '3-7 years',
+    minAge: 3,
+    maxAge: 7,
+    difficulty: 'easy',
+    isNew: true,
+    featured: true,
+    skills: ['الفتحة والكسرة والضمة', 'النطق الصوتي للحركات', 'التمييز البصري والسمعي'],
+    skillsEn: ['Arabic Harakat (Fatha, Kasra, Damma)', 'Phonics listening', 'Visual & audio matching'],
+  },
 ];

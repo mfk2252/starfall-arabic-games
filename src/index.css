@@ -184,3 +184,17 @@ button, a, [role="button"], input[type="button"], input[type="submit"] {
   }
 }
 
+@keyframes roadDash {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -48;
+  }
+}
+
+.animate-road-dash {
+  animation: roadDash 0.8s linear infinite;
+}
+
+
